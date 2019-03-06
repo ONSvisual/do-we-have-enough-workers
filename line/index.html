@@ -422,6 +422,10 @@
         sumFemaleMigration=femalemigration.reduce(function(sum,step){return sum+step["2017"]},0)
 
         totalMigration=sumMaleMigration+sumFemaleMigration
+
+
+
+
       })
       .then(function(){
 
@@ -553,34 +557,19 @@
 
       function runthemodel(malemortality,femalemortality,malemigration,femalemigration,fertility,malepopulation,femalepopulation,netMigrationTarget,totalFertilityTarget,customPensionYear,customPensionAge){
 
-        // console.log("male mortality",malemortality)
-        // console.log("female mortality",femalemortality)
-        // console.log("female migration",femalemigration)
-        // console.log("male migration",malemigration)
-        // console.log("fertility",fertility)
-        // console.log("male population",malepopulation)
-        // console.log("female population",femalepopulation)
-
-
-
-
-        //set target migration
-        //targetMigration=492250;
-        targetMigration=netMigrationTarget
-
         //work out migration scale factors
-        targetMigrationScale=targetMigration/totalMigration
+        targetMigrationScale=netMigrationTarget/totalMigration
         migrationScaleFactors=numberofyears.map(function(d,i){
           return {year:d,msf:1-(i*(1-targetMigrationScale)/(numberofyears.length-1))}
         })
 
-        // console.log("migration scale factors", migrationScaleFactors)
         //create the structure for the migration
         migration=[]
         numberofyears.forEach(function(d){
           migration.push({year:d,values:[]})
         })
 
+        //for each year, work out the migration, which is migration*scale factor
         numberofyears.forEach(function(c){
           var array = migration.filter(function(d){
             return d.year==c
@@ -599,24 +588,16 @@
               )
             })
           })
-        })
+        })//end of numberofyears.forEach
 
-        console.log("migrants",migration)
-
-        //fertility
+        //Calculate TFR
         totalFertilityRate=fertility.reduce(function(sum,step){return sum+step["2017"]},0)/1000
 
-        //set target totalFertilityRate
-        // targetFertilityRate=3.51052669276
-        targetFertilityRate=totalFertilityTarget
-
-        targetFertilityScale=targetFertilityRate/totalFertilityRate
+        //Work out fertility rates
+        targetFertilityScale=totalFertilityTarget/totalFertilityRate
         fertilityScaleFactors=numberofyears.map(function(d,i){
           return {year:d,fsf:1-(i*(1-targetFertilityScale)/(numberofyears.length-1))}
         })
-
-        // console.log(fertilityScaleFactors)
-
 
         //create the data structure for fertility
         birthrate=[]
@@ -624,6 +605,7 @@
           birthrate.push({year:d,values:[]})
         })
 
+        //work out the birth rate for each age and each year with the fertility and scale factors
         numberofyears.forEach(function(c){
           var array = birthrate.filter(function(d){
             return d.year==c
@@ -635,7 +617,7 @@
             "fertilityrate":fertility.filter(function(e){return e.AGE==d}).map(function(f){return f["2017"]})[0]*fertilityScaleFactors.filter(function(d){return d.year==c}).map(function(d){return d.fsf})[0]
             })
           })
-        })
+        })//end numberofyears.forEach
 
         console.log("birth rate", birthrate)
 
@@ -677,14 +659,12 @@
           population.push({year:d,values:[]})
         })
 
-        //     BIG
-        //     LOOP
-        //     HERE
-        //     !!!!
-        //     !!!!
+        //     BIG      ///////////////////////////////////////////////////
+        //     LOOP     ///////////////////////////////////////////////////
+        //     HERE     ///////////////////////////////////////////////////
+        //     !!!!     ///////////////////////////////////////////////////
+        //     !!!!     ///////////////////////////////////////////////////
         numberofyears.forEach(function(a){
-
-            // console.log(a-1)
 
             // lets work out how many people died
             var cat=deaths.filter(function(d){return d.year==a})
@@ -796,8 +776,6 @@
                 })
             })
 
-            // console.log("interim",a,interim)
-
             // work out how many babies were born
             var dogs = babies.filter(function(d){
               return d.year==a
@@ -846,8 +824,6 @@
 
             addTotalBirths[0]["totalFemale"]=addTotalBirths[0]["total"]-addTotalBirths[0]["totalMale"]
 
-            // console.log("births",a,babies)
-
             //work out premature deaths
             deaths.filter(function(e){return e.year==a})
             .map(function(e){return e.values})[0]
@@ -875,8 +851,6 @@
                 )
               }
             )
-
-            // console.log("deaths",a, deaths)
 
             // add it all together as one big thing
             var eagle=population.filter(function(e){return e.year==a})
@@ -932,10 +906,6 @@
 
       })//end of massive numberofyears loop
 
-
-      console.log("population",population)
-
-
       //work out pension age for each year
       pensionAge=[];
 
@@ -962,8 +932,6 @@
           })
         }
       })
-
-      console.log("pension age",pensionAge)
 
       //work out how many pensioners and workers there were
       pensioners=[]
@@ -1015,9 +983,6 @@
           })
       })
 
-      console.log("pensioners and workers",pensioners)
-
-
       OldAgeDependencyRatio = []
       numberofyears.forEach(function(d){
         var thisyear=pensioners.filter(function(e){
@@ -1030,7 +995,6 @@
         })
       })
 
-      console.log("oadr",OldAgeDependencyRatio)
       return OldAgeDependencyRatio
     }//ends run the model
 
@@ -1049,37 +1013,16 @@
 
     }//ends draw graphic
 
-	// 	function drawGraphic() {
-
-  //
-  //
-  //       function ready (error,malemortality,femalemortality,femalemigration,malemigration,fertility,malepopulation,femalepopulation){
-  //         //reformat the data
-
-  //
-  //
-
-  //
-  //
-  //       }//end ready
-  //
-  //
-  //
-	// }  // ends draw graphic
-
 	//check whether browser can cope with svg
 		if (Modernizr.svg) {
-		   //load config
-			// d3.json("config.json").then(function(config){dvc=config})
 			//use pym to create iframed chart dependent on specified variables
 			pymChild = new pym.Child({ renderCallback: drawGraphic});
-
 		} else {
 			 //use pym to create iframe containing fallback image (which is set as default)
 			 pymChild = new pym.Child();
 			if (pymChild) {
 		        pymChild.sendHeight();
-		    }
+		  }
 		}
     </script>
 </body>
