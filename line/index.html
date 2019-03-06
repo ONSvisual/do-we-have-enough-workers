@@ -1069,7 +1069,7 @@
 	//check whether browser can cope with svg
 		if (Modernizr.svg) {
 		   //load config
-			d3.json("config.json").then(function(config){dvc=config})
+			// d3.json("config.json").then(function(config){dvc=config})
 			//use pym to create iframed chart dependent on specified variables
 			pymChild = new pym.Child({ renderCallback: drawGraphic});
 
