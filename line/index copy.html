@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <title></title>
+
+    <meta name="description" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no" />
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+
+    <link rel="stylesheet" href="../lib/globalStyle.css" />
+    <link rel="stylesheet" href="bootstrap-grid.css"/>
+    <style>
+      body{
+        font-family: 'Open Sans', helvetica, arial, sans-serif;
+      }
+      .line{
+        shape-rendering:"crispEdges";
+      }
+      h2{
+        font-size: 30px;
+        line-height:40px;
+        font-weight: 700;
+        margin:40px 0 0 0;
+        padding:3px 0 5px 0
+      }
+      p{
+        line-height: 32px;
+        font-size: 18px;
+        margin:16px 0;
+        padding: 6px 0 10px 0;
+      }
+      input{
+        border: none;
+        border-radius: 0;
+        border-bottom: solid 1px #ddd;
+        font-size: 18px;
+        line-height: 32px;
+        margin:16px 0;
+        padding: 6px 0 0 0;
+      }
+      input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+      }
+
+      input[type="number"] {
+          -moz-appearance: textfield;
+      }
+      .slider text{
+        font-size: 18px;
+      }
+
+      #slider-simple text{
+        font-size: 18px;
+      }
+
+      .parameter-value path{
+        fill:#0F8243;
+        stroke:white;
+        stroke-width:1.5px;
+      }
+      .parameter-value path:focus{
+        fill:#0F8243;
+        stroke:orange;
+        stroke-width:3px;
+      }
+    </style>
+</head>
+
+
+<body>
+    <h2>Do we have enough workers?</h2>
+    <p>The old age dependency ratio (OADR) measures the number of people of State Pension Age (SPA) and over for every 1,000 people of working age (16 to SPA). The OADR provides an idea of the relationship between working and pensioner populations.</p>
+    <p>The current old age dependancy ratio is 3.1 people above the state pension age for every 10 people of working age.</p>
+    <p>Adjust the values below to see how the ratio can be protected in the future.</p>
+
+    <div class="row">
+        <div class="col-sm-6"><p>Net migration by 2042</p></div>
+        <div class="col-sm-6"><input id="value-simple" type="number" value="175000" oninput="sliderchange()" min="0" max="400000"></div>
+        <div class="col-sm-12"><div id="slider-simple"></div></div>
+    </div>
+	  <div id="graphic">
+    	<!-- <img src="fallback.png" alt="[Chart]" /> -->
+    </div>
+
+    <div id="keypoints">
+        <p></p>
+    </div>
+
+   <div id="footer">
+   </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.11/lodash.min.js"></script>
+ 		<script src="https://cdn.ons.gov.uk/vendor/d3/4.13.0/d3.min.js" type="text/javascript"></script>
+    <script src="d3-simple-slider.js"></script>
+ 		<script src="../lib/modernizr.svg.min.js" type="text/javascript"></script>
+ 		<script src="../lib/pym.js" type="text/javascript"></script>
+
+   <script>
+
+		var graphic = d3.select('#graphic');
+		var keypoints = d3.select('#keypoints');
+		var footer = d3.select(".footer");
+		var pymChild = null;
+
+    //set up the sliders
+    // Simple
+    var sliderSimple = d3
+      .sliderBottom()
+      .min(0)
+      .max(400000)
+      .width(parseInt(graphic.style("width"))-80)
+      .tickFormat(d3.format(',.0f'))
+      .ticks(5)
+      .default(175000)
+      .handle(
+        d3.symbol()
+          .type(d3.symbolCircle)
+          .size(500)
+      )
+      .fill("#206595")
+      .on('onchange', val => {
+        document.getElementById("value-simple").value=d3.format('.0f')(val)
+      });
+
+    var gSimple = d3
+      .select('div#slider-simple')
+      .append('svg')
+      .attr('width', parseInt(graphic.style("width")))
+      .attr('height', 100)
+      .append('g')
+      .attr('transform', 'translate(30,30)');
+
+    gSimple.call(sliderSimple);
+
+    document.getElementById("value-simple").value=d3.format('.0f')(sliderSimple.value());
+
+    function sliderchange(){
+      sliderSimple.silentValue(document.getElementById('value-simple').value)
+    }
+
+    d3.select('body').on('keydown',function(){
+      if(document.getElementById("handle")===document.activeElement){//if handle is focussed
+        var max = document.getElementById('value-simple').max
+        var min = document.getElementById('value-simple').min
+
+        if (d3.event.key=='ArrowLeft') {
+          if(+document.getElementById('value-simple').value-100<min){
+            sliderSimple.silentValue(min)
+            document.getElementById("value-simple").value=min
+          }else{
+            sliderSimple.silentValue(+document.getElementById('value-simple').value-100)
+            document.getElementById("value-simple").value=+document.getElementById("value-simple").value-100
+          }
+        }
+        if (d3.event.key=='ArrowUp') {
+          d3.event.preventDefault();
+          if(+document.getElementById('value-simple').value+100>max){
+            sliderSimple.silentValue(max)
+            document.getElementById("value-simple").value=max
+          }else{
+            sliderSimple.silentValue(+document.getElementById('value-simple').value+100)
+            document.getElementById("value-simple").value=+document.getElementById("value-simple").value+100
+          }
+        }
+        if (d3.event.key=='ArrowRight') {
+          if(+document.getElementById('value-simple').value+100>max){
+            sliderSimple.silentValue(max)
+            document.getElementById("value-simple").value=max
+          }else{
+            sliderSimple.silentValue(+document.getElementById('value-simple').value+100)
+            document.getElementById("value-simple").value=+document.getElementById("value-simple").value+100
+          }              }
+        if (d3.event.key=='ArrowDown') {
+          d3.event.preventDefault();
+          if(+document.getElementById('value-simple').value-100<min){
+            sliderSimple.silentValue(min)
+            document.getElementById("value-simple").value=min
+          }else{
+            sliderSimple.silentValue(+document.getElementById('value-simple').value-100)
+            document.getElementById("value-simple").value=+document.getElementById("value-simple").value-100
+          }
+        }
+        if (d3.event.key=='PageDown') {
+          d3.event.preventDefault();
+          if(+document.getElementById('value-simple').value-1000<min){
+            sliderSimple.silentValue(min)
+            document.getElementById("value-simple").value=min
+          }else{
+            sliderSimple.silentValue(+document.getElementById('value-simple').value-1000)
+            document.getElementById("value-simple").value=+document.getElementById("value-simple").value-1000
+          }
+        }
+        if (d3.event.key=='PageUp') {
+          d3.event.preventDefault();
+          if(+document.getElementById('value-simple').value+1000>max){
+            sliderSimple.silentValue(max)
+            document.getElementById("value-simple").value=max
+          }else{
+            sliderSimple.silentValue(+document.getElementById('value-simple').value+1000)
+            document.getElementById("value-simple").value=+document.getElementById("value-simple").value+1000
+          }              }
+        if (d3.event.key=='Home') {
+          d3.event.preventDefault();
+          sliderSimple.silentValue(min)
+          document.getElementById("value-simple").value=min
+        }
+        if (d3.event.key=='End') {
+          d3.event.preventDefault();
+          sliderSimple.silentValue(max)
+          document.getElementById("value-simple").value=max
+        }
+      }
+    })
+
+		function drawGraphic() {
+
+      //load chart data
+      d3.queue()
+        .defer(d3.csv,"principal-male-mortality.csv")
+        .defer(d3.csv,"principal-female-mortality.csv")
+        .defer(d3.csv,"principal-female-migration.csv")
+        .defer(d3.csv,"principal-male-migration.csv")
+        .defer(d3.csv,"principal-fertility-rate.csv")
+        .defer(d3.csv,"population-male.csv")
+        .defer(d3.csv,"population-female.csv")
+        .await(ready)
+
+        function ready (error,malemortality,femalemortality,femalemigration,malemigration,fertility,malepopulation,femalepopulation){
+          //reformat the data
+          malemortality.forEach(function(d,i){
+            for(var column in malemortality[0]){
+              malemortality[i][column]=+malemortality[i][column]
+            }
+          })
+
+          femalemortality.forEach(function(d,i){
+            for(var column in femalemortality[0]){
+              femalemortality[i][column]=+femalemortality[i][column]
+            }
+          })
+
+          malemigration.forEach(function(d){
+            d["2017"]=+d["2017"]
+          })
+          femalemigration.forEach(function(d){
+            d["2017"]=+d["2017"]
+          })
+          fertility.forEach(function(d){
+            d["2017"]=+d["2017"]
+          })
+
+          malepopulation.forEach(function(d){
+            d["mid-2016"]=+d["mid-2016"]
+          })
+
+          femalepopulation.forEach(function(d){
+            d["mid-2016"]=+d["mid-2016"]
+          })
+
+          console.log("male mortality",malemortality)
+          console.log("female mortality",femalemortality)
+          console.log("female migration",femalemigration)
+          console.log("male migration",malemigration)
+          console.log("fertility",fertility)
+          console.log("male population",malepopulation)
+          console.log("female population",femalepopulation)
+
+
+          //array with all the years in it
+          numberofyears=[]
+          for(var column in malemortality[0]){
+            if(column=="AGE") continue;
+            numberofyears.push(+column)
+          }
+          console.log("number of years",numberofyears)
+
+          //array with all the ages for population in it
+          populationAgeRange=[]
+          malemortality.forEach(function(d){
+            populationAgeRange.push(d.AGE)
+          })
+          console.log("population age range",populationAgeRange)
+
+          //array with all the ages for fertility
+          birthAgeRange=[]
+          fertility.forEach(function(d){
+            birthAgeRange.push(d.AGE)
+          })
+          // console.log(birthAgeRange)
+
+          //copy the age range for population but remove -1
+          migrationAgeRange=_.clone(populationAgeRange)
+          migrationAgeRange.shift()
+          console.log("migrationAgeRange",migrationAgeRange)
+
+          //total up migration
+          sumMaleMigration=malemigration.reduce(function(sum,step){return sum+step["2017"]},0)
+          sumFemaleMigration=femalemigration.reduce(function(sum,step){return sum+step["2017"]},0)
+
+          totalMigration=sumMaleMigration+sumFemaleMigration
+
+          //set target migration
+          //targetMigration=492250;
+          targetMigration=246125
+
+          //work out migration scale factors
+          targetMigrationScale=targetMigration/totalMigration
+          migrationScaleFactors=numberofyears.map(function(d,i){
+            return {year:d,msf:1-(i*(1-targetMigrationScale)/(numberofyears.length-1))}
+          })
+
+          // console.log("migration scale factors", migrationScaleFactors)
+          //create the structure for the migration
+          migration=[]
+          numberofyears.forEach(function(d){
+            migration.push({year:d,values:[]})
+          })
+
+          numberofyears.forEach(function(c){
+            var array = migration.filter(function(d){
+              return d.year==c
+            }).map(function(e){
+              return e["values"]
+            })
+
+          migrationAgeRange.forEach(function(d){
+              array[0].push({
+                "age":d,
+                "male":Math.round(
+                  malemigration.filter(function(e){return e.AGE==d}).map(function(f){return f["2017"]})[0]*migrationScaleFactors.filter(function(d){return d.year==c}).map(function(d){return d.msf})[0]
+                ),
+                "female":Math.round(
+                  femalemigration.filter(function(e){return e.AGE==d}).map(function(f){return f["2017"]})[0]*migrationScaleFactors.filter(function(d){return d.year==c}).map(function(d){return d.msf})[0]
+                )
+              })
+            })
+          })
+
+          console.log("migrants",migration)
+
+          //fertility
+          totalFertilityRate=fertility.reduce(function(sum,step){return sum+step["2017"]},0)/1000
+
+          //set target totalFertilityRate
+          // targetFertilityRate=3.51052669276
+          targetFertilityRate=1.7552634638
+
+          targetFertilityScale=targetFertilityRate/totalFertilityRate
+          fertilityScaleFactors=numberofyears.map(function(d,i){
+            return {year:d,fsf:1-(i*(1-targetFertilityScale)/(numberofyears.length-1))}
+          })
+
+          // console.log(fertilityScaleFactors)
+
+
+          //create the data structure for fertility
+          birthrate=[]
+          numberofyears.forEach(function(d){
+            birthrate.push({year:d,values:[]})
+          })
+
+          numberofyears.forEach(function(c){
+            var array = birthrate.filter(function(d){
+              return d.year==c
+            }).map(function(e){
+              return e["values"]
+            })[0]
+            birthAgeRange.forEach(function(d){
+              array.push({"age":d,
+              "fertilityrate":fertility.filter(function(e){return e.AGE==d}).map(function(f){return f["2017"]})[0]*fertilityScaleFactors.filter(function(d){return d.year==c}).map(function(d){return d.fsf})[0]
+              })
+            })
+          })
+
+          console.log("birth rate", birthrate)
+
+          //set up all the arrays to hold the different bits of data
+          deaths=[]
+          numberofyears.forEach(function(d){
+            deaths.push({year:d,values:[]})
+          })
+
+          interimAgeRange=_.clone(migrationAgeRange)
+          interimAgeRange.shift()
+          // console.log("interim age range",interimAgeRange)
+
+          interim=[]
+          numberofyears.forEach(function(d){
+            interim.push({year:d,values:[]})
+          })
+
+          babies=[]
+          numberofyears.forEach(function(d){
+            babies.push({year:d,values:[]})
+          })
+
+          population=[];
+
+          //put the male and female population from the csv into our data format
+          population.push({year:2016,values:[]})
+          var fox = population.filter(function(e){return e.year==2016;}).map(function(e){return e.values})
+          malepopulation.forEach(function(d){
+            fox[0].push({
+              age:+d.Age,
+              male:d["mid-2016"],
+              female:femalepopulation.filter(function(e){return e.Age==d.Age})
+              .map(function(e){return e["mid-2016"]})[0]
+            })
+          })
+
+          numberofyears.forEach(function(d){
+            population.push({year:d,values:[]})
+          })
+
+          //     BIG
+          //     LOOP
+          //     HERE
+          //     !!!!
+          //     !!!!
+          numberofyears.forEach(function(a){
+
+              // console.log(a-1)
+
+              // lets work out how many people died
+              var cat=deaths.filter(function(d){return d.year==a})
+              .map(function(e){
+                return e["values"]
+              })
+
+              //use migration age range as it starts from 0-125, then work out neonatal deaths later
+              migrationAgeRange.forEach(function(d){
+                cat[0].push({
+                  "age":d,
+                   "male":
+                   Math.round(
+                     (
+                       population.filter(function(e){return e.year==a-1})
+                       .map(function(e){return e.values})[0]
+                       .filter(function(e){return e.age==d})
+                       .map(function(e){return e.male})[0]
+                       +migration.filter(function(e){return e.year==a})
+                       .map(function(e){return e.values})[0]
+                       .filter(function(e){return e.age==d})
+                       .map(function(e){return e.male})[0]
+                     )
+                     *malemortality.filter(function(e){
+                       return e.AGE==d
+                     }).map(function(e){return e[a]})[0]
+                     /100000
+                ),
+                  "female":
+                  Math.round(
+                    (
+                      population.filter(function(e){return e.year==a-1})
+                      .map(function(e){return e.values})[0]
+                      .filter(function(e){return e.age==d})
+                      .map(function(e){return e.female})[0]
+                      +migration.filter(function(e){return e.year==a})
+                      .map(function(e){return e.values})[0]
+                      .filter(function(e){return e.age==d})
+                      .map(function(e){return e.female})[0]
+                    )
+                    *femalemortality.filter(function(e){
+                      return e.AGE==d
+                    }).map(function(e){return e[a]})[0]
+                    /100000
+                  )
+                })
+              })
+
+              // work out interim population
+              var bee=interim.filter(function(d){
+                return d.year==a
+              }).map(function(e){
+                return e["values"]
+              })
+
+              interimAgeRange.forEach(function(d){
+                  bee[0].push({"age":d,
+                  male:
+                  //males population
+                  population.filter(function(e){return e.year==a-1})
+                  .map(function(e){return e.values})[0]
+                  .filter(function(e){return e.age==d-1})
+                  .map(function(e){return e.male})[0]
+                  //minus deaths
+                  -
+                  deaths.filter(function(e){return e.year==a})
+                  .map(function(e){return e["values"].filter(function(f){return f.age==d-1})
+                  .map(function(f){return f.male})[0]})[0]
+                  //add in migration
+                  +
+                  Math.round(
+                    (
+                      migration.filter(function(e){return e.year==a})
+                      .map(function(e){return e.values})[0]
+                      .filter(function(e){return e.age==d})
+                      .map(function(e){return e.male})[0]
+                      +
+                      migration.filter(function(e){return e.year==a})
+                      .map(function(e){return e.values})[0]
+                      .filter(function(e){return e.age==d-1})
+                      .map(function(e){return e.male})[0]
+                    )/2
+                  )  ,
+                  female:
+                  population.filter(function(e){return e.year==a-1})
+                  .map(function(e){return e.values})[0]
+                  .filter(function(e){return e.age==d-1})
+                  .map(function(e){return e.female})[0]
+                  //minus deaths
+                  -
+                  deaths.filter(function(e){return e.year==a})
+                  .map(function(e){return e["values"].filter(function(f){return f.age==d-1})
+                  .map(function(f){return f.female})[0]})[0]
+                  //add in migration
+                  +
+                  Math.round(
+                    (
+                      migration.filter(function(e){return e.year==a})
+                      .map(function(e){return e.values})[0]
+                      .filter(function(e){return e.age==d})
+                      .map(function(e){return e.female})[0]
+                      +
+                      migration.filter(function(e){return e.year==a})
+                      .map(function(e){return e.values})[0]
+                      .filter(function(e){return e.age==d-1})
+                      .map(function(e){return e.female})[0]
+                    )/2
+                  )
+                  })
+              })
+
+              // console.log("interim",a,interim)
+
+              // work out how many babies were born
+              var dogs = babies.filter(function(d){
+                return d.year==a
+              }).map(function(e){
+                return e["values"]
+              })
+
+              birthAgeRange.forEach(function(d){
+                dogs[0].push({
+                  "age":d,
+                  "births":
+                  Math.round(
+                    (
+                      (
+                        population.filter(function(e){return e.year==a-1})
+                        .map(function(e){return e.values})[0]
+                        .filter(function(e){return e.age==d})
+                        .map(function(e){return e.female})[0]
+                        +
+                        interim.filter(function(e){return e.year==a})
+                        .map(function(e){return e.values})[0]
+                        .filter(function(e){return e.age==d})
+                        .map(function(e){return e.female})[0]
+                      )/2
+                      *
+                      birthrate
+                      .filter(function(e){return e.year==a})
+                      .map(function(e){return e.values})[0]
+                      .filter(function(e){return e.age==d})
+                      .map(function(e){return e.fertilityrate})[0]
+                    )/1000
+                  )
+                })
+              })
+
+              //work out the total births
+              var addTotalBirths=babies.filter(function(e){return e.year==a})
+
+              addTotalBirths[0]["total"]=
+                babies.filter(function(e){return e.year==a})
+                .map(function(e){return e.values})[0]
+                .reduce(function(sum,step){return sum+step.births},0)
+
+              // and work how many were male and female
+              addTotalBirths[0]["totalMale"]=Math.round(addTotalBirths[0]["total"]*0.51219512195122)
+
+              addTotalBirths[0]["totalFemale"]=addTotalBirths[0]["total"]-addTotalBirths[0]["totalMale"]
+
+              // console.log("births",a,babies)
+
+              //work out premature deaths
+              deaths.filter(function(e){return e.year==a})
+              .map(function(e){return e.values})[0]
+              .push(
+                {
+                  age:"-1",
+                  male:
+                  Math.round(
+                    babies.filter(function(e){return e.year==a})
+                    .map(function(e){return e.totalMale})[0]
+                    *
+                    malemortality.filter(function(e){return e.AGE=="-1"})
+                    .map(function(e){return e[a]})[0]
+                    /100000
+                  )
+                  ,
+                  female:
+                  Math.round(
+                    babies.filter(function(e){return e.year==a})
+                    .map(function(e){return e.totalFemale})[0]
+                    *
+                    femalemortality.filter(function(e){return e.AGE=="-1"})
+                    .map(function(e){return e[a]})[0]
+                    /100000
+                  )
+                }
+              )
+
+              // console.log("deaths",a, deaths)
+
+              // add it all together as one big thing
+              var eagle=population.filter(function(e){return e.year==a})
+              .map(function(e){return e.values})
+
+              //do age 0 first
+              eagle[0].push(
+                {
+                  age:0,
+                  male:babies.filter(function(e){return e.year==a})
+                  .map(function(e){return e.totalMale})[0]
+                  -
+                  deaths.filter(function(e){return e.year==a})
+                  .map(function(e){return e.values})[0]
+                  .filter(function(e){return e.age=="-1"})
+                  .map(function(e){return e.male})[0]
+                  +
+                  migration.filter(function(e){return e.year==a})
+                  .map(function(e){return e.values})[0]
+                  .filter(function(e){return e.age==0})
+                  .map(function(e){return e.male})[0],
+
+                  female:babies.filter(function(e){return e.year==a})
+                  .map(function(e){return e.totalFemale})[0]
+                  -
+                  deaths.filter(function(e){return e.year==a})
+                  .map(function(e){return e.values})[0]
+                  .filter(function(e){return e.age=="-1"})
+                  .map(function(e){return e.female})[0]
+                  +
+                  migration.filter(function(e){return e.year==a})
+                  .map(function(e){return e.values})[0]
+                  .filter(function(e){return e.age==0})
+                  .map(function(e){return e.female})[0]
+                }
+              )
+
+              //then for the rest of the ages
+              interimAgeRange.forEach(function(d){
+                eagle[0].push(
+                  { age:d,
+                    male:interim.filter(function(e){return e.year==a})
+                    .map(function(e){return e.values})[0]
+                    .filter(function(e){return e.age==d})
+                    .map(function(e){return e.male})[0],
+                    female:interim.filter(function(e){return e.year==a})
+                    .map(function(e){return e.values})[0]
+                    .filter(function(e){return e.age==d})
+                    .map(function(e){return e.female})[0]
+                  }
+                )
+              })
+
+        })//end of massive numberofyears loop
+
+
+        console.log("population",population)
+
+
+        //work out pension age for each year
+        pensionAge=[];
+
+        pensionAge.push({year:2016,men:65,women:63})
+        numberofyears.forEach(function(d){
+          var malePensionAge,femalePensionAge;
+
+          if(d<=2019){malePensionAge=65}else if(d>2019&&d<2028){malePensionAge=66}else{malePensionAge=67}
+
+          if(d==2016){femalePensionAge=63}else if(d==2017){femalePensionAge=64}else if(d==2018||d==2019){femalePensionAge=65}else if(d>2019&&d<2028){femalePensionAge=66}else{femalePensionAge=67}
+
+          pensionAge.push({
+            year:d,
+            men:malePensionAge,
+            women:femalePensionAge
+          })
+        })
+
+        console.log("pension age",pensionAge)
+
+        //work out how many pensioners and workers there were
+        pensioners=[]
+        numberofyears.forEach(function(d){
+          pensioners.push({year:d,values:[]})
+        })
+
+        numberofyears.forEach(function(d){
+          var fish=pensioners.filter(function(e){return e.year==d})
+          .map(function(e){return e.values})
+
+          var malepensionageforyear=pensionAge.filter(function(e){
+            return e.year==d
+          }).map(function(e){return e.men})[0]
+
+          var femalepensionageforyear=pensionAge.filter(function(e){
+            return e.year==d
+          }).map(function(e){return e.women})[0]
+
+          var populationforthisyear=population.filter(function(e){
+            return e.year==d
+          })[0].values
+
+          fish[0].push({
+                malepensioners:populationforthisyear
+                .filter(function(e){
+                   return e.age>malepensionageforyear
+                })
+                .reduce(function(sum,step){return sum=sum+step.male},0)
+                ,
+                femalepensioners:populationforthisyear
+                .filter(function(e){
+                   return e.age>femalepensionageforyear
+                })
+                .reduce(function(sum,step){return sum=sum+step.female},0)
+
+                ,
+                maleworkers:populationforthisyear
+                .filter(function(e){
+                  return e.age>=16&&e.age<=malepensionageforyear
+                })
+                .reduce(function(sum,step){return sum=sum+step.male},0)
+                ,
+                femaleworkers:populationforthisyear
+                .filter(function(e){
+                  return e.age>=16&&e.age<=femalepensionageforyear
+                })
+                .reduce(function(sum,step){return sum=sum+step.female},0)
+            })
+        })
+
+        console.log("pensioners and workers",pensioners)
+
+
+        OldAgeDependencyRatio = []
+        numberofyears.forEach(function(d){
+          var thisyear=pensioners.filter(function(e){
+            return e.year==d
+          })[0].values[0]
+
+          OldAgeDependencyRatio.push({
+            year:d3.timeParse("%Y")(d),
+            oadr:((thisyear.malepensioners+thisyear.femalepensioners)/(thisyear.maleworkers+thisyear.femaleworkers))*1000
+          })
+        })
+
+        console.log("oadr",OldAgeDependencyRatio)
+
+        var margin = {	top: 	30,
+             right: 	20,
+             bottom: 50,
+             left: 	50
+           };
+        var aspectRatio=[16,9]
+
+        var chart_width = parseInt(graphic.style("width")) - margin.left - margin.right;
+        var height = Math.ceil((chart_width * aspectRatio[1]) / aspectRatio[0]) - margin.top - margin.bottom;
+
+        var x = d3.scaleTime()
+               .range([0, chart_width]);
+
+        var y = d3.scaleLinear()
+               .range([height, 0]);
+        //
+        x.domain(d3.extent(numberofyears,function(d){return d3.timeParse("%Y")(d)}));
+        //
+        var xAxis = d3.axisBottom(x)
+
+        var yAxis = d3.axisLeft(y);
+        //
+        //gridlines
+        var y_axis_grid = function() { return yAxis; }
+        //
+        //
+        var line = d3.line()
+               .curve(d3.curveLinear)
+               .x(function(d) { return x(d.year); })
+               .y(function(d) { return y(d.oadr); });
+
+        // y.domain(d3.extent(OldAgeDependencyRatio,function(d){return d.oadr}));
+        y.domain([0,500])
+        //
+        //    //create svg for chart
+        var svg = d3.select('#graphic').append('svg')
+                    .attr("width", chart_width + margin.left + margin.right)
+                    .attr("height", height + margin.top + margin.bottom )
+                    .append("g")
+                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+
+             svg.append("rect")
+               .style("fill", "#fff")
+               .attr("width", chart_width)
+               .attr("height", height);
+
+               svg.append('g')
+                   .attr('class', 'x axis')
+                   .attr('transform','translate(0 '+height+')')
+                   .call(xAxis);
+
+              svg.append('g')
+                    .attr('class', 'y axis')
+                    .call(yAxis);
+
+               svg.append('g')
+                   .attr('class', 'y grid')
+                   .call(y_axis_grid()
+                       .tickSize(-chart_width, 0, 0)
+                       .tickFormat('')
+                   );
+
+             //y axis label
+                svg.append("text")
+                 //.attr('class', 'unit')
+                 .attr('transform','translate(' + -margin.left + ',-10)') // " + eval(-margin.top + (lineNo+1)*20) + "
+                 .attr("font-size","16px")
+                 .attr("fill","#321213")
+                 .text("OADR");
+
+        //    //create lines
+             svg.append('g')
+                 .append('path')
+                 .attr('class', 'line')
+                 .style("stroke", "steelblue")
+                 .style("fill", 'none')
+                 .style("stroke-width", 3)
+                 .style("stroke-linecap", 'round')
+                 .style("stroke-linejoin", 'round')
+                 .attr('d', function(d) {
+                     return line(OldAgeDependencyRatio);
+                 });
+
+         //use pym to calculate chart dimensions
+           if (pymChild) {
+               pymChild.sendHeight();
+           }
+
+
+        }//end ready
+
+	}  // ends draw graphic
+
+
+
+	//check whether browser can cope with svg
+		if (Modernizr.svg) {
+		   //load config
+			d3.json("config.json", function(error, config) {
+			dvc=config
+
+					//use pym to create iframed chart dependent on specified variables
+					pymChild = new pym.Child({ renderCallback: drawGraphic});
+
+			})
+
+		} else {
+			 //use pym to create iframe containing fallback image (which is set as default)
+			 pymChild = new pym.Child();
+			if (pymChild) {
+		        pymChild.sendHeight();
+		    }
+		}
+    </script>
+</body>
+</html>
