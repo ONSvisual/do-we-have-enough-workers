@@ -73,6 +73,10 @@
         stroke:orange;
         stroke-width:3px;
       }
+      .bold{
+        font-weight: 700;
+        font-size:20px;
+      }
     </style>
 </head>
 
@@ -84,18 +88,19 @@
     <p>Adjust the values below to see how the ratio can be projected into the future.</p>
 
     <div class="row">
-        <div class="col-sm-6"><p>Annual net migration by 2042</p></div>
-        <div class="col-sm-6"><input id="value-simple" type="number" value="283000" step="100" oninput="sliderchange()" min="0" max="600000"></div>
+        <div class="col-sm-6"><p class='bold'>Annual net migration by 2042</p></div>
+        <div class="col-sm-6"><input class='bold' style="text-align: right;" id="value-simple" type="number" value="283000" step="100" oninput="sliderchange()" min="0" max="600000"></div>
         <div class="col-sm-12"><div id="slider-simple"></div></div>
 
-        <div class="col-sm-6"><p>Children per women by 2042</p></div>
-        <div class="col-sm-6"><input id="value-women" type="number" value="1.75" step="0.01" oninput="sliderchange2()" min="0" step="0.01" max="5"></div>
+        <div class="col-sm-6"><p class='bold' >Children per women by 2042</p></div>
+        <div class="col-sm-6"><input  class='bold' style="text-align: right;" id="value-women" type="number" value="1.75" step="0.01" oninput="sliderchange2()" min="0" step="0.01" max="5"></div>
         <div class="col-sm-12"><div id="slider-women"></div></div>
 
-        <div class="col-sm-1"><p>At</p></div>
-        <div class="col-sm-2"><input class="show" id="year" type="number" value="2028" max="2042" min="2017"></div>
-        <div class="col-sm-5"><p>the state pension age will be</p></div>
-        <div class="col-sm-2"><input id="value-pension" type="number" value="67" oninput="sliderchange3()" min="60" step="1" max="80"></div>
+        <div class="col-sm-1"><p class='bold' >At</p></div>
+        <div class="col-sm-2"><input class="bold" style="text-align: right;" id="year" type="number" value="2028" max="2042" min="2017"></div>
+        <div class="col-sm-2"></div>
+        <div class="col-sm-5"><p class='bold' >the state pension age will be</p></div>
+        <div class="col-sm-2"><input  class='bold' style="text-align: right;" id="value-pension" type="number" value="67" oninput="sliderchange3()" min="60" step="1" max="80"></div>
         <div class="col-sm-12"><div id="slider-pension"></div></div>
 
         <!-- <div class="col-sm-12">
@@ -145,6 +150,7 @@
       .ticks(5)
       .step(1000)
       .default(283000)
+      .startingText("2017: ")
       .handle(
         d3.symbol()
           .type(d3.symbolCircle)
@@ -163,9 +169,10 @@
       .attr('width', parseInt(graphic.style("width")))
       .attr('height', 100)
       .append('g')
-      .attr('transform', 'translate(30,30)');
+      .attr('transform', 'translate(30,50)');
 
     gSimple.call(sliderSimple);
+
 
     document.getElementById("value-simple").value=d3.format('.0f')(sliderSimple.value());
 
@@ -179,6 +186,7 @@
       .ticks(5)
       .step(0.01)
       .default(1.75)
+      .startingText("2017: ")
       .handle(
         d3.symbol()
           .type(d3.symbolCircle)
@@ -196,7 +204,7 @@
       .attr('width', parseInt(graphic.style("width")))
       .attr('height', 100)
       .append('g')
-      .attr('transform', 'translate(30,30)');
+      .attr('transform', 'translate(30,50)');
 
     gSimple2.call(sliderWomen);
 
@@ -212,6 +220,7 @@
       .ticks(5)
       .step(1)
       .default(67)
+      .startingText("2017: ")
       .handle(
         d3.symbol()
           .type(d3.symbolCircle)
@@ -229,7 +238,7 @@
       .attr('width', parseInt(graphic.style("width")))
       .attr('height', 100)
       .append('g')
-      .attr('transform', 'translate(30,30)');
+      .attr('transform', 'translate(30,50)');
 
     gSimple3.call(sliderPension);
 
@@ -396,14 +405,14 @@
           if(column=="AGE") continue;
           numberofyears.push(+column)
         }
-        console.log("number of years",numberofyears)
+        // console.log("number of years",numberofyears)
 
         //array with all the ages for population in it
         populationAgeRange=[]
         malemortality.forEach(function(d){
           populationAgeRange.push(d.AGE)
         })
-        console.log("population age range",populationAgeRange)
+        // console.log("population age range",populationAgeRange)
 
         //array with all the ages for fertility
         birthAgeRange=[]
@@ -415,7 +424,7 @@
         //copy the age range for population but remove -1
         migrationAgeRange=_.clone(populationAgeRange)
         migrationAgeRange.shift()
-        console.log("migrationAgeRange",migrationAgeRange)
+        // console.log("migrationAgeRange",migrationAgeRange)
 
         //total up migration
         sumMaleMigration=malemigration.reduce(function(sum,step){return sum+step["2017"]},0)
@@ -430,7 +439,7 @@
       .then(function(){
 
         d3.selectAll('input').on("change",function(){
-          console.log("input changing")
+          // console.log("input changing")
 
           // Promise.all([d3.csv("principal-male-migration.csv"),d3.csv("principal-female-migration.csv")])
           // .then(function(data){
@@ -455,9 +464,9 @@
 
         slidervalues=getSliderValues();
 
-        console.log("run the model")
+        // console.log("run the model")
         var OADR=runthemodel(malemortality,femalemortality,malemigration,femalemigration,fertility,malepopulation,femalepopulation,slidervalues[0],slidervalues[1],2028,67)
-        console.log("draw the line")
+        // console.log("draw the line")
 
         var margin = {	top: 	30,
              right: 	20,
@@ -619,7 +628,7 @@
           })
         })//end numberofyears.forEach
 
-        console.log("birth rate", birthrate)
+        // console.log("birth rate", birthrate)
 
         //set up all the arrays to hold the different bits of data
         deaths=[]

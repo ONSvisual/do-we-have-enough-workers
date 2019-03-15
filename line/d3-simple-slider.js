@@ -38,6 +38,7 @@
     var ticks = null;
     var displayFormat = null;
     var fill = null;
+    var startingTextValue = null;
 
     var listeners = d3Dispatch.dispatch('onchange', 'start', 'end', 'drag');
 
@@ -159,6 +160,26 @@
       //   .attr('stroke', '#bbb')
       //   .attr('stroke-width', 12)
       //   .attr('stroke-linecap', 'round');
+
+      sliderEnter
+        .append('line')
+        .attr('class','starting-value')
+        .attr('x1',scale(defaultValue[0]))
+        .attr('x2',scale(defaultValue[0]))
+        .attr('y1',0)
+        .attr('y2',-20)
+        .attr('stroke', '#58595B')
+        .attr('stroke-width', 3)
+        .attr('stroke-linecap', 'round');
+
+      sliderEnter
+        .append('text')
+        .attr('class','starting-text')
+        .style('fill', '#58595B')
+        .attr('x',scale(defaultValue))
+        .attr('y',-30)
+        .attr('text-anchor','middle')
+        .text(startingTextValue+tickFormat(defaultValue))
 
       sliderEnter
         .append('line')
@@ -593,6 +614,12 @@
       value = toArray;
       return slider;
     };
+
+    slider.startingText = function(_) {
+      if (!arguments.length) return startingText;
+      startingTextValue = _;
+      return slider;
+    }
 
     slider.step = function(_) {
       if (!arguments.length) return step;
