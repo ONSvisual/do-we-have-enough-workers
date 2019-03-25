@@ -88,6 +88,10 @@
     <p>Adjust the values below to see how the ratio can be projected into the future.</p>
 
     <div class="row">
+        <div class="col-sm-6"><p class='bold'>Mortality assumptions</p></div>
+        <div class="col-sm-6"><input class='bold' style="text-align: right;" id="value-mortality" type="text" value="principal" step="1" oninput="sliderchange4()" readonly></div>
+        <div class="col-sm-12"><div id="slider-mortality"></div></div>
+
         <div class="col-sm-6"><p class='bold'>Annual net migration by 2042</p></div>
         <div class="col-sm-6"><input class='bold' style="text-align: right;" id="value-simple" type="number" value="283000" step="100" oninput="sliderchange()" min="0" max="600000"></div>
         <div class="col-sm-12"><div id="slider-simple"></div></div>
@@ -244,6 +248,45 @@
 
     document.getElementById("value-pension").value=d3.format('.0f')(sliderPension.value());
 
+    //mortality sliders
+
+    ticks=["low","medium low","principal","medium high","high"]
+
+    var sliderMortality = d3
+        .sliderBottom()
+        .min(0)
+        .max(4)
+        .width(parseInt(graphic.style("width"))-80)
+        .tickFormat(function(d,i){return ticks[i]})
+        .ticks(5)
+        .step(1)
+        .default(2)
+        .startingText("")
+        .handle(
+          d3.symbol()
+            .type(d3.symbolCircle)
+            .size(500)
+        )
+        .fill("#206595")
+        .on('onchange', _.throttle(function(val){
+          document.getElementById("value-mortality").value=ticks[val]
+          d3.select('#slider-mortality g.parameter-value text').text(ticks[val])
+          d3.select("#value-mortality").on('change')()
+        }),100);
+
+    var gSimple4 = d3
+      .select('div#slider-mortality')
+      .append('svg')
+      .attr('width', parseInt(graphic.style("width")))
+      .attr('height', 100)
+      .append('g')
+      .attr('transform', 'translate(30,50)');
+
+    gSimple4.call(sliderMortality);
+
+    d3.select('#slider-mortality g.parameter-value text').text(ticks[sliderMortality.value()])
+
+
     //select all handles and give them separate ids
     d3.selectAll(".handle").attr("id",function(d,i){return 'handle'+i})
 
@@ -259,6 +302,9 @@
       sliderPension.silentValue(document.getElementById('value-pension').value)
     }
 
+    function sliderchange4(){
+      sliderMortality.silentValue(document.getElementById('value-mortality').value)
+    }
     // Keyboard accessibility
 
     // d3.select('body').on('keydown',function(){
@@ -346,6 +392,8 @@
       sliderPension.width(parseInt(graphic.style("width"))-80)
       gSimple3.call(sliderPension)
 
+      sliderMortality.width(parseInt(graphic.style("width"))-80)
+      gSimple4.call(sliderMortality)
 
       //load all the necessary csv files
       //using Promise.all fetches all the csvs at the same time then only return the promise once all the files have been retrieved.
@@ -431,15 +479,13 @@
         sumFemaleMigration=femalemigration.reduce(function(sum,step){return sum+step["2017"]},0)
 
         totalMigration=sumMaleMigration+sumFemaleMigration
-
-
-
-
       })
       .then(function(){
 
         d3.selectAll('input').on("change",function(){
           // console.log("input changing")
+
+
 
           // Promise.all([d3.csv("principal-male-migration.csv"),d3.csv("principal-female-migration.csv")])
           // .then(function(data){
@@ -451,15 +497,40 @@
           // })
 
           slidervalues=getSliderValues()
-          var newOADR=runthemodel(malemortality,femalemortality,malemigration,femalemigration,fertility,malepopulation,femalepopulation,slidervalues[0],slidervalues[1],slidervalues[2],slidervalues[3])
+          //if mortality data is different
+          if(slidervalues[4]!=mortalityprofile){
+            //load new mortality profiles
+            Promise.all([
+              d3.csv(slidervalues[4].replace(/\s/g,'')+"-male-mortality.csv"),
+              d3.csv(slidervalues[4].replace(/\s/g,'')+"-female-mortality.csv")
+            ]).then(function(results){
+              malemortality=results[0]
+              femalemortality=results[1]
+            }).then(function(){
+              var newOADR=runthemodel(malemortality,femalemortality,malemigration,femalemigration,fertility,malepopulation,femalepopulation,slidervalues[0],slidervalues[1],slidervalues[2],slidervalues[3])
 
-          svg.select('.line')
-              .attr('stroke-dasharray','5 5')
-              .style("stroke", "grey")
+              svg.select('.line')
+                  .attr('stroke-dasharray','5 5')
+                  .style("stroke", "grey")
 
-          svg.select('.newline')
-              .attr('d', line(newOADR))
+              svg.select('.newline')
+                  .attr('d', line(newOADR))
 
+              mortalityprofile=slidervalues[4]
+            })
+          }else{
+            //just use the existing mortality profiles
+            var newOADR=runthemodel(malemortality,femalemortality,malemigration,femalemigration,fertility,malepopulation,femalepopulation,slidervalues[0],slidervalues[1],slidervalues[2],slidervalues[3])
+
+            svg.select('.line')
+                .attr('stroke-dasharray','5 5')
+                .style("stroke", "grey")
+
+            svg.select('.newline')
+                .attr('d', line(newOADR))
+            //set the mortalityprofile
+            mortalityprofile=slidervalues[4]
+          }
         })//end of on change
 
         slidervalues=getSliderValues();
@@ -1012,7 +1083,8 @@
         var totalfertility=document.getElementById('value-women').value
         var year=document.getElementById('year').value
         var pensionage=document.getElementById('value-pension').value
-        return [netmigration,totalfertility,year,pensionage]
+        var mortality=document.getElementById('value-mortality').value
+        return [netmigration,totalfertility,year,pensionage,mortality]
       }
 
       //use pym to calculate chart dimensions

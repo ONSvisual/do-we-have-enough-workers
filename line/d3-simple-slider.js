@@ -160,7 +160,7 @@
       //   .attr('stroke', '#bbb')
       //   .attr('stroke-width', 12)
       //   .attr('stroke-linecap', 'round');
-
+      if(startingTextValue!=""){
       sliderEnter
         .append('line')
         .attr('class','starting-value')
@@ -180,6 +180,7 @@
         .attr('y',-30)
         .attr('text-anchor','middle')
         .text(startingTextValue+tickFormat(defaultValue))
+      }
 
       sliderEnter
         .append('line')
