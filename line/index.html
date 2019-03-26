@@ -404,17 +404,60 @@
         d3.csv("principal-female-migration.csv"),
         d3.csv("principal-fertility-rate.csv"),
         d3.csv("population-male.csv"),
-        d3.csv("population-female.csv")
+        d3.csv("population-female.csv"),
+        d3.csv("low-male-mortality.csv"),
+        d3.csv("low-female-mortality.csv"),
+        d3.csv("mediumlow-male-mortality.csv"),
+        d3.csv("mediumlow-female-mortality.csv"),
+        d3.csv("mediumhigh-male-mortality.csv"),
+        d3.csv("mediumhigh-female-mortality.csv"),
+        d3.csv("high-male-mortality.csv"),
+        d3.csv("high-female-mortality.csv")
       ])
       .then(function(data){
-        malemortality=data[0],
-        femalemortality=data[1]
+        malemortalitydata={
+          principal:data[0],
+          low:data[7],
+          mediumlow:data[9],
+          mediumhigh:data[11],
+          high:data[13]
+        }
+
+        femalemortalitydata={
+          principal:data[1],
+          low:data[8],
+          mediumlow:data[10],
+          mediumhigh:data[12],
+          high:data[14]
+        }
+
+        // principalmalemortality=data[0],
+        // principalfemalemortality=data[1]
         malemigration=data[2]
         femalemigration=data[3]
         fertility=data[4],
         malepopulation=data[5],
-        femalepopulation=data[6]
+        femalepopulation=data[6],
+
+        // lowmalemortality=data[7],
+        // lowfemalemortality=data[8],
+        //
+        // mediumlowmalemortality=data[9],
+        // mediumlowfemalemortality=data[10],
+        //
+        // mediumhighmalemortality=data[11],
+        // mediumhighfemalemortality=data[12],
+        //
+        // highmalemortality=data[13],
+        // highfemalemortality=data[14]
+
         mortalityprofile="principal"
+
+
+        //for the first run use principal
+
+        malemortality=malemortalitydata[mortalityprofile]
+        femalemortality=femalemortalitydata[mortalityprofile]
 
         //do some reformatting of the data
         malemortality.forEach(function(d,i){
@@ -500,13 +543,22 @@
           //if mortality data is different
           if(slidervalues[4]!=mortalityprofile){
             //load new mortality profiles
-            Promise.all([
-              d3.csv(slidervalues[4].replace(/\s/g,'')+"-male-mortality.csv"),
-              d3.csv(slidervalues[4].replace(/\s/g,'')+"-female-mortality.csv")
-            ]).then(function(results){
-              malemortality=results[0]
-              femalemortality=results[1]
-            }).then(function(){
+              malemortality=malemortalitydata[slidervalues[4].replace(/\s/g,'')]
+              femalemortality=femalemortalitydata[slidervalues[4].replace(/\s/g,'')]
+
+              //do some reformatting of the data
+              malemortality.forEach(function(d,i){
+                for(var column in malemortality[0]){
+                  malemortality[i][column]=+malemortality[i][column]
+                }
+              })
+
+              femalemortality.forEach(function(d,i){
+                for(var column in femalemortality[0]){
+                  femalemortality[i][column]=+femalemortality[i][column]
+                }
+              })
+
               var newOADR=runthemodel(malemortality,femalemortality,malemigration,femalemigration,fertility,malepopulation,femalepopulation,slidervalues[0],slidervalues[1],slidervalues[2],slidervalues[3])
 
               svg.select('.line')
@@ -517,7 +569,7 @@
                   .attr('d', line(newOADR))
 
               mortalityprofile=slidervalues[4]
-            })
+
           }else{
             //just use the existing mortality profiles
             var newOADR=runthemodel(malemortality,femalemortality,malemigration,femalemigration,fertility,malepopulation,femalepopulation,slidervalues[0],slidervalues[1],slidervalues[2],slidervalues[3])
