@@ -268,23 +268,30 @@
           )
           .text(tickFormat(value[0]));
 
+
           var text=handleEnter.select('text')
-          var bbox = text.node().getBBox();
-          handleEnter.select('text').remove()
-          var padding = 5;
-          var rect = handleEnter.append("rect")
-            .attr("x", bbox.x - padding)
-            .attr("y", bbox.y - padding)
-            .attr("ry",5)
-            .attr("width", bbox.width + (padding*2))
-            .attr("height", bbox.height + (padding*2))
-            .style("fill", "#206095");
-          handleEnter
-            .append('text')
-            .text(tickFormat(value[0]))
-            .style('fill','white')
-            .attr('y',text.attr('y'))
-            .attr('dy',text.attr('dy'))
+
+          if(text._groups.length>0){
+            var bbox = text.node().getBBox();
+            handleEnter.select('text').remove()
+            var padding = 5;
+            var rect = handleEnter.append("rect")
+              .attr("x", bbox.x - padding)
+              .attr("y", bbox.y - padding)
+              .attr("ry",5)
+              .attr("width", bbox.width + (padding*2))
+              .attr("height", bbox.height + (padding*2))
+              .style("fill", "#206095");
+            handleEnter
+              .append('text')
+              .text(tickFormat(value[0]))
+              .attr('font-weight',700)
+              .style('fill','white')
+              .attr('y',text.attr('y'))
+              .attr('dy',text.attr('dy'))
+          }
+
+
       }
 
       context
