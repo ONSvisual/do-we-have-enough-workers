@@ -104,8 +104,8 @@
         scale = scale
           .domain(domain)
           .range([
-            0,
             orientation === top || orientation === bottom ? width : height,
+            0
           ])
           .clamp(true);
       }
@@ -185,7 +185,7 @@
       sliderEnter
         .append('line')
         .attr('class', 'track-inset')
-        .attr(x + '1', scale.range()[0] - SLIDER_END_PADDING)
+        .attr(x + '1', scale.range()[1] - SLIDER_END_PADDING)
         .attr('stroke', '#eee')
         .attr('stroke-width', 10)
         .attr('stroke-linecap', 'round');
@@ -197,7 +197,7 @@
           .attr(
             x + '1',
             value.length === 1
-              ? scale.range()[0] - SLIDER_END_PADDING
+              ? scale.range()[0] + SLIDER_END_PADDING
               : scale(value[0])
           )
           .attr('stroke', fill)
@@ -246,7 +246,7 @@
 
       handleEnter
         .append('path')
-        .attr('transform', 'translate(0 24)')
+        .attr('transform', 'translate(21 1) rotate(-90)')
         .attr('d', d3.symbol()
           .type(d3.symbolTriangle)
           .size(150))
@@ -288,6 +288,7 @@
               .attr('font-weight',700)
               .style('fill','white')
               .attr('y',text.attr('y'))
+              .attr('x',text.attr('x'))
               .attr('dy',text.attr('dy'))
           }
 
@@ -511,7 +512,7 @@
             .attr(
               x + '1',
               value.length === 1
-                ? scale.range()[0] - SLIDER_END_PADDING
+                ? scale.range()[1] + SLIDER_END_PADDING
                 : scale(newValue[0])
             )
             .attr(
@@ -532,7 +533,7 @@
             .attr(
               x + '1',
               value.length === 1
-                ? scale.range()[0] - SLIDER_END_PADDING
+                ? scale.range()[1] + SLIDER_END_PADDING
                 : scale(newValue[0])
             )
             .attr(
