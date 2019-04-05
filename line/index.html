@@ -88,28 +88,21 @@
     <p>Adjust the values below to see how the ratio can be projected into the future.</p>
 
     <div class="row">
-        <div class="col-sm-6"><p class='bold'>Annual net migration by 2042</p></div>
-        <div class="col-sm-6"><input class='bold' style="text-align: right;" id="value-simple" type="number" value="283000" step="100" oninput="sliderchange()" min="0" max="600000"></div>
-        <div class="col-sm-12"><div id="slider-simple"></div></div>
+        <div class="col-sm-4">
+          <div class="col-sm-12"><p class='bold'>Annual net migration by 2042</p></div>
+          <div class="col-sm-12"><div id="slider-simple"></div>
+        </div>
+        <div class="col-sm-4">
+          <div class="col-sm-12"><p class='bold' >Children per women by 2042</p></div>
+          <div class="col-sm-12"><div id="slider-women"></div></div>
+        </div>
+        <div class="col-sm-4">
+          <div class="col-sm-4"><p class='bold' >At</p></div>
+          <div class="col-sm-4"><input class="bold" style="text-align: right;" id="year" type="number" value="2028" max="2042" min="2017"></div>
+          <div class="col-sm-4"><p class='bold' >the state pension age will be</p></div>
+          <div class="col-sm-12"><div id="slider-pension"></div></div>
+        </div>
 
-        <div class="col-sm-6"><p class='bold' >Children per women by 2042</p></div>
-        <div class="col-sm-6"><input  class='bold' style="text-align: right;" id="value-women" type="number" value="1.75" step="0.01" oninput="sliderchange2()" min="0" step="0.01" max="5"></div>
-        <div class="col-sm-12"><div id="slider-women"></div></div>
-
-        <div class="col-sm-1"><p class='bold' >At</p></div>
-        <div class="col-sm-2"><input class="bold" style="text-align: right;" id="year" type="number" value="2028" max="2042" min="2017"></div>
-        <div class="col-sm-2"></div>
-        <div class="col-sm-5"><p class='bold' >the state pension age will be</p></div>
-        <div class="col-sm-2"><input  class='bold' style="text-align: right;" id="value-pension" type="number" value="67" oninput="sliderchange3()" min="60" step="1" max="80"></div>
-        <div class="col-sm-12"><div id="slider-pension"></div></div>
-
-        <!-- <div class="col-sm-12">
-          <select id="mortality" name="mortality">
-            <option value="principal">Principal</option>
-            <option value="high">High</option>
-            <option value="low">Low</option>
-          </select>
-        </div> -->
     </div>
 	  <div id="graphic">
     	<!-- <img src="fallback.png" alt="[Chart]" /> -->
@@ -142,15 +135,15 @@
     //set up the sliders
     // Simple
     var sliderSimple = d3
-      .sliderBottom()
-      .min(0)
-      .max(600000)
-      .width(parseInt(graphic.style("width"))-80)
+      .sliderRight()
+      .min(600000)
+      .max(0)
+      .width(parseInt(graphic.style("width"))/3)
       .tickFormat(d3.format(',.0f'))
       .ticks(5)
       .step(1000)
       .default(283000)
-      .startingText("2017: ")
+      .startingText("")
       .handle(
         d3.symbol()
           .type(d3.symbolCircle)
@@ -158,7 +151,6 @@
       )
       .fill("#206595")
       .on('onchange', _.throttle(function(val){
-        document.getElementById("value-simple").value=d3.format('.0f')(val)
         d3.select("#value-simple").on('change')() //call the change event https://stackoverflow.com/questions/32610092/why-isnt-the-checkbox-change-event-triggered-when-i-do-it-programatically-in-d3
 
       }),100);
@@ -166,22 +158,20 @@
     var gSimple = d3
       .select('div#slider-simple')
       .append('svg')
-      .attr('width', parseInt(graphic.style("width")))
-      .attr('height', 100)
+      .attr('width', parseInt(graphic.style("width"))/3)
+      .attr('height', 400)
       .append('g')
-      .attr('transform', 'translate(30,50)');
+      .attr('transform', 'translate(50,30)');
 
     gSimple.call(sliderSimple);
 
 
-    document.getElementById("value-simple").value=d3.format('.0f')(sliderSimple.value());
-
     //women sliders
     var sliderWomen = d3
-      .sliderBottom()
+      .sliderLeft()
       .min(0)
       .max(5)
-      .width(parseInt(graphic.style("width"))-80)
+      .width(parseInt(graphic.style("width"))/3)
       .tickFormat(d3.format(',.2f'))
       .ticks(5)
       .step(0.01)
@@ -194,28 +184,26 @@
       )
       .fill("#206595")
       .on('onchange', _.throttle(function(val){
-        document.getElementById("value-women").value=d3.format('.2f')(val)
         d3.select("#value-women").on('change')()
       }),100);
 
     var gSimple2 = d3
       .select('div#slider-women')
       .append('svg')
-      .attr('width', parseInt(graphic.style("width")))
-      .attr('height', 100)
+      .attr('width', parseInt(graphic.style("width"))/3)
+      .attr('height', 400)
       .append('g')
       .attr('transform', 'translate(30,50)');
 
     gSimple2.call(sliderWomen);
 
-    document.getElementById("value-women").value=d3.format('.2f')(sliderWomen.value());
 
     //pension slider
     var sliderPension = d3
-      .sliderBottom()
+      .sliderLeft()
       .min(60)
       .max(80)
-      .width(parseInt(graphic.style("width"))-80)
+      .width(parseInt(graphic.style("width"))/3)
       .tickFormat(d3.format(',.0f'))
       .ticks(5)
       .step(1)
@@ -228,36 +216,22 @@
       )
       .fill("#206595")
       .on('onchange', _.throttle(function(val){
-        document.getElementById("value-pension").value=d3.format('.0f')(val)
         d3.select("#value-pension").on('change')()
       }),100);
 
     var gSimple3 = d3
       .select('div#slider-pension')
       .append('svg')
-      .attr('width', parseInt(graphic.style("width")))
-      .attr('height', 100)
+      .attr('width', parseInt(graphic.style("width"))/3)
+      .attr('height', 400)
       .append('g')
       .attr('transform', 'translate(30,50)');
 
     gSimple3.call(sliderPension);
 
-    document.getElementById("value-pension").value=d3.format('.0f')(sliderPension.value());
 
     //select all handles and give them separate ids
     d3.selectAll(".handle").attr("id",function(d,i){return 'handle'+i})
-
-    function sliderchange(){
-      sliderSimple.silentValue(document.getElementById('value-simple').value)
-    }
-
-    function sliderchange2(){
-      sliderWomen.silentValue(document.getElementById('value-women').value)
-    }
-
-    function sliderchange3(){
-      sliderPension.silentValue(document.getElementById('value-pension').value)
-    }
 
     // Keyboard accessibility
 
