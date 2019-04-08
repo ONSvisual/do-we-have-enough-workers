@@ -12,6 +12,7 @@
   var right = 2;
   var bottom = 3;
   var left = 4;
+  var leftRight = 5;
 
   function translateX(x) {
     return 'translate(' + x + ',0)';
@@ -47,8 +48,8 @@
     var handleIndex = null;
 
     var k = orientation === top || orientation === left ? -1 : 1;
-    var x = orientation === left || orientation === right ? 'y' : 'x';
-    var y = orientation === left || orientation === right ? 'x' : 'y';
+    var x = orientation === left || orientation === right || orientation === leftRight ? 'y' : 'x';
+    var y = orientation === left || orientation === right || orientation === leftRight ? 'x' : 'y';
 
     var transformAlong =
       orientation === top || orientation === bottom ? translateX : translateY;
@@ -57,6 +58,9 @@
       orientation === top || orientation === bottom ? translateY : translateX;
 
     var axisFunction = null;
+    if(orientation===leftRight){
+      var axisFunction2=null;
+    }
 
     switch (orientation) {
       case top:
@@ -70,6 +74,10 @@
         break;
       case left:
         axisFunction = d3Axis.axisLeft;
+        break;
+      case leftRight:
+        axisFunction = d3Axis.axisRight;
+        axisFunction2= d3Axis.axisLeft
         break;
     }
 
@@ -104,8 +112,8 @@
         scale = scale
           .domain(domain)
           .range([
-            0,
             orientation === top || orientation === bottom ? width : height,
+            0
           ])
           .clamp(true);
       }
@@ -127,6 +135,16 @@
       displayFormat = displayFormat || tickFormat || scale.tickFormat();
 
       var axis = selection.selectAll('.axis').data([null]);
+      if(orientation===leftRight){
+        var axis2 = selection.selectAll('.axis').data([null])
+
+        axis2
+          .enter()
+          .append('g')
+          .attr('transform', transformAcross(-1 * 7))
+          .attr('class', 'axis2');
+
+      }
 
       axis
         .enter()
@@ -164,10 +182,10 @@
       sliderEnter
         .append('line')
         .attr('class','starting-value')
-        .attr('x1',scale(defaultValue[0]))
-        .attr('x2',scale(defaultValue[0]))
-        .attr('y1',0)
-        .attr('y2',-20)
+        .attr('y1',scale(defaultValue[0]))
+        .attr('y2',scale(defaultValue[0]))
+        .attr('x1',0)
+        .attr('x2',-20)
         .attr('stroke', '#58595B')
         .attr('stroke-width', 3)
         .attr('stroke-linecap', 'round');
@@ -176,10 +194,20 @@
         .append('text')
         .attr('class','starting-text')
         .style('fill', '#58595B')
-        .attr('x',scale(defaultValue))
-        .attr('y',-30)
-        .attr('text-anchor','middle')
-        .text(startingTextValue+tickFormat(defaultValue))
+        .attr('y',scale(defaultValue))
+        .attr('x',-80)
+        .attr('text-anchor','start')
+        .text(startingTextValue)
+
+
+      sliderEnter
+        .append('text')
+        .attr('class','starting-text')
+        .style('fill', '#58595B')
+        .attr('y',scale(defaultValue)+16)
+        .attr('x',-80)
+        .attr('text-anchor','start')
+        .text(tickFormat(defaultValue))
       }
 
       sliderEnter
@@ -197,7 +225,7 @@
           .attr(
             x + '1',
             value.length === 1
-              ? scale.range()[0] - SLIDER_END_PADDING
+              ? scale.range()[0] + SLIDER_END_PADDING
               : scale(value[0])
           )
           .attr('stroke', fill)
@@ -225,12 +253,17 @@
         })
         .attr('font-family', 'sans-serif')
         .attr(
-          'text-anchor',
-          orientation === right
-            ? 'start'
-            : orientation === left
-            ? 'end'
-            : 'middle'
+            'text-anchor', function(){
+            if(orientation===right){
+              return 'start'
+            }else if(orientation===left){
+              return 'end'
+            }else if(orientation===leftRight){
+              return 'start'
+            }else{
+              return 'middle'
+            }
+          }
         );
 
       handleEnter
@@ -244,16 +277,29 @@
         .attr('fill', 'white')
         .attr('stroke', '#777');
 
-      // handleEnter
-      //   .append('path')
-      //   .attr('transform', 'translate(0 24)')
-      //   .attr('d', d3.symbol()
-      //     .type(d3.symbolTriangle)
-      //     .size(150))
-      //   .style('fill', '#206095')
-      //   .style('stroke',"none")
 
-     if (displayValue && value.length === 1) {
+      handleEnter
+        .append('path')
+        .attr('transform', 'translate(21 1) rotate(-90)')
+        .attr('d', d3.symbol()
+          .type(d3.symbolTriangle)
+          .size(150))
+        .style('fill', '#206095')
+        .style('stroke',"none")
+
+      if(orientation===leftRight){
+        handleEnter
+          .append('path')
+          .attr('transform', 'translate(-21 1) rotate(+90)')
+          .attr('d', d3.symbol()
+            .type(d3.symbolTriangle)
+            .size(150))
+          .style('fill', '#206095')
+          .style('stroke',"none")
+      }
+
+      if (displayValue && value.length === 1) {
+
         handleEnter
           .append('text')
           .attr('font-size', 10) // TODO: Remove coupling to font-size in d3-axis
@@ -269,27 +315,29 @@
           .text(tickFormat(value[0]));
 
 
-          // var text=handleEnter.select('text')
-          //
-          // if(text._groups.length>0){
-          //   var bbox = text.node().getBBox();
-          //   handleEnter.select('text').remove()
-          //   var padding = 5;
-          //   var rect = handleEnter.append("rect")
-          //     .attr("x", bbox.x - padding)
-          //     .attr("y", bbox.y - padding)
-          //     .attr("ry",5)
-          //     .attr("width", bbox.width + (padding*2))
-          //     .attr("height", bbox.height + (padding*2))
-          //     .style("fill", "#206095");
-            // handleEnter
-            //   .append('text')
-            //   .text(tickFormat(value[0]))
-              // .attr('font-weight',700)
-              // .style('fill','white')
-              // .attr('y',text.attr('y'))
-              // .attr('dy',text.attr('dy'))
-          // }
+          var text=handleEnter.select('text')
+
+          if(text._groups.length>0){
+            var bbox = text.node().getBBox();
+            handleEnter.select('text').remove()
+            var padding = 5;
+            var rect = handleEnter.append("rect")
+              .attr("x", bbox.x - padding)
+              .attr("y", bbox.y - padding)
+              .attr("ry",5)
+              .attr("width", bbox.width + (padding*2))
+              .attr("height", bbox.height + (padding*2))
+              .style("fill", "#206095");
+            handleEnter
+              .append('text')
+              .text(tickFormat(value[0]))
+              .attr('font-weight',700)
+              .style('fill','white')
+              .attr('y',text.attr('y'))
+              .attr('x',text.attr('x'))
+              .attr('dy',text.attr('dy'))
+          }
+
 
 
       }
@@ -300,7 +348,7 @@
 
       context
         .select('.track-inset')
-        .attr(x + '2', scale.range()[1] + SLIDER_END_PADDING);
+        .attr(x + '2', scale.range()[1] - SLIDER_END_PADDING);
 
       if (fill) {
         context
@@ -318,6 +366,20 @@
           .ticks(ticks)
           .tickValues(tickValues)
       );
+
+      if(orientation===leftRight){
+        context.select('.axis2').call(
+          axisFunction2(scale)
+          .tickFormat(tickFormat)
+          .ticks(ticks)
+          .tickValues(tickValues)
+        );
+
+        selection
+        .select('.axis2')
+        .select('.domain')
+        .remove();
+      }
 
       // https://bl.ocks.org/mbostock/4323929
       selection
@@ -511,7 +573,7 @@
             .attr(
               x + '1',
               value.length === 1
-                ? scale.range()[0] - SLIDER_END_PADDING
+                ? scale.range()[1] + SLIDER_END_PADDING
                 : scale(newValue[0])
             )
             .attr(
@@ -532,7 +594,7 @@
             .attr(
               x + '1',
               value.length === 1
-                ? scale.range()[0] - SLIDER_END_PADDING
+                ? scale.range()[0] + SLIDER_END_PADDING
                 : scale(newValue[0])
             )
             .attr(
@@ -544,6 +606,7 @@
 
       if (displayValue) {
         textSelection.text(displayFormat(newValue[0]));
+        if(orientation===leftRight){textSelection.text(ticks[(newValue[0])])}
       }
     }
 
@@ -724,12 +787,17 @@
     return slider(left, scale);
   }
 
+  function sliderLeftRight(scale){
+    return slider(leftRight,scale)
+  }
+
   exports.sliderHorizontal = sliderHorizontal;
   exports.sliderVertical = sliderVertical;
   exports.sliderTop = sliderTop;
   exports.sliderRight = sliderRight;
   exports.sliderBottom = sliderBottom;
   exports.sliderLeft = sliderLeft;
+  exports.sliderLeftRight = sliderLeftRight;
 
   Object.defineProperty(exports, '__esModule', { value: true });
 
