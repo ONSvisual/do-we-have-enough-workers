@@ -277,6 +277,7 @@
         .attr('fill', 'white')
         .attr('stroke', '#777');
 
+
       handleEnter
         .append('path')
         .attr('transform', 'translate(21 1) rotate(-90)')
@@ -298,6 +299,7 @@
       }
 
       if (displayValue && value.length === 1) {
+
         handleEnter
           .append('text')
           .attr('font-size', 10) // TODO: Remove coupling to font-size in d3-axis
@@ -312,8 +314,9 @@
           )
           .text(tickFormat(value[0]));
 
+
           var text=handleEnter.select('text')
-          console.log(text)
+
           if(text._groups.length>0){
             var bbox = text.node().getBBox();
             handleEnter.select('text').remove()
@@ -334,6 +337,7 @@
               .attr('x',text.attr('x'))
               .attr('dy',text.attr('dy'))
           }
+
 
 
       }
