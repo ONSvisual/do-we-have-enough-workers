@@ -12,6 +12,7 @@
   var right = 2;
   var bottom = 3;
   var left = 4;
+  var leftRight = 5;
 
   function translateX(x) {
     return 'translate(' + x + ',0)';
@@ -47,8 +48,8 @@
     var handleIndex = null;
 
     var k = orientation === top || orientation === left ? -1 : 1;
-    var x = orientation === left || orientation === right ? 'y' : 'x';
-    var y = orientation === left || orientation === right ? 'x' : 'y';
+    var x = orientation === left || orientation === right || orientation === leftRight ? 'y' : 'x';
+    var y = orientation === left || orientation === right || orientation === leftRight ? 'x' : 'y';
 
     var transformAlong =
       orientation === top || orientation === bottom ? translateX : translateY;
@@ -57,6 +58,9 @@
       orientation === top || orientation === bottom ? translateY : translateX;
 
     var axisFunction = null;
+    if(orientation===leftRight){
+      var axisFunction2=null;
+    }
 
     switch (orientation) {
       case top:
@@ -70,6 +74,10 @@
         break;
       case left:
         axisFunction = d3Axis.axisLeft;
+        break;
+      case leftRight:
+        axisFunction = d3Axis.axisRight;
+        axisFunction2= d3Axis.axisLeft
         break;
     }
 
@@ -127,6 +135,17 @@
       displayFormat = displayFormat || tickFormat || scale.tickFormat();
 
       var axis = selection.selectAll('.axis').data([null]);
+console.log(orientation)
+      if(orientation===leftRight){
+        var axis2 = selection.selectAll('.axis').data([null])
+
+        axis2
+          .enter()
+          .append('g')
+          .attr('transform', transformAcross(-1 * 7))
+          .attr('class', 'axis2');
+
+      }
 
       axis
         .enter()
@@ -164,10 +183,10 @@
       sliderEnter
         .append('line')
         .attr('class','starting-value')
-        .attr('x1',scale(defaultValue[0]))
-        .attr('x2',scale(defaultValue[0]))
-        .attr('y1',0)
-        .attr('y2',-20)
+        .attr('y1',scale(defaultValue[0]))
+        .attr('y2',scale(defaultValue[0]))
+        .attr('x1',0)
+        .attr('x2',-20)
         .attr('stroke', '#58595B')
         .attr('stroke-width', 3)
         .attr('stroke-linecap', 'round');
@@ -176,16 +195,26 @@
         .append('text')
         .attr('class','starting-text')
         .style('fill', '#58595B')
-        .attr('x',scale(defaultValue))
-        .attr('y',-30)
-        .attr('text-anchor','middle')
-        .text(startingTextValue+tickFormat(defaultValue))
+        .attr('y',scale(defaultValue))
+        .attr('x',-80)
+        .attr('text-anchor','start')
+        .text(startingTextValue)
+
+
+      sliderEnter
+        .append('text')
+        .attr('class','starting-text')
+        .style('fill', '#58595B')
+        .attr('y',scale(defaultValue)+16)
+        .attr('x',-80)
+        .attr('text-anchor','start')
+        .text(tickFormat(defaultValue))
       }
 
       sliderEnter
         .append('line')
         .attr('class', 'track-inset')
-        .attr(x + '1', scale.range()[1] - SLIDER_END_PADDING)
+        .attr(x + '1', scale.range()[0] - SLIDER_END_PADDING)
         .attr('stroke', '#eee')
         .attr('stroke-width', 10)
         .attr('stroke-linecap', 'round');
@@ -225,12 +254,18 @@
         })
         .attr('font-family', 'sans-serif')
         .attr(
-          'text-anchor',
-          orientation === right
-            ? 'start'
-            : orientation === left
-            ? 'end'
-            : 'middle'
+            'text-anchor', function(){
+            console.log(orientation===leftRight)
+            if(orientation===right){
+              return 'start'
+            }else if(orientation===left){
+              return 'end'
+            }else if(orientation===leftRight){
+              return 'start'
+            }else{
+              return 'middle'
+            }
+          }
         );
 
       handleEnter
@@ -301,7 +336,7 @@
 
       context
         .select('.track-inset')
-        .attr(x + '2', scale.range()[1] + SLIDER_END_PADDING);
+        .attr(x + '2', scale.range()[1] - SLIDER_END_PADDING);
 
       if (fill) {
         context
@@ -319,6 +354,20 @@
           .ticks(ticks)
           .tickValues(tickValues)
       );
+
+      if(orientation===leftRight){
+        context.select('.axis2').call(
+          axisFunction2(scale)
+          .tickFormat(tickFormat)
+          .ticks(ticks)
+          .tickValues(tickValues)
+        );
+
+        selection
+        .select('.axis2')
+        .select('.domain')
+        .remove();
+      }
 
       // https://bl.ocks.org/mbostock/4323929
       selection
@@ -533,7 +582,7 @@
             .attr(
               x + '1',
               value.length === 1
-                ? scale.range()[1] + SLIDER_END_PADDING
+                ? scale.range()[0] + SLIDER_END_PADDING
                 : scale(newValue[0])
             )
             .attr(
@@ -725,12 +774,17 @@
     return slider(left, scale);
   }
 
+  function sliderLeftRight(scale){
+    return slider(leftRight,scale)
+  }
+
   exports.sliderHorizontal = sliderHorizontal;
   exports.sliderVertical = sliderVertical;
   exports.sliderTop = sliderTop;
   exports.sliderRight = sliderRight;
   exports.sliderBottom = sliderBottom;
   exports.sliderLeft = sliderLeft;
+  exports.sliderLeftRight = sliderLeftRight;
 
   Object.defineProperty(exports, '__esModule', { value: true });
 
