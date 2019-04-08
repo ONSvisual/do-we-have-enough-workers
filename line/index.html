@@ -353,13 +353,15 @@
 
     //mortality sliders
     ticks=["low","medium low","principal","medium high","high"]
+    ticksLeft=["81.6","82.4","83.4","84.1","84.6"]
+    ticksRight=["84.5","85.3","86.2","86.9","87.2"]
 
     var sliderMortality = d3
         .sliderLeftRight()
         .max(4)
         .min(0)
         .height(200)
-        .tickFormat(function(d,i){return ticks[i]})
+        .tickFormat(function(d,i){return ticksRight[i]})
         .ticks(5)
         .step(1)
         .default(2)
@@ -372,9 +374,11 @@
         .fill("#206595")
         .on('onchange', _.throttle(function(val){
           var svg = d3.select('#graphic').select('svg')
+          //change text in bubbles
+          d3.select('div#slider-mortality').select(".parameter-value").select('text').text(ticksRight[sliderMortality.value()])
+          d3.select('div#slider-mortality').select(".parameter-value").select('#textLeft').text(ticksLeft[sliderMortality.value()])
 
           slidervalues=getSliderValues()
-          console.log(slidervalues)
             if(slidervalues[4]!=mortalityprofile){
               //load new mortality profiles
                 malemortality=malemortalitydata[slidervalues[4].replace(/\s/g,'')]
@@ -424,14 +428,62 @@
       .append('svg')
       .attr('height', 260)
       .append('g')
-      .attr('transform', 'translate(80,20)');
+      .attr('transform', 'translate(80,30)');
 
     gSimple4.call(sliderMortality);
 
-    d3.selectAll('div#sliderMortality').select('.axis.tick text').attr('text-anchor','start')
+    //male & female labels
+    gSimple4.append('text').text("Males").attr("x",-18).attr("y",-18).attr('text-anchor','end').attr('fill','#58595B')
+    gSimple4.append('text').text("Females").attr("x",15).attr("y",-18).attr('text-anchor','start').attr('fill','#58595B')
+
+    //custom ticks for the left
+    d3.select('div#slider-mortality').select('.axis').selectAll('.tick text').attr('text-anchor','start')
+    d3.select('div#slider-mortality').select('.axis2').selectAll('.tick text')
+    .attr('font-size',18)
+    .attr('fill',"#aaa")
+    .attr('x',-18)
+    .text(function(d,i){return ticksLeft[i]})
+
+    d3.select('div#slider-mortality').select('.axis2').selectAll('.tick line')
+    .attr('stroke',"#aaa")
+
+    //bubble for the right
+    var textRight=d3.select('div#slider-mortality').select(".parameter-value").select('text').text(ticksRight[sliderMortality.value()])
+    bbox=d3.select('div#slider-mortality').select(".parameter-value").select('text').node().getBBox();
+    console.log(bbox)
+    d3.select('div#slider-mortality').select(".parameter-value").select('rect')
+    .attr("x", bbox.x - 5)
+    .attr("y", bbox.y - 5)
+    .attr("ry",5)
+    .attr("width", bbox.width + (5*2))
+    .attr("height", bbox.height + (5*2))
+    .style("fill", "#206095");
+
+    //bubble for the left
+    d3.select('div#slider-mortality').select(".parameter-value").append('rect')
+    .attr('id','rectLeft')
+    .attr("x", bbox.x - 5-90)
+    .attr("y", bbox.y - 5)
+    .attr("ry",5)
+    .attr("width", bbox.width + (5*2))
+    .attr("height", bbox.height + (5*2))
+    .style("fill", "#206095");
+
+    d3.select('div#slider-mortality').select(".parameter-value").append('text')
+    .attr('id','textLeft')
+    .text(ticksLeft[sliderMortality.value()])
+    .attr('font-weight',700)
+    .style('fill','white')
+    .attr('y',textRight.attr('y'))
+    .attr('x',textRight.attr('x')-90)
+    .attr('dy',textRight.attr('dy'))
+
+
+
 
     //select all handles and give them separate ids
     d3.selectAll(".handle").attr("id",function(d,i){return 'handle'+i})
+
 
     // Keyboard accessibility
 

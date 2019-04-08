@@ -135,7 +135,6 @@
       displayFormat = displayFormat || tickFormat || scale.tickFormat();
 
       var axis = selection.selectAll('.axis').data([null]);
-console.log(orientation)
       if(orientation===leftRight){
         var axis2 = selection.selectAll('.axis').data([null])
 
@@ -255,7 +254,6 @@ console.log(orientation)
         .attr('font-family', 'sans-serif')
         .attr(
             'text-anchor', function(){
-            console.log(orientation===leftRight)
             if(orientation===right){
               return 'start'
             }else if(orientation===left){
@@ -288,6 +286,17 @@ console.log(orientation)
         .style('fill', '#206095')
         .style('stroke',"none")
 
+      if(orientation===leftRight){
+        handleEnter
+          .append('path')
+          .attr('transform', 'translate(-21 1) rotate(+90)')
+          .attr('d', d3.symbol()
+            .type(d3.symbolTriangle)
+            .size(150))
+          .style('fill', '#206095')
+          .style('stroke',"none")
+      }
+
       if (displayValue && value.length === 1) {
         handleEnter
           .append('text')
@@ -303,9 +312,8 @@ console.log(orientation)
           )
           .text(tickFormat(value[0]));
 
-
           var text=handleEnter.select('text')
-
+          console.log(text)
           if(text._groups.length>0){
             var bbox = text.node().getBBox();
             handleEnter.select('text').remove()
@@ -594,6 +602,7 @@ console.log(orientation)
 
       if (displayValue) {
         textSelection.text(displayFormat(newValue[0]));
+        if(orientation===leftRight){textSelection.text(ticks[(newValue[0])])}
       }
     }
 
