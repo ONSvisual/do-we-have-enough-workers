@@ -450,7 +450,6 @@
     //bubble for the right
     var textRight=d3.select('div#slider-mortality').select(".parameter-value").select('text').text(ticksRight[sliderMortality.value()])
     bbox=d3.select('div#slider-mortality').select(".parameter-value").select('text').node().getBBox();
-    console.log(bbox)
     d3.select('div#slider-mortality').select(".parameter-value").select('rect')
     .attr("x", bbox.x - 5)
     .attr("y", bbox.y - 5)
@@ -1218,15 +1217,15 @@
     //work out pension age for each year
     pensionAge=[];
 
-    pensionAge.push({year:2016,men:65,women:63})
+    pensionAge.push({year:2016,men:65,women:64})
     numberofyears.forEach(function(d){
 
       if(d<customPensionYear){
         var malePensionAge,femalePensionAge;
 
-        if(d<=2019){malePensionAge=65}else if(d>2019&&d<2028){malePensionAge=66}else{malePensionAge=67}
+        if(d<2019){malePensionAge=65}else if(d>=2019&&d<2026){malePensionAge=66}else{malePensionAge=67}
 
-        if(d==2016){femalePensionAge=63}else if(d==2017){femalePensionAge=64}else if(d==2018||d==2019){femalePensionAge=65}else if(d>2019&&d<2028){femalePensionAge=66}else{femalePensionAge=67}
+        if(d==2016||d==2017){femalePensionAge=64}else if(d==2018){femalePensionAge=65}else if(d>2018&&d<2026){femalePensionAge=66}else{femalePensionAge=67}
 
         pensionAge.push({
           year:d,
@@ -1264,33 +1263,84 @@
         return e.year==d
       })[0].values
 
+
+      //corrections for sliding pension start date
+      if(d==2016){
+        var femalecorrectionforthisyear=Math.round(populationforthisyear
+        .filter(function(e){return e.age==(femalepensionageforyear-1)})[0].female*0.7644)
+      }
+      else if(d==2017){
+        var femalecorrectionforthisyear=Math.round(populationforthisyear
+        .filter(function(e){return e.age==(femalepensionageforyear-1)})[0].female*0.0137)
+      }
+      else if(d==2018){
+        var femalecorrectionforthisyear=Math.round(populationforthisyear
+        .filter(function(e){return e.age==(femalepensionageforyear-1)})[0].female*0.2658)
+      }
+      else if(d==2019){
+        var femalecorrectionforthisyear=Math.round(populationforthisyear
+        .filter(function(e){return e.age==(femalepensionageforyear-1)})[0].female*0.60274)
+      }
+      else if(d==2020){
+        var femalecorrectionforthisyear=Math.round(populationforthisyear
+        .filter(function(e){return e.age==(femalepensionageforyear-1)})[0].female*0.09863)
+      }else if(d==2026){
+        var femalecorrectionforthisyear=Math.round(populationforthisyear
+        .filter(function(e){return e.age==(femalepensionageforyear-1)})[0].female*0.84699)
+      }else if(d==2027){
+        var femalecorrectionforthisyear=Math.round(populationforthisyear
+        .filter(function(e){return e.age==(femalepensionageforyear-1)})[0].female*0.35068)
+      }
+      else{var femalecorrectionforthisyear=0}
+
+
+      if(d==2019){
+        var malecorrectionforthisyear=Math.round(populationforthisyear
+        .filter(function(e){return e.age==(malepensionageforyear-1)})[0].male*0.60274)
+      }else if(d==2020){
+        var malecorrectionforthisyear=Math.round(populationforthisyear
+        .filter(function(e){return e.age==(malepensionageforyear-1)})[0].male*0.09863)
+      }else if(d==2026){
+        var malecorrectionforthisyear=Math.round(populationforthisyear
+        .filter(function(e){return e.age==(malepensionageforyear-1)})[0].male*0.84699)
+      }else if(d==2027){
+        var malecorrectionforthisyear=Math.round(populationforthisyear
+        .filter(function(e){return e.age==(malepensionageforyear-1)})[0].male*0.35068)
+      }else{
+        var malecorrectionforthisyear=0
+      }
+
+
+
       fish[0].push({
             malepensioners:populationforthisyear
             .filter(function(e){
                return e.age>=malepensionageforyear
             })
-            .reduce(function(sum,step){return sum=sum+step.male},0)
+            .reduce(function(sum,step){return sum=sum+step.male},0)+malecorrectionforthisyear
             ,
             femalepensioners:populationforthisyear
             .filter(function(e){
                return e.age>=femalepensionageforyear
             })
-            .reduce(function(sum,step){return sum=sum+step.female},0)
+            .reduce(function(sum,step){return sum=sum+step.female},0)+femalecorrectionforthisyear
 
             ,
             maleworkers:populationforthisyear
             .filter(function(e){
               return e.age>=16&&e.age<malepensionageforyear
             })
-            .reduce(function(sum,step){return sum=sum+step.male},0)
+            .reduce(function(sum,step){return sum=sum+step.male},0)-malecorrectionforthisyear
             ,
             femaleworkers:populationforthisyear
             .filter(function(e){
               return e.age>=16&&e.age<femalepensionageforyear
             })
-            .reduce(function(sum,step){return sum=sum+step.female},0)
+            .reduce(function(sum,step){return sum=sum+step.female},0)-femalecorrectionforthisyear
         })
     })
+
+
 
     OldAgeDependencyRatio = []
     numberofyears.forEach(function(d){
