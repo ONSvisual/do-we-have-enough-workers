@@ -31,20 +31,21 @@
         padding:3px 0 5px 0
       }
       p{
-        line-height: 32px;
+        line-height: 24px;
         font-size: 18px;
-        margin:16px 0;
-        padding: 6px 0 10px 0;
+        margin:0;
+        padding: 0;
       }
       input{
         border: none;
         border-radius: 0;
-        border: 2px solid #1b5f97;
+        /* border: 2px solid #1b5f97; */
         font-size: 18px;
-        line-height: 32px;
-        /* margin:16px 0;
-        padding: 6px 0 0 0; */
+        line-height: 27px;
         width:60px;
+        /* margin:16px 0;
+        padding: 6px 0 0 0;
+        width:60px;*/
         text-align: center;
       }
 
@@ -84,54 +85,112 @@
         font-weight: 700;
         font-size:20px;
       }
+
+    button {
+    width: 1.4em;
+    height: 1.4em;
+    background-color: #1b5f97;
+    color: #fff;
+    border: 2px solid #1b5f97;
+    box-sizing: border-box;
+    font-size: 27px;
+    text-align: center;
+    cursor: pointer;
+    font-weight: bold;
+    }
+    .borderbox {
+    border: 2px solid #1b5f97;
+    padding-top:5px;
+    padding-bottom: 1px;
+    /*padding-left: 0px;
+    padding-right: 0px;
+    display: flex;
+    align-items: center;
+    max-width: 160px;
+    float: none;*/
+    }
+
+
+    .error_message {
+      padding: 8px;
+      border: solid 3px #D32F2F;
+    }
+    .error_title {
+        font-weight: bold;
+        font-size: 1.2em;
+        padding: 0;
+        margin-top: 0;
+    }
     </style>
 </head>
 
 
 <body>
-    <h2>Do we have enough workers?</h2>
-    <p>The old age dependency ratio (OADR) measures the number of people of State Pension Age (SPA) and over for every 1,000 people of working age (16 to SPA). The OADR provides an idea of the relationship between working and pensioner populations.</p>
-    <p>The current old age dependancy ratio is 3.1 people above the state pension age for every 10 people of working age.</p>
-    <p>Adjust the values below to see how the ratio can be projected into the future.</p>
     <div class="container" style="padding-left:0px;padding-right:0px;">
       <div class="row">
         <div class="col-sm-3">
           <div class="row no-gutters">
-            <div class="col-sm-12"><p class='bold'>Life expectancy in 2042</p></div>
+            <div class="col-sm-12" style="height:120px;"><p class='bold'>Life expectancy in 2042</p></div>
             <div class="col-sm-12"><div id="slider-mortality"></div></div>
           </div>
         </div>
 
         <div class="col-sm-3">
           <div class="row no-gutters">
-            <div class="col-sm-12"><p class='bold'>Annual net migration by 2042</p></div>
+            <div class="col-sm-12" style="height:120px;"><p class='bold'>Annual net migration by 2042</p></div>
             <div class="col-sm-12"><div id="slider-simple"></div></div>
           </div>
         </div>
 
         <div class="col-sm-3">
           <div class="row no-gutters">
-            <div class="col-sm-12"><p class='bold' >Children per woman by 2042</p></div>
+            <div class="col-sm-12" style="height:120px;"><p class='bold' >Children per woman by 2042</p></div>
             <div class="col-sm-12"><div id="slider-women"></div></div>
           </div>
         </div>
 
         <div class="col-sm-3">
           <div class="row no-gutters">
-            <div class="col-sm-12"><p class='bold'>At <input class="bold" id="year" type="number" value="2028" max="2042" min="2017"> the state pension age will be</p></div>
+            <div class="col-sm-12" style="height:120px;"><p class='bold'>At
+                  <span class="borderbox">
+                  <span><button type="button" id="minus" class="minus">-</button></span>
+                  <span style="text-align: center;"><input class="bold" id="year" type="number" value="2028" max="2042" min="2017"></span>
+                  <span><button type="button" id="plus" class="plus">+</button></span>
+                  </span>
+
+               the state pension age will be</p></div>
             <div class="col-sm-12"><div id="slider-pension"></div></div>
           </div>
         </div>
 
       </div>
     </div>
-	  <div id="graphic">
-    	<!-- <img src="fallback.png" alt="[Chart]" /> -->
+    <div class="container" style="padding-left:0px;padding-right:0px;">
+      <div class="row">
+        <div class="col-8 order-1 order-xs-2">
+          <div id="graphic">
+          	<!-- <img src="fallback.png" alt="[Chart]" /> -->
+          </div>
+        </div>
+        <div class="col-4 order-2 order-xs-1">
+          <div id="keypoints">
+              <p class='bold' style="margin:0;">Based on your selection</p>
+
+              <div class="error_message">
+                <p class="error_text">In 2042, there will be <span id="boxtext1">X</span> pensioners per 1,000 people of working age.
+                </br></br>
+                This is <span id="boxtext2">Y></span> <span id='boxtext3'>more/less</span> than our projections.
+                </br></br>
+                This is <span id='boxtext4'>Z</span> <span id='boxtext5'>more/less</span> than in 2016
+                </p>
+              </div>
+
+          </div>
+        </div>
+
+      </div>
     </div>
 
-    <div id="keypoints">
-        <p></p>
-    </div>
 
    <div id="footer">
    </div>
@@ -147,6 +206,24 @@
  		<script src="../lib/pym.js" type="text/javascript"></script>
 
    <script>
+   //stuff for the tally
+   document.getElementById("plus").addEventListener("click", function() {
+     var typenumber = document.getElementById("year").value
+     if(typenumber+1<=document.getElementById("year").max){
+       document.getElementById("year").value = +typenumber + 1;
+       d3.select("#year").on('change')()
+     }
+    })
+    document.getElementById("minus").addEventListener("click", function() {
+     if (document.getElementById("year").value > 0) {
+       var typenumber = document.getElementById("year").value
+       if(typenumber-1>=document.getElementById("year").min){
+         document.getElementById("year").value = +typenumber - 1;
+         d3.select("#year").on('change')()
+       }
+     }
+    })
+
 
 		var graphic = d3.select('#graphic');
 		var keypoints = d3.select('#keypoints');
@@ -159,12 +236,13 @@
       .sliderRight()
       .min(0)
       .max(600000)
-      .height(200)
+      .height(175)
       .tickFormat(d3.format(',.0f'))
       .ticks(5)
       .step(1000)
-      .default(283000)
+      .default(165000)
       .startingText("2017:")
+      .startingValue(283000)
       .handle(
         d3.symbol()
           .type(d3.symbolCircle)
@@ -187,6 +265,13 @@
       d3.select('#graphic path.newline')
           .attr('d', line(newOADR))
 
+      svg.select('#endcircle')
+        .attr('cy',y(newOADR[newOADR.length-1].oadr))
+
+      // svg.select('#endtext')
+      //     .attr("y",y(newOADR[newOADR.length-1].oadr)+7)
+      //     .text("Your projection: "+d3.format(".0f")(newOADR[newOADR.length-1].oadr))
+
       }),100);
 
     var gSimple = d3
@@ -194,7 +279,7 @@
       .append('svg')
       .attr('height', 260)
       .append('g')
-      .attr('transform', 'translate(80,20)');
+      .attr('transform', 'translate(80,30)');
 
     gSimple.call(sliderSimple);
 
@@ -208,8 +293,9 @@
       .tickFormat(d3.format(',.2f'))
       .ticks(5)
       .step(0.01)
-      .default(1.75)
+      .default(1.84)
       .startingText("2017:")
+      .startingValue("1.75")
       .handle(
         d3.symbol()
           .type(d3.symbolCircle)
@@ -220,50 +306,24 @@
       //   d3.select("#value-women").on('change')()
       var svg = d3.select('#graphic').select('svg')
 
-
       slidervalues=getSliderValues()
-        if(slidervalues[4]!=mortalityprofile){
-          //load new mortality profiles
-            malemortality=malemortalitydata[slidervalues[4].replace(/\s/g,'')]
-            femalemortality=femalemortalitydata[slidervalues[4].replace(/\s/g,'')]
 
-            //do some reformatting of the data
-            malemortality.forEach(function(d,i){
-              for(var column in malemortality[0]){
-                malemortality[i][column]=+malemortality[i][column]
-              }
-            })
+      var newOADR=runthemodel(malemortality,femalemortality,malemigration,femalemigration,fertility,malepopulation,femalepopulation,slidervalues[0],slidervalues[1],slidervalues[2],slidervalues[3])
 
-            femalemortality.forEach(function(d,i){
-              for(var column in femalemortality[0]){
-                femalemortality[i][column]=+femalemortality[i][column]
-              }
-            })
+      svg.select('.line')
+          .attr('stroke-dasharray','5 5')
+          .style("stroke", "grey")
 
-            var newOADR=runthemodel(malemortality,femalemortality,malemigration,femalemigration,fertility,malepopulation,femalepopulation,slidervalues[0],slidervalues[1],slidervalues[2],slidervalues[3])
+      svg.select('.newline')
+          .attr('d', line(newOADR))
 
-            svg.select('.line')
-                .attr('stroke-dasharray','5 5')
-                .style("stroke", "grey")
+      svg.select('#endcircle')
+        .attr('cy',y(newOADR[newOADR.length-1].oadr))
 
-            svg.select('.newline')
-                .attr('d', line(newOADR))
+      // svg.select('#endtext')
+      //     .attr("y",y(newOADR[newOADR.length-1].oadr)+7)
+      //     .text("Your projection: "+d3.format(".0f")(newOADR[newOADR.length-1].oadr))
 
-            mortalityprofile=slidervalues[4]
-
-        }else{
-          //just use the existing mortality profiles
-          var newOADR=runthemodel(malemortality,femalemortality,malemigration,femalemigration,fertility,malepopulation,femalepopulation,slidervalues[0],slidervalues[1],slidervalues[2],slidervalues[3])
-
-          svg.select('.line')
-              .attr('stroke-dasharray','5 5')
-              .style("stroke", "grey")
-
-          svg.select('.newline')
-              .attr('d', line(newOADR))
-          //set the mortalityprofile
-          mortalityprofile=slidervalues[4]
-        }
       }),100);
 
     var gSimple2 = d3
@@ -271,7 +331,7 @@
       .append('svg')
       .attr('height', 260)
       .append('g')
-      .attr('transform', 'translate(80,20)');
+      .attr('transform', 'translate(80,30)');
 
     gSimple2.call(sliderWomen);
 
@@ -295,51 +355,25 @@
       .fill("#206595")
       .on('onchange', _.throttle(function(val){
       //  d3.select("#value-pension").on('change')()
-      var svg = d3.select('#graphic').select('svg')
+        var svg = d3.select('#graphic').select('svg')
 
-      slidervalues=getSliderValues()
-        if(slidervalues[4]!=mortalityprofile){
-          //load new mortality profiles
-            malemortality=malemortalitydata[slidervalues[4].replace(/\s/g,'')]
-            femalemortality=femalemortalitydata[slidervalues[4].replace(/\s/g,'')]
+        slidervalues=getSliderValues()
 
-            //do some reformatting of the data
-            malemortality.forEach(function(d,i){
-              for(var column in malemortality[0]){
-                malemortality[i][column]=+malemortality[i][column]
-              }
-            })
+        var newOADR=runthemodel(malemortality,femalemortality,malemigration,femalemigration,fertility,malepopulation,femalepopulation,slidervalues[0],slidervalues[1],slidervalues[2],slidervalues[3])
 
-            femalemortality.forEach(function(d,i){
-              for(var column in femalemortality[0]){
-                femalemortality[i][column]=+femalemortality[i][column]
-              }
-            })
+        svg.select('.line')
+            .attr('stroke-dasharray','5 5')
+            .style("stroke", "grey")
 
-            var newOADR=runthemodel(malemortality,femalemortality,malemigration,femalemigration,fertility,malepopulation,femalepopulation,slidervalues[0],slidervalues[1],slidervalues[2],slidervalues[3])
+        svg.select('.newline')
+            .attr('d', line(newOADR))
 
-            svg.select('.line')
-                .attr('stroke-dasharray','5 5')
-                .style("stroke", "grey")
+        svg.select('#endcircle')
+          .attr('cy',y(newOADR[newOADR.length-1].oadr))
 
-            svg.select('.newline')
-                .attr('d', line(newOADR))
-
-            mortalityprofile=slidervalues[4]
-
-        }else{
-          //just use the existing mortality profiles
-          var newOADR=runthemodel(malemortality,femalemortality,malemigration,femalemigration,fertility,malepopulation,femalepopulation,slidervalues[0],slidervalues[1],slidervalues[2],slidervalues[3])
-
-          svg.select('.line')
-              .attr('stroke-dasharray','5 5')
-              .style("stroke", "grey")
-
-          svg.select('.newline')
-              .attr('d', line(newOADR))
-          //set the mortalityprofile
-          mortalityprofile=slidervalues[4]
-        }
+        // svg.select('#endtext')
+        //     .attr("y",y(newOADR[newOADR.length-1].oadr)+7)
+        //     .text("Your projection: "+d3.format(".0f")(newOADR[newOADR.length-1].oadr))
       }),100);
 
     var gSimple3 = d3
@@ -347,7 +381,7 @@
       .append('svg')
       .attr('height', 260)
       .append('g')
-      .attr('transform', 'translate(80,20)');
+      .attr('transform', 'translate(80,30)');
 
     gSimple3.call(sliderPension);
 
@@ -360,7 +394,7 @@
         .sliderLeftRight()
         .max(4)
         .min(0)
-        .height(200)
+        .height(150)
         .tickFormat(function(d,i){return ticksRight[i]})
         .ticks(5)
         .step(1)
@@ -406,6 +440,14 @@
                 svg.select('.newline')
                     .attr('d', line(newOADR))
 
+                svg.select('#endcircle')
+                  .attr('cy',y(newOADR[newOADR.length-1].oadr))
+
+                // svg.select('#endtext')
+                //   .attr("y",y(newOADR[newOADR.length-1].oadr)+7)
+                //   .text("Your projection: "+d3.format(".0f")(newOADR[newOADR.length-1].oadr))
+
+
                 mortalityprofile=slidervalues[4]
 
             }else{
@@ -418,6 +460,14 @@
 
               svg.select('.newline')
                   .attr('d', line(newOADR))
+
+              svg.select('#endcircle')
+                .attr('cy',y(newOADR[newOADR.length-1].oadr))
+
+              // svg.select('#endtext')
+              //   .attr("y",y(newOADR[newOADR.length-1].oadr)+7)
+              //   .text("Your projection: "+d3.format(".0f")(newOADR[newOADR.length-1].oadr))
+
               //set the mortalityprofile
               mortalityprofile=slidervalues[4]
             }
@@ -745,7 +795,7 @@
         slidervalues=getSliderValues();
 
         // console.log("run the model")
-        var OADR=runthemodel(malemortality,femalemortality,malemigration,femalemigration,fertility,malepopulation,femalepopulation,slidervalues[0],slidervalues[1],2028,67)
+        var OADR=runthemodel(malemortality,femalemortality,malemigration,femalemigration,fertility,malepopulation,femalepopulation,165000,1.84,2028,67)
         // console.log("draw the line")
 
         var margin = {	top: 	30,
@@ -761,7 +811,7 @@
         var x = d3.scaleTime()
                .range([0, chart_width]);
 
-        var y = d3.scaleLinear()
+        y = d3.scaleLinear()
                .range([height, 0]);
         //
         x.domain(d3.extent(numberofyears,function(d){return d3.timeParse("%Y")(d)}));
@@ -817,7 +867,7 @@
            .attr('transform','translate(' + -margin.left + ',-17)') // " + eval(-margin.top + (lineNo+1)*20) + "
            .attr("font-size","16px")
            .attr("fill","#321213")
-           .text("OADR");
+           .text("Number of pensioners per 1,000 people of working age");
 
       //create lines
        svg.append('g')
@@ -840,6 +890,29 @@
            .style("stroke-width", 3)
            .style("stroke-linecap", 'round')
            .style("stroke-linejoin", 'round')
+
+           console.log(OADR)
+
+       svg.append('g')
+        .append('circle')
+        .attr('id','endcircle')
+        .attr('cx',x(new Date("2042")))
+        .attr('cy',y(OADR[OldAgeDependencyRatio.length-1].oadr))
+        .attr('r',5)
+        .attr('fill','#206095')
+
+      // svg.append('g')
+      //   .append('text')
+      //   .attr('id','endtext')
+      //   .attr('x',x(new Date("2042"))+25)
+      //   .attr('y',y(OADR[OldAgeDependencyRatio.length-1].oadr)+7)
+      //   .attr('font-weight',700)
+      //   .text("Your projection: ")
+      //   .append('tspan')
+      //   .attr('font-weight',400)
+      //   .attr('dy','1.1em')
+      //   .text(d3.format(".0f")(OADR[OldAgeDependencyRatio.length-1].oadr))
+
 
       })//end initial promise
 
@@ -1375,7 +1448,6 @@
         oadr:((thisyear.malepensioners+thisyear.femalepensioners)/(thisyear.maleworkers+thisyear.femaleworkers))*1000
       })
     })
-    console.log(OldAgeDependencyRatio)
     return OldAgeDependencyRatio
   }//ends run the model
 
