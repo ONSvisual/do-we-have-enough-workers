@@ -40,6 +40,7 @@
     var displayFormat = null;
     var fill = null;
     var startingTextValue = null;
+    var startingValueValue=null;
 
     var listeners = d3Dispatch.dispatch('onchange', 'start', 'end', 'drag');
 
@@ -182,8 +183,8 @@
       sliderEnter
         .append('line')
         .attr('class','starting-value')
-        .attr('y1',scale(defaultValue[0]))
-        .attr('y2',scale(defaultValue[0]))
+        .attr('y1',scale(startingValueValue))
+        .attr('y2',scale(startingValueValue))
         .attr('x1',0)
         .attr('x2',-20)
         .attr('stroke', '#58595B')
@@ -194,7 +195,7 @@
         .append('text')
         .attr('class','starting-text')
         .style('fill', '#58595B')
-        .attr('y',scale(defaultValue))
+        .attr('y',scale(startingValueValue))
         .attr('x',-80)
         .attr('text-anchor','start')
         .text(startingTextValue)
@@ -204,10 +205,10 @@
         .append('text')
         .attr('class','starting-text')
         .style('fill', '#58595B')
-        .attr('y',scale(defaultValue)+16)
+        .attr('y',scale(startingValueValue)+16)
         .attr('x',-80)
         .attr('text-anchor','start')
-        .text(tickFormat(defaultValue))
+        .text(tickFormat(startingValueValue))
       }
 
       sliderEnter
@@ -716,6 +717,12 @@
     slider.startingText = function(_) {
       if (!arguments.length) return startingText;
       startingTextValue = _;
+      return slider;
+    }
+
+    slider.startingValue = function(_) {
+      if (!arguments.length) return startingValue;
+      startingValueValue = _;
       return slider;
     }
 
