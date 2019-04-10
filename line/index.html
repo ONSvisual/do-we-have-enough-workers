@@ -1266,46 +1266,68 @@
 
       //corrections for sliding pension start date
       if(d==2016){
-        var femalecorrectionforthisyear=Math.round(populationforthisyear
-        .filter(function(e){return e.age==(femalepensionageforyear-1)})[0].female*0.7644)
+        if(femalepensionageforyear==64){
+          var femalecorrectionforthisyear=Math.round(populationforthisyear
+          .filter(function(e){return e.age==(femalepensionageforyear-1)})[0].female*0.7644)
+        }else{var femalecorrectionforthisyear=0}
       }
       else if(d==2017){
-        var femalecorrectionforthisyear=Math.round(populationforthisyear
-        .filter(function(e){return e.age==(femalepensionageforyear-1)})[0].female*0.0137)
+        if(femalepensionageforyear==64){
+          var femalecorrectionforthisyear=Math.round(populationforthisyear
+          .filter(function(e){return e.age==(femalepensionageforyear-1)})[0].female*0.0137)
+        }else{var femalecorrectionforthisyear=0}
       }
       else if(d==2018){
-        var femalecorrectionforthisyear=Math.round(populationforthisyear
-        .filter(function(e){return e.age==(femalepensionageforyear-1)})[0].female*0.2658)
+        if(femalepensionageforyear==65){
+          var femalecorrectionforthisyear=Math.round(populationforthisyear
+          .filter(function(e){return e.age==(femalepensionageforyear-1)})[0].female*0.2658)
+        }else{var femalecorrectionforthisyear=0}
       }
       else if(d==2019){
-        var femalecorrectionforthisyear=Math.round(populationforthisyear
-        .filter(function(e){return e.age==(femalepensionageforyear-1)})[0].female*0.60274)
+        if(femalepensionageforyear==66){
+          var femalecorrectionforthisyear=Math.round(populationforthisyear
+          .filter(function(e){return e.age==(femalepensionageforyear-1)})[0].female*0.60274)
+        }else{var femalecorrectionforthisyear=0}
       }
       else if(d==2020){
-        var femalecorrectionforthisyear=Math.round(populationforthisyear
-        .filter(function(e){return e.age==(femalepensionageforyear-1)})[0].female*0.09863)
+        if(femalepensionageforyear==66){
+          var femalecorrectionforthisyear=Math.round(populationforthisyear
+          .filter(function(e){return e.age==(femalepensionageforyear-1)})[0].female*0.09863)
+        }else{var femalecorrectionforthisyear=0}
       }else if(d==2026){
-        var femalecorrectionforthisyear=Math.round(populationforthisyear
-        .filter(function(e){return e.age==(femalepensionageforyear-1)})[0].female*0.84699)
+        if(femalepensionageforyear==67){
+          var femalecorrectionforthisyear=Math.round(populationforthisyear
+          .filter(function(e){return e.age==(femalepensionageforyear-1)})[0].female*0.84699)
+        }else{var femalecorrectionforthisyear=0}
       }else if(d==2027){
-        var femalecorrectionforthisyear=Math.round(populationforthisyear
-        .filter(function(e){return e.age==(femalepensionageforyear-1)})[0].female*0.35068)
+        if(femalepensionageforyear==67){
+          var femalecorrectionforthisyear=Math.round(populationforthisyear
+          .filter(function(e){return e.age==(femalepensionageforyear-1)})[0].female*0.35068)
+        }else{var femalecorrectionforthisyear=0}
       }
       else{var femalecorrectionforthisyear=0}
 
 
       if(d==2019){
-        var malecorrectionforthisyear=Math.round(populationforthisyear
-        .filter(function(e){return e.age==(malepensionageforyear-1)})[0].male*0.60274)
+        if(malepensionageforyear==66){
+          var malecorrectionforthisyear=Math.round(populationforthisyear
+          .filter(function(e){return e.age==(malepensionageforyear-1)})[0].male*0.60274)
+        }else{var malecorrectionforthisyear=0}
       }else if(d==2020){
-        var malecorrectionforthisyear=Math.round(populationforthisyear
-        .filter(function(e){return e.age==(malepensionageforyear-1)})[0].male*0.09863)
+        if(malepensionageforyear==66){
+          var malecorrectionforthisyear=Math.round(populationforthisyear
+          .filter(function(e){return e.age==(malepensionageforyear-1)})[0].male*0.09863)
+        }else{var malecorrectionforthisyear=0}
       }else if(d==2026){
-        var malecorrectionforthisyear=Math.round(populationforthisyear
-        .filter(function(e){return e.age==(malepensionageforyear-1)})[0].male*0.84699)
+        if(malepensionageforyear==67){
+          var malecorrectionforthisyear=Math.round(populationforthisyear
+          .filter(function(e){return e.age==(malepensionageforyear-1)})[0].male*0.84699)
+        }else{var malecorrectionforthisyear=0}
       }else if(d==2027){
-        var malecorrectionforthisyear=Math.round(populationforthisyear
-        .filter(function(e){return e.age==(malepensionageforyear-1)})[0].male*0.35068)
+        if(malepensionageforyear==67){
+          var malecorrectionforthisyear=Math.round(populationforthisyear
+          .filter(function(e){return e.age==(malepensionageforyear-1)})[0].male*0.35068)
+        }else{var malecorrectionforthisyear=0}
       }else{
         var malecorrectionforthisyear=0
       }
