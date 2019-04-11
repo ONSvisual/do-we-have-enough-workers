@@ -31,7 +31,7 @@
         padding:3px 0 5px 0
       }
       p{
-        line-height: 24px;
+        /* line-height: 24px; */
         font-size: 18px;
         margin:0;
         padding: 0;
@@ -113,7 +113,7 @@
 
     .error_message {
       padding: 8px;
-      border: solid 3px #D32F2F;
+      border: solid 3px #206095;
     }
     .error_title {
         font-weight: bold;
@@ -130,28 +130,28 @@
       <div class="row">
         <div class="col-sm-3">
           <div class="row no-gutters">
-            <div class="col-sm-12" style="height:120px;"><p class='bold'>Life expectancy in 2042</p></div>
+            <div class="col-sm-12" style="height:90px;"><p class='bold'>Life expectancy in 2042</p></div>
             <div class="col-sm-12"><div id="slider-mortality"></div></div>
           </div>
         </div>
 
         <div class="col-sm-3">
           <div class="row no-gutters">
-            <div class="col-sm-12" style="height:120px;"><p class='bold'>Annual net migration by 2042</p></div>
+            <div class="col-sm-12" style="height:90px;"><p class='bold'>Annual net migration by 2042</p></div>
             <div class="col-sm-12"><div id="slider-simple"></div></div>
           </div>
         </div>
 
         <div class="col-sm-3">
           <div class="row no-gutters">
-            <div class="col-sm-12" style="height:120px;"><p class='bold' >Children per woman by 2042</p></div>
+            <div class="col-sm-12" style="height:90px;"><p class='bold' >Children per woman by 2042</p></div>
             <div class="col-sm-12"><div id="slider-women"></div></div>
           </div>
         </div>
 
         <div class="col-sm-3">
           <div class="row no-gutters">
-            <div class="col-sm-12" style="height:120px;"><p class='bold'>At
+            <div class="col-sm-12" style="height:90px;"><p class='bold'>At
                   <span class="borderbox">
                   <span><button type="button" id="minus" class="minus">-</button></span>
                   <span style="text-align: center;"><input class="bold" id="year" type="number" value="2028" max="2042" min="2017"></span>
@@ -167,21 +167,21 @@
     </div>
     <div class="container" style="padding-left:0px;padding-right:0px;">
       <div class="row">
-        <div class="col-8 order-1 order-xs-2">
+        <div class="col-sm-8 order-2 order-sm-1">
           <div id="graphic">
           	<!-- <img src="fallback.png" alt="[Chart]" /> -->
           </div>
         </div>
-        <div class="col-4 order-2 order-xs-1">
+        <div class="col-sm-4 order-1 order-sm-2">
           <div id="keypoints">
               <p class='bold' style="margin:0;">Based on your selection</p>
 
               <div class="error_message">
-                <p class="error_text">In 2042, there will be <span id="boxtext1">X</span> pensioners per 1,000 people of working age.
+                <p class="error_text">In 2042, there will be <span id="boxtext1">367</span> pensioners per 1,000 people of working age.
                 </br></br>
-                This is <span id="boxtext2">Y></span> <span id='boxtext3'>more/less</span> than our projections.
+                This is <span id="boxtext2"></span> <span id='boxtext3'>equal to</span> our projections.
                 </br></br>
-                This is <span id='boxtext4'>Z</span> <span id='boxtext5'>more/less</span> than in 2016
+                This is <span id='boxtext4'></span> <span id='boxtext5'>equal to</span> 2016.
                 </p>
               </div>
 
@@ -268,6 +268,7 @@
       svg.select('#endcircle')
         .attr('cy',y(newOADR[newOADR.length-1].oadr))
 
+      updateText(newOADR)
       // svg.select('#endtext')
       //     .attr("y",y(newOADR[newOADR.length-1].oadr)+7)
       //     .text("Your projection: "+d3.format(".0f")(newOADR[newOADR.length-1].oadr))
@@ -277,7 +278,7 @@
     var gSimple = d3
       .select('div#slider-simple')
       .append('svg')
-      .attr('height', 260)
+      .attr('height', 220)
       .append('g')
       .attr('transform', 'translate(80,30)');
 
@@ -289,7 +290,7 @@
       .sliderRight()
       .min(0)
       .max(5)
-      .height(200)
+      .height(175)
       .tickFormat(d3.format(',.2f'))
       .ticks(5)
       .step(0.01)
@@ -320,16 +321,14 @@
       svg.select('#endcircle')
         .attr('cy',y(newOADR[newOADR.length-1].oadr))
 
-      // svg.select('#endtext')
-      //     .attr("y",y(newOADR[newOADR.length-1].oadr)+7)
-      //     .text("Your projection: "+d3.format(".0f")(newOADR[newOADR.length-1].oadr))
+      updateText(newOADR)
 
       }),100);
 
     var gSimple2 = d3
       .select('div#slider-women')
       .append('svg')
-      .attr('height', 260)
+      .attr('height', 220)
       .append('g')
       .attr('transform', 'translate(80,30)');
 
@@ -341,7 +340,7 @@
       .sliderRight()
       .min(60)
       .max(80)
-      .height(200)
+      .height(175)
       .tickFormat(d3.format(',.0f'))
       .ticks(5)
       .step(1)
@@ -371,15 +370,14 @@
         svg.select('#endcircle')
           .attr('cy',y(newOADR[newOADR.length-1].oadr))
 
-        // svg.select('#endtext')
-        //     .attr("y",y(newOADR[newOADR.length-1].oadr)+7)
-        //     .text("Your projection: "+d3.format(".0f")(newOADR[newOADR.length-1].oadr))
+        updateText(newOADR)
+
       }),100);
 
     var gSimple3 = d3
       .select('div#slider-pension')
       .append('svg')
-      .attr('height', 260)
+      .attr('height', 220)
       .append('g')
       .attr('transform', 'translate(80,30)');
 
@@ -394,7 +392,7 @@
         .sliderLeftRight()
         .max(4)
         .min(0)
-        .height(150)
+        .height(175)
         .tickFormat(function(d,i){return ticksRight[i]})
         .ticks(5)
         .step(1)
@@ -443,10 +441,7 @@
                 svg.select('#endcircle')
                   .attr('cy',y(newOADR[newOADR.length-1].oadr))
 
-                // svg.select('#endtext')
-                //   .attr("y",y(newOADR[newOADR.length-1].oadr)+7)
-                //   .text("Your projection: "+d3.format(".0f")(newOADR[newOADR.length-1].oadr))
-
+                updateText(newOADR)
 
                 mortalityprofile=slidervalues[4]
 
@@ -464,9 +459,7 @@
               svg.select('#endcircle')
                 .attr('cy',y(newOADR[newOADR.length-1].oadr))
 
-              // svg.select('#endtext')
-              //   .attr("y",y(newOADR[newOADR.length-1].oadr)+7)
-              //   .text("Your projection: "+d3.format(".0f")(newOADR[newOADR.length-1].oadr))
+              updateText(newOADR)
 
               //set the mortalityprofile
               mortalityprofile=slidervalues[4]
@@ -476,7 +469,7 @@
     var gSimple4 = d3
       .select('div#slider-mortality')
       .append('svg')
-      .attr('height', 260)
+      .attr('height', 220)
       .append('g')
       .attr('transform', 'translate(80,30)');
 
@@ -1450,6 +1443,42 @@
     })
     return OldAgeDependencyRatio
   }//ends run the model
+
+  function updateText(OADR){
+
+
+
+    var OADRin2042=d3.format(".0f")(OADR[OADR.length-1].oadr)
+    var selectBox=d3.select('#keypoints')
+    selectBox.select('#boxtext1').html(OADRin2042)
+
+    var changeAgainstProjections = OADRin2042-367
+    selectBox.select('#boxtext2').html(Math.abs(changeAgainstProjections))
+
+    if(changeAgainstProjections>0){
+      selectBox.select('#boxtext3').html('more than')
+    }else if(changeAgainstProjections<0){
+      selectBox.select('#boxtext3').html('less than')
+    }else{
+      selectBox.select('#boxtext2').html("")
+      selectBox.select('#boxtext3').html('equal to')
+    }
+
+    var changeAgainst2016 = OADRin2042-300
+    selectBox.select('#boxtext4').html(Math.abs(changeAgainst2016))
+
+    if(changeAgainst2016>0){
+      selectBox.select('#boxtext5').html('more than in')
+    }else if(changeAgainst2016<0){
+      selectBox.select('#boxtext5').html('less than in')
+    }else{
+      selectBox.select('#boxtext4').html("")
+      selectBox.select('#boxtext5').html('equal to')
+    }
+
+
+
+  }//end function OADR
 
 
 	//check whether browser can cope with svg
