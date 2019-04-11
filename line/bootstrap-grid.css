@@ -9,14 +9,16 @@
 }
 
 html {
-  box-sizing: border-box;
-  -ms-overflow-style: scrollbar;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  -ms-overflow-style: "scrollbar";
 }
 
 *,
 *::before,
 *::after {
-  box-sizing: inherit;
+  -webkit-box-sizing: inherit;
+          box-sizing: inherit;
 }
 
 .container {
@@ -2047,4 +2049,3 @@ html {
     align-self: stretch !important;
   }
 }
-/*# sourceMappingURL=bootstrap-grid.css.map */
