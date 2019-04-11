@@ -131,36 +131,36 @@
   <h1>Lorem ipsum</h1>
     <div class="container" style="padding-left:0px;padding-right:0px;">
       <div class="row">
-        <div class="col">
+        <div class="col-md">
           <div class="row no-gutters">
-            <div class="col-sm-12" style="height:70px;"><p class='bold'>Life expectancy in 2042</p></div>
-            <div class="col-sm-12"><div id="slider-mortality"></div></div>
+            <div class="col-md-12" style="height:70px;"><p class='bold'>Life expectancy in 2042</p></div>
+            <div class="col-md-12"><div id="slider-mortality"></div></div>
           </div>
         </div>
 
-        <div class="col">
+        <div class="col-md">
           <div class="row no-gutters">
-            <div class="col-sm-12" style="height:70px;"><p class='bold'>Annual net migration by 2042</p></div>
-            <div class="col-sm-12"><div id="slider-simple"></div></div>
+            <div class="col-md-12" style="height:70px;"><p class='bold'>Annual net migration by 2042</p></div>
+            <div class="col-md-12"><div id="slider-simple"></div></div>
           </div>
         </div>
 
-        <div class="col">
+        <div class="col-md">
           <div class="row no-gutters">
-            <div class="col-sm-12" style="height:70px;"><p class='bold' >Children per woman by 2042</p></div>
-            <div class="col-sm-12"><div id="slider-women"></div></div>
+            <div class="col-md-12" style="height:70px;"><p class='bold' >Children per woman by 2042</p></div>
+            <div class="col-md-12"><div id="slider-women"></div></div>
           </div>
         </div>
 
-        <div class="col-sm-4">
+        <div class="col-md-4">
           <div class="row no-gutters">
-            <div class="col-sm-12" style="height:70px;"><p class='bold'>At
+            <div class="col-md-12" style="height:70px;"><p class='bold'>At
                   <span class="borderbox"><span><button type="button" id="minus" class="minus">-</button></span>
                   <span style="text-align: center;"><input class="bold" id="year" type="number" value="2028" max="2042" min="2017"></span>
                   <span><button type="button" id="plus" class="plus">+</button></span></span>
 
                the state pension age will be</p></div>
-            <div class="col-sm-12"><div id="slider-pension"></div></div>
+            <div class="col-md-12"><div id="slider-pension"></div></div>
           </div>
         </div>
 
@@ -168,12 +168,12 @@
     </div>
     <div class="container" style="padding-left:0px;padding-right:0px;">
       <div class="row">
-        <div class="col-sm-8 order-2 order-sm-1">
+        <div class="col-md-8 order-2 order-md-1">
           <div id="graphic">
           	<!-- <img src="fallback.png" alt="[Chart]" /> -->
           </div>
         </div>
-        <div class="col-sm-4 order-1 order-sm-2">
+        <div class="col-md-4 order-1 order-md-2">
           <div id="keypoints">
               <p class='bold' style="margin:0;">Based on your selection</p>
 
@@ -182,7 +182,7 @@
                 </br></br>
                 This is <span id="boxtext2"></span> <span id='boxtext3'>equal to</span> our projections.
                 </br></br>
-                This is <span id='boxtext4'></span> <span id='boxtext5'>equal to</span> 2016.
+                This is <span id='boxtext4'>67</span> <span id='boxtext5'>more than in</span> 2016.
                 </p>
               </div>
 
@@ -792,7 +792,7 @@
         var OADR=runthemodel(malemortality,femalemortality,malemigration,femalemigration,fertility,malepopulation,femalepopulation,165000,1.84,2028,67)
         // console.log("draw the line")
 
-        var margin = {	top: 	30,
+        var margin = {	top: 	60,
              right: 	20,
              bottom: 50,
              left: 	50
@@ -810,9 +810,9 @@
         //
         x.domain(d3.extent(numberofyears,function(d){return d3.timeParse("%Y")(d)}));
         //
-        var xAxis = d3.axisBottom(x)
+        var xAxis = d3.axisBottom(x).ticks(5)
 
-        var yAxis = d3.axisLeft(y);
+        var yAxis = d3.axisLeft(y).ticks(5);
         //
         //gridlines
         var y_axis_grid = function() { return yAxis; }
@@ -827,7 +827,11 @@
         y.domain([0,550])
         //
         //    //create svg for chart
-        var svg = d3.select('#graphic').append('svg')
+
+        d3.select('#graphic').selectAll("*").remove()
+        d3.select('#graphic').append('svg').append('g').attr('id',"legend")
+
+        var svg = d3.select('#graphic').select('svg')
                     .attr("width", chart_width + margin.left + margin.right)
                     .attr("height", height + margin.top + margin.bottom )
                     .append("g")
@@ -859,7 +863,7 @@
           svg.append("text")
            //.attr('class', 'unit')
            .attr('transform','translate(' + -margin.left + ',-17)') // " + eval(-margin.top + (lineNo+1)*20) + "
-           .attr("font-size","16px")
+           .attr("font-size","18px")
            .attr("fill","#321213")
            .text("Number of pensioners per 1,000 people of working age");
 
@@ -895,18 +899,7 @@
         .attr('r',5)
         .attr('fill','#206095')
 
-      // svg.append('g')
-      //   .append('text')
-      //   .attr('id','endtext')
-      //   .attr('x',x(new Date("2042"))+25)
-      //   .attr('y',y(OADR[OldAgeDependencyRatio.length-1].oadr)+7)
-      //   .attr('font-weight',700)
-      //   .text("Your projection: ")
-      //   .append('tspan')
-      //   .attr('font-weight',400)
-      //   .attr('dy','1.1em')
-      //   .text(d3.format(".0f")(OADR[OldAgeDependencyRatio.length-1].oadr))
-
+      createLegend()
 
       })//end initial promise
 
@@ -1481,6 +1474,64 @@
 
   }//end function OADR
 
+function createLegend(){
+  var prevX= 0;
+  var prevY= 0;
+  lineNo = 0;
+  var lineNoOld = 0;
+  var colours=["#206095","grey"]
+  var legendLabels=["Your projection", "Our projection"]
+  legendLabels.forEach(function(d,i) {
+  var_group= d3.select("#legend").append("g")
+  var_group.append("line")
+    .attr("class","rect" + i)
+    .style("stroke", colours[i])
+    .attr("x1", 0)
+    .attr("x2",20)
+    .attr("y1", 14)
+    .attr("y2",14)
+    .attr("stroke-width",3)
+    .attr("stroke-dasharray",function(){if(i==1){return "5 5"}})
+  var_group.append("text")
+    .text(legendLabels[i])
+    .attr("class","legend" + i)
+    .attr("text-anchor", "start")
+    .style("font-size", "18px")
+    .style("fill", colours[i])
+    .attr('y',15)
+    .attr('x',0);
+  d3.selectAll(".legend" + (i))
+    .each(calcPosition);
+
+    function calcPosition() {
+      var BBox = this.getBBox()
+      //prevY =BBox.width
+      d3.select(".legend" + (i))
+      .attr("y",function(d){
+      if((prevX+BBox.width +50)>parseInt(graphic.style("width")) ){
+      lineNoOld = lineNo;
+      lineNo=lineNo + 1;
+      prevX = 0;
+      }
+      return eval((lineNo*20) + 20);
+      })
+      .attr("x",function(d){ return prevX+25;})
+      d3.select(".rect" + (i))
+      .attr("y",function(d){
+      if((prevX+BBox.width +50)>parseInt(graphic.style("width")) ){
+      lineNoOld = lineNo;
+      lineNo=lineNo + 1;
+      prevX = 0;
+      }
+      return eval((lineNo*20)+5);
+      })
+      .attr("x1",function(d){ return prevX; })
+      .attr("x2",function(d){ return prevX+20; })
+
+      prevX = prevX + BBox.width +50
+      }; // end function calcPosition()
+  }); // end foreach
+}// end function createLegend()
 
 	//check whether browser can cope with svg
 		if (Modernizr.svg) {
