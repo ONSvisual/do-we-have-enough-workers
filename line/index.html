@@ -182,14 +182,14 @@
 
         <div class="col-md">
           <div class="row no-gutters">
-            <div class="col-md-12" style="height:70px;"><p class='bold'>Annual net migration by 2042</p></div>
+            <div class="col-md-12" style="height:70px;"><p class='bold'>Annual net migration by 2042<span class="fas fa-info-circle test" id="icon2"></span></p></div>
             <div class="col-md-12"><div id="slider-simple"></div></div>
           </div>
         </div>
 
         <div class="col-md">
           <div class="row no-gutters">
-            <div class="col-md-12" style="height:70px;"><p class='bold' >Children per woman by 2042</p></div>
+            <div class="col-md-12" style="height:70px;"><p class='bold' >Children per woman by 2042<span class="fas fa-info-circle test" id="icon3"></span></p></div>
             <div class="col-md-12"><div id="slider-women"></div></div>
           </div>
         </div>
@@ -256,16 +256,24 @@
 
 
    <script>
-   tooltip
+   //tooltip
    d3.select('#icon1')
-    .data([{"tooltipText":"Lorem ipsum","id":"icon1"}])
+    .data([{"tooltipText":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec mollis nulla purus. Etiam aliquam sit amet dolor vel ullamcorper. ","id":"icon1"}])
     .on('mouseover',function(d){showTooltip(d)})
     .on('mouseout',function(d){hideTooltip(d)})
 
+    d3.select('#icon2')
+     .data([{"tooltipText":"Sed euismod urna non tristique euismod. Quisque auctor dui arcu, sit amet porta dui ornare sit amet. ","id":"icon2"}])
+     .on('mouseover',function(d){showTooltip(d)})
+     .on('mouseout',function(d){hideTooltip(d)})
+
+     d3.select('#icon3')
+      .data([{"tooltipText":"Donec at maximus turpis, in sagittis enim. Curabitur maximus rhoncus hendrerit. Fusce suscipit sit amet mauris nec vehicula.","id":"icon3"}])
+      .on('mouseover',function(d){showTooltip(d)})
+      .on('mouseout',function(d){hideTooltip(d)})
+
     function showTooltip(d){
-      console.log(document.getElementById(d.id).getBoundingClientRect())
       var boundingRect=document.getElementById(d.id).getBoundingClientRect()
-      console.log(boundingRect.x)
       d3.select("#tooltip")
         .classed("tooltipright",false)
         .classed("tooltipleft",true)
