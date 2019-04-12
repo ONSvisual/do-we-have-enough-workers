@@ -6,7 +6,7 @@
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
     <title></title>
 
-    <meta name="description" content="Interactive calculator to show what factors affect the ratio of pensions to people of working age">
+    <meta name="description" content="Interactive calculator to show what factors affect the ratio of pensioners to people of working age">
     <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge" /> -->
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" />
     <!-- <meta http-equiv="content-type" content="text/html; charset=utf-8" /> -->
@@ -87,8 +87,9 @@
       }
       .bold{
         font-weight: 700;
-        font-size:20px;
+        /* font-size:20px; */
       }
+
 
     button {
     width: 1.4em;
@@ -126,6 +127,10 @@
         font-size: 1.2em;
         padding: 0;
         margin-top: 0;
+    }
+
+    .error_text{
+      font-weight: 400;
     }
 
     /* Tooltip */
@@ -172,7 +177,7 @@
 
 <body>
   <h1>Lorem ipsum</h1>
-    <div class="container" style="padding-left:0px;padding-right:0px;">
+    <div class="container" style="padding-left:0px;padding-right:0px;margin-bottom:20px">
       <div class="row">
         <div class="col col-12 col-md-3">
           <div class="row no-gutters">
@@ -181,21 +186,21 @@
           </div>
         </div>
 
-        <div class="col col-12 col-md-3">
+        <div class="col col-12 col-md-3" style="border-left: grey 1px solid;">
           <div class="row no-gutters">
             <div class="col-md-12" style="height:70px;"><p class='bold'>Annual net migration by 2042<span class="fas fa-info-circle test" id="icon2"></span></p></div>
             <div class="col-md-12"><div id="slider-simple"></div></div>
           </div>
         </div>
 
-        <div class="col col-12 col-md-3">
+        <div class="col col-12 col-md-3" style="border-left: grey 1px solid;">
           <div class="row no-gutters">
             <div class="col-md-12" style="height:70px;"><p class='bold' >Children per woman by 2042<span class="fas fa-info-circle test" id="icon3"></span></p></div>
             <div class="col-md-12"><div id="slider-women"></div></div>
           </div>
         </div>
 
-        <div class="col col-12 col-md-3">
+        <div class="col col-12 col-md-3" style="border-left: grey 1px solid;">
           <div class="row no-gutters">
             <div class="col-md-12" style="height:70px;"><p class='bold'>At
                   <span class="borderbox"><span><button type="button" id="minus" class="minus">-</button></span>
@@ -220,11 +225,11 @@
               <p class='bold' style="margin:0;">Based on your selection</p>
 
               <div class="error_message">
-                <p class="error_text">In 2042, there will be <span id="boxtext1">367</span> pensioners per 1,000 people of working age.
+                <p class="error_text">In 2042, there will be <span class="bold" id="boxtext1">367</span> pensioners per 1,000 people of working age.
                 </br></br>
-                This is <span id="boxtext2"></span> <span id='boxtext3'>equal to</span> our projections.
+                This is <span class="bold"id="boxtext2"></span> <span id='boxtext3'>equal to</span> our projections.
                 </br></br>
-                This is <span id='boxtext4'>67</span> <span id='boxtext5'>more than in</span> 2016.
+                This is <span class="bold"id='boxtext4'>67</span> <span id='boxtext5'>more than in</span> 2016.
                 </p>
               </div>
 
