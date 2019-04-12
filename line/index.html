@@ -91,29 +91,42 @@
       }
 
 
-    button {
-    width: 1.4em;
-    height: 1.4em;
-    background-color: #1b5f97;
-    color: #fff;
-    border: 2px solid #1b5f97;
-    box-sizing: border-box;
-    font-size: 20px;
-    text-align: center;
-    cursor: pointer;
-    font-weight: bold;
-    }
-    .borderbox {
-    border: 2px solid #1b5f97;
-    /* padding-top:5px; */
-    /* padding-bottom: 1px; */
-    /*padding-left: 0px;
-    padding-right: 0px;
-    display: flex;
-    align-items: center;
-    max-width: 160px;
-    float: none;*/
-    }
+      button {
+      width: 18px;
+      height: 18px;
+      padding: 0px;
+      position: absolute;
+      background-color: #1b5f97;
+      color: #fff;
+      border: 2px solid #1b5f97;
+      box-sizing: border-box;
+      /* font-size: 27px; */
+      text-align: center;
+      cursor: pointer;
+      font-weight: bold;
+      }
+      .borderbox {
+      border: 2px solid #1b5f97;
+      padding-top:3px;
+      padding-bottom: 3px;
+      padding-right: 16px;
+      /*padding-left: 0px;
+      padding-right: 0px;
+      display: flex;
+      align-items: center;
+      max-width: 160px;
+      float: none;*/
+      }
+
+      #minus {
+          margin-top: 10px;
+          font-size:12px;
+      }
+
+      #plus {
+          margin-top: -5px;
+          font-size:12px;
+      }
     button:focus {
       outline: 3px solid #f93;
     }
@@ -203,10 +216,12 @@
         <div class="col col-12 col-md-3" style="border-left: grey 1px solid;">
           <div class="row no-gutters">
             <div class="col-md-12" style="height:70px;"><p class='bold'>At
-                  <span class="borderbox"><span><button type="button" id="minus" class="minus">-</button></span>
-                  <span style="text-align: center;"><input class="bold" id="year" type="number" value="2028" max="2042" min="2017"></span>
-                  <span><button type="button" id="plus" class="plus">+</button></span></span>
-               the state pension age will be</p></div>
+              <span class="borderbox">
+              <span style="text-align: center;"><input class="bold" id="year" type="number" value="2028" max="2042" min="2017"></span>
+              <button type="button" id="minus" class="minus">-</button>
+              <button type="button" id="plus" class="plus">+</button>
+              </span>
+                &nbsp;the state pension age will be</p></div>
             <div class="col-md-12"><div id="slider-pension"></div></div>
           </div>
         </div>
