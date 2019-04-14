@@ -139,7 +139,6 @@
       /* font-size: 2em;  */
     }
 
-    @media (min-width: 600px) {
       #tooltip {
         background: #206095;
         color: #fff;
@@ -150,6 +149,7 @@
         padding: 5px;
         width: 150px;
         text-align:center;
+        pointer-events: none;
       }
 
       #tooltip::after {
@@ -170,7 +170,14 @@
         .tooltipright::after {
             left: 155px !important;
         }
+
+
+    @media (min-width: 767px){
+      .title{
+         height:70px;
+      }
     }
+
     </style>
 </head>
 
@@ -181,28 +188,28 @@
       <div class="row">
         <div class="col col-12 col-md-3">
           <div class="row no-gutters">
-            <div class="col-12" style="height:70px;"><p class='bold'>Life expectancy in 2042<span class="fas fa-info-circle test" id="icon1"></span></p></div>
+            <div class="col-12 title"><p class='bold'>Life expectancy in 2042<span class="fas fa-info-circle test" id="icon1"></span></p></div>
             <div class="col-12"><div id="slider-mortality"></div></div>
           </div>
         </div>
 
         <div class="col col-12 col-md-3" style="border-left: grey 1px solid;">
           <div class="row no-gutters">
-            <div class="col-md-12" style="height:70px;"><p class='bold'>Annual net migration by 2042<span class="fas fa-info-circle test" id="icon2"></span></p></div>
+            <div class="col-md-12 title"><p class='bold'>Annual net migration by 2042<span class="fas fa-info-circle test" id="icon2"></span></p></div>
             <div class="col-md-12"><div id="slider-simple"></div></div>
           </div>
         </div>
 
         <div class="col col-12 col-md-3" style="border-left: grey 1px solid;">
           <div class="row no-gutters">
-            <div class="col-md-12" style="height:70px;"><p class='bold' >Children per woman by 2042<span class="fas fa-info-circle test" id="icon3"></span></p></div>
+            <div class="col-md-12 title"><p class='bold' >Children per woman by 2042<span class="fas fa-info-circle test" id="icon3"></span></p></div>
             <div class="col-md-12"><div id="slider-women"></div></div>
           </div>
         </div>
 
         <div class="col col-12 col-md-3" style="border-left: grey 1px solid;">
           <div class="row no-gutters">
-            <div class="col-md-12" style="height:70px;"><p class='bold'>At
+            <div class="col-md-12 title"><p class='bold'>At
                   <span class="borderbox"><span><button type="button" id="minus" class="minus">-</button></span>
                   <span style="text-align: center;"><input class="bold" id="year" type="number" value="2028" max="2042" min="2017"></span>
                   <span><button type="button" id="plus" class="plus">+</button></span></span>
@@ -261,67 +268,83 @@
 
 
    <script>
-   //tooltip
-   d3.select('#icon1')
-    .data([{"tooltipText":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec mollis nulla purus. Etiam aliquam sit amet dolor vel ullamcorper. ","id":"icon1"}])
-    .on('mouseover',function(d){showTooltip(d)})
-    .on('mouseout',function(d){hideTooltip(d)})
 
-    d3.select('#icon2')
-     .data([{"tooltipText":"Sed euismod urna non tristique euismod. Quisque auctor dui arcu, sit amet porta dui ornare sit amet. ","id":"icon2"}])
-     .on('mouseover',function(d){showTooltip(d)})
-     .on('mouseout',function(d){hideTooltip(d)})
-
-     d3.select('#icon3')
-      .data([{"tooltipText":"Donec at maximus turpis, in sagittis enim. Curabitur maximus rhoncus hendrerit. Fusce suscipit sit amet mauris nec vehicula.","id":"icon3"}])
-      .on('mouseover',function(d){showTooltip(d)})
-      .on('mouseout',function(d){hideTooltip(d)})
-
-    function showTooltip(d){
-      var boundingRect=document.getElementById(d.id).getBoundingClientRect()
-      d3.select("#tooltip")
-        .classed("tooltipright",false)
-        .classed("tooltipleft",true)
-        .style("left", (boundingRect.x-2)+"px")
-        .style("top", (boundingRect.y+25)+"px")
-        .text(d.tooltipText)
-        .transition()
-        .duration(300)
-        .style("opacity","1");
-    }
-
-    function hideTooltip(d){
-      d3.select("#tooltip")
-      .transition()
-      .duration(300)
-      .style("opacity","0");
-    }
-
-   //stuff for the tally
-   document.getElementById("plus").addEventListener("click", function() {
-     var typenumber = document.getElementById("year").value
-     if(typenumber+1<=document.getElementById("year").max){
-       document.getElementById("year").value = +typenumber + 1;
-       d3.select("#year").on('change')()
-     }
-    })
-    document.getElementById("minus").addEventListener("click", function() {
-     if (document.getElementById("year").value > 0) {
-       var typenumber = document.getElementById("year").value
-       if(typenumber-1>=document.getElementById("year").min){
-         document.getElementById("year").value = +typenumber - 1;
-         d3.select("#year").on('change')()
-       }
-     }
-    })
-
-
+    width=document.body.clientWidth
 		var graphic = d3.select('#graphic');
 		var keypoints = d3.select('#keypoints');
 		var footer = d3.select(".footer");
 		var pymChild = null;
 
-    width=document.body.clientWidth
+    //tooltip
+     d3.select('#icon1')
+      .data([{"tooltipText":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec mollis nulla purus. Etiam aliquam sit amet dolor vel ullamcorper. ","id":"icon1"}])
+      .on('mouseover',function(d){showTooltip(d)})
+      .on('mouseout',function(d){hideTooltip(d)})
+
+      d3.select('#icon2')
+       .data([{"tooltipText":"Sed euismod urna non tristique euismod. Quisque auctor dui arcu, sit amet porta dui ornare sit amet. ","id":"icon2"}])
+       .on('mouseover',function(d){showTooltip(d)})
+       .on('mouseout',function(d){hideTooltip(d)})
+
+       d3.select('#icon3')
+        .data([{"tooltipText":"Donec at maximus turpis, in sagittis enim. Curabitur maximus rhoncus hendrerit. Fusce suscipit sit amet mauris nec vehicula.","id":"icon3"}])
+        .on('mouseover',function(d){showTooltip(d)})
+        .on('mouseout',function(d){hideTooltip(d)})
+
+      function showTooltip(d){
+        var boundingRect=document.getElementById(d.id).getBoundingClientRect()
+        if(boundingRect.x>width/2){
+          d3.select("#tooltip")
+            .classed("tooltipright",true)
+            .classed("tooltipleft",false)
+            .style("right", (width-boundingRect.right+2)+"px")
+            .style("top", (boundingRect.y+25)+"px")
+            .text(d.tooltipText)
+            .transition()
+            .duration(300)
+            .style("opacity","1");
+        }else{
+          d3.select("#tooltip")
+            .classed("tooltipright",false)
+            .classed("tooltipleft",true)
+            .style("left", (boundingRect.x-2)+"px")
+            .style("top", (boundingRect.y+25)+"px")
+            .text(d.tooltipText)
+            .transition()
+            .duration(300)
+            .style("opacity","1");
+        }
+      }
+
+      function hideTooltip(){
+        d3.select("#tooltip")
+        .transition()
+        .duration(300)
+        .style("opacity","0");
+
+        window.setTimeout(function(){d3.select("#tooltip")
+        .style("left","")
+        .style("right","")},500)
+      }
+
+     //stuff for the tally
+     document.getElementById("plus").addEventListener("click", function() {
+       var typenumber = document.getElementById("year").value
+       if(typenumber+1<=document.getElementById("year").max){
+         document.getElementById("year").value = +typenumber + 1;
+         d3.select("#year").on('change')()
+       }
+      })
+      document.getElementById("minus").addEventListener("click", function() {
+       if (document.getElementById("year").value > 0) {
+         var typenumber = document.getElementById("year").value
+         if(typenumber-1>=document.getElementById("year").min){
+           document.getElementById("year").value = +typenumber - 1;
+           d3.select("#year").on('change')()
+         }
+       }
+      })
+
 
     if(width>767){
       var sliderSimple = d3
@@ -632,7 +655,9 @@
         .attr('height', 110)
         .attr('width',width)
         .append('g')
-        .attr('transform', 'translate(30,20)');
+        .attr('transform', 'translate(30,40)');
+
+      if(width<500){sliderSimple.ticks(3)}
 
       gSimple.call(sliderSimple);
 
@@ -677,7 +702,7 @@
         .attr('height', 100)
         .attr('width',width)
         .append('g')
-        .attr('transform', 'translate(30,20)');
+        .attr('transform', 'translate(30,40)');
 
       gSimple2.call(sliderWomen);
 
@@ -721,7 +746,7 @@
         .attr('height', 100)
         .attr('width',width)
         .append('g')
-        .attr('transform', 'translate(30,20)');
+        .attr('transform', 'translate(30,40)');
 
       gSimple3.call(sliderPension);
 
@@ -731,10 +756,10 @@
       ticksRight=["84.5","85.3","86.2","86.9","87.2"]
 
       var sliderMortality = d3
-          .sliderLeftRight()
+          .sliderTopBottom()
           .max(4)
           .min(0)
-          .height(175)
+          .width(width-80)
           .tickFormat(function(d,i){return ticksRight[i]})
           .ticks(5)
           .step(1)
@@ -811,28 +836,39 @@
       var gSimple4 = d3
         .select('div#slider-mortality')
         .append('svg')
-        .attr('height', 220)
+        .attr('width',width)
+        .attr('height', 120)
         .append('g')
-        .attr('transform', 'translate(80,30)');
+        .attr('transform', 'translate(30,50)');
 
       gSimple4.call(sliderMortality);
 
       //male & female labels
-      gSimple4.append('text').text("Males").attr("x",-18).attr("y",-18).attr('text-anchor','end').attr('fill','#58595B')
-      gSimple4.append('text').text("Females").attr("x",15).attr("y",-18).attr('text-anchor','start').attr('fill','#58595B')
+      gSimple4.append('text').text("Females").attr("x",-16).attr("y",-15).attr('text-anchor','start').attr('fill','#58595B')
+      gSimple4.append('text').text("Males").attr("x",-16).attr("y",22).attr('text-anchor','start').attr('fill','#58595B')
 
-      //custom ticks for the left
-      d3.select('div#slider-mortality').select('.axis').selectAll('.tick text').attr('text-anchor','start')
+      //custom ticks for the left/bottom
+      d3.select('div#slider-mortality').select('.axis').selectAll('.tick text').attr('text-anchor','middle')
+
+      d3.select('div#slider-mortality').select('.axis').selectAll('.tick text').attr('y','-30')
+
+      d3.select('div#slider-mortality').select('.parameter-value').select('text').attr('y',-36)
+
+
       d3.select('div#slider-mortality').select('.axis2').selectAll('.tick text')
       .attr('font-size',18)
       .attr('fill',"#aaa")
-      .attr('x',-18)
+      .attr('y',+36)
+      .attr('text-anchor','middle')
       .text(function(d,i){return ticksLeft[i]})
+
+      d3.select('div#slider-mortality').select('.axis2').selectAll('line').attr('y2','18')
+
 
       d3.select('div#slider-mortality').select('.axis2').selectAll('.tick line')
       .attr('stroke',"#aaa")
 
-      //bubble for the right
+      //bubble for the right/top
       var textRight=d3.select('div#slider-mortality').select(".parameter-value").select('text').text(ticksRight[sliderMortality.value()])
       bbox=d3.select('div#slider-mortality').select(".parameter-value").select('text').node().getBBox();
       d3.select('div#slider-mortality').select(".parameter-value").select('rect')
@@ -846,8 +882,8 @@
       //bubble for the left
       d3.select('div#slider-mortality').select(".parameter-value").append('rect')
       .attr('id','rectLeft')
-      .attr("x", bbox.x - 5-90)
-      .attr("y", bbox.y - 5)
+      .attr("x", bbox.x - 5)
+      .attr("y", + 22)
       .attr("ry",5)
       .attr("width", bbox.width + (5*2))
       .attr("height", bbox.height + (5*2))
@@ -858,12 +894,13 @@
       .text(ticksLeft[sliderMortality.value()])
       .attr('font-weight',700)
       .style('fill','white')
-      .attr('y',textRight.attr('y'))
-      .attr('x',textRight.attr('x')-90)
+      .attr('y',36)
+      .attr('x',textRight.attr('x'))
       .attr('dy',textRight.attr('dy'))
 
 
-    }//end else
+
+    }//end else mobile
 
     //set up the sliders
 
@@ -1144,9 +1181,16 @@
              left: 	50
            };
         var aspectRatio=[16,9]
+        var mobileAspectRatio=[4,3]
 
-        var chart_width = parseInt(graphic.style("width")) - margin.left - margin.right;
-        var height = Math.ceil((chart_width * aspectRatio[1]) / aspectRatio[0]) - margin.top - margin.bottom;
+        if(width<768){
+          var chart_width = parseInt(graphic.style("width")) - margin.left - margin.right;
+          var height = Math.ceil((chart_width * mobileAspectRatio[1]) / mobileAspectRatio[0]) - margin.top - margin.bottom;
+
+        }else{
+          var chart_width = parseInt(graphic.style("width")) - margin.left - margin.right;
+          var height = Math.ceil((chart_width * aspectRatio[1]) / aspectRatio[0]) - margin.top - margin.bottom;
+        }
 
         var x = d3.scaleTime()
                .range([0, chart_width]);

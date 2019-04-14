@@ -13,6 +13,7 @@
   var bottom = 3;
   var left = 4;
   var leftRight = 5;
+  var topBottom = 6;
 
   function translateX(x) {
     return 'translate(' + x + ',0)';
@@ -48,18 +49,18 @@
     var identityClamped = null;
     var handleIndex = null;
 
-    var k = orientation === top || orientation === left ? -1 : 1;
+    var k = orientation === top || orientation === left || orientation===topBottom ? -1 : 1;
     var x = orientation === left || orientation === right || orientation === leftRight ? 'y' : 'x';
     var y = orientation === left || orientation === right || orientation === leftRight ? 'x' : 'y';
 
     var transformAlong =
-      orientation === top || orientation === bottom ? translateX : translateY;
+      orientation === top || orientation === bottom || orientation === topBottom ? translateX : translateY;
 
     var transformAcross =
-      orientation === top || orientation === bottom ? translateY : translateX;
+      orientation === top || orientation === bottom || orientation === topBottom ? translateY : translateX;
 
     var axisFunction = null;
-    if(orientation===leftRight){
+    if(orientation===leftRight||orientation===topBottom){
       var axisFunction2=null;
     }
 
@@ -80,6 +81,9 @@
         axisFunction = d3Axis.axisRight;
         axisFunction2= d3Axis.axisLeft
         break;
+      case topBottom:
+        axisFunction = d3Axis.axisTop;
+        axisFunction2= d3Axis.axisBottom
     }
 
     var handleSelection = null;
@@ -89,7 +93,7 @@
     if (scale) {
       domain = [d3Array.min(scale.domain()), d3Array.max(scale.domain())];
 
-      if (orientation === top || orientation === bottom) {
+      if (orientation === top || orientation === bottom||orientation === topBottom) {
         width = d3Array.max(scale.range()) - d3Array.min(scale.range());
       } else {
         height = d3Array.max(scale.range()) - d3Array.min(scale.range());
@@ -105,18 +109,30 @@
         scale = scale.range([
           d3Array.min(scale.range()),
           d3Array.min(scale.range()) +
-            (orientation === top || orientation === bottom ? width : height),
+            (orientation === top || orientation === bottom || orientation === topBottom ? width : height),
         ]);
       } else {
         scale = domain[0] instanceof Date ? d3Scale.scaleTime() : d3Scale.scaleLinear();
 
-        scale = scale
-          .domain(domain)
-          .range([
-            orientation === top || orientation === bottom ? width : height,
-            0
-          ])
-          .clamp(true);
+        if(orientation===top||orientation===bottom||orientation===topBottom){
+          scale = scale
+            .domain(domain)
+            .range([
+              0,
+              width
+            ])
+            .clamp(true);
+        }else{
+          scale = scale
+            .domain(domain)
+            .range([
+              height,
+              0
+            ])
+            .clamp(true);
+        }
+
+
       }
 
       identityClamped = d3Scale.scaleLinear()
@@ -136,7 +152,7 @@
       displayFormat = displayFormat || tickFormat || scale.tickFormat();
 
       var axis = selection.selectAll('.axis').data([null]);
-      if(orientation===leftRight){
+      if(orientation===leftRight||orientation===topBottom){
         var axis2 = selection.selectAll('.axis').data([null])
 
         axis2
@@ -161,7 +177,7 @@
         .attr('class', 'slider')
         .attr(
           'cursor',
-          orientation === top || orientation === bottom
+          orientation === top || orientation === bottom || orientation === topBottom
             ? 'ew-resize'
             : 'ns-resize'
         )
@@ -179,59 +195,110 @@
       //   .attr('stroke', '#bbb')
       //   .attr('stroke-width', 12)
       //   .attr('stroke-linecap', 'round');
+
       if(startingTextValue!=""){
-      sliderEnter
-        .append('line')
-        .attr('class','starting-value')
-        .attr('y1',scale(startingValueValue))
-        .attr('y2',scale(startingValueValue))
-        .attr('x1',0)
-        .attr('x2',-20)
-        .attr('stroke', '#58595B')
-        .attr('stroke-width', 3)
-        .attr('stroke-linecap', 'round');
+        if(orientation===left||orientation===right||orientation===leftRight){
+          sliderEnter
+            .append('line')
+            .attr('class','starting-value')
+            .attr('y1',scale(startingValueValue))
+            .attr('y2',scale(startingValueValue))
+            .attr('x1',0)
+            .attr('x2',-20)
+            .attr('stroke', '#58595B')
+            .attr('stroke-width', 3)
+            .attr('stroke-linecap', 'round');
 
-      sliderEnter
-        .append('text')
-        .attr('class','starting-text')
-        .style('fill', '#58595B')
-        .attr('y',scale(startingValueValue))
-        .attr('x',-80)
-        .attr('text-anchor','start')
-        .text(startingTextValue)
+          sliderEnter
+            .append('text')
+            .attr('class','starting-text')
+            .style('fill', '#58595B')
+            .attr('y',scale(startingValueValue))
+            .attr('x',-80)
+            .attr('text-anchor','start')
+            .text(startingTextValue)
 
 
-      sliderEnter
-        .append('text')
-        .attr('class','starting-text')
-        .style('fill', '#58595B')
-        .attr('y',scale(startingValueValue)+16)
-        .attr('x',-80)
-        .attr('text-anchor','start')
-        .text(tickFormat(startingValueValue))
+          sliderEnter
+            .append('text')
+            .attr('class','starting-text')
+            .style('fill', '#58595B')
+            .attr('y',scale(startingValueValue)+16)
+            .attr('x',-80)
+            .attr('text-anchor','start')
+            .text(tickFormat(startingValueValue))
+        }else{
+          sliderEnter
+            .append('line')
+            .attr('class','starting-value')
+            .attr('y1',0)
+            .attr('y2',-17)
+            .attr('x1',scale(startingValueValue))
+            .attr('x2',scale(startingValueValue))
+            .attr('stroke', '#58595B')
+            .attr('stroke-width', 3)
+            .attr('stroke-linecap', 'round');
+
+          sliderEnter
+            .append('text')
+            .attr('class','starting-text')
+            .style('fill', '#58595B')
+            .attr('y',-20)
+            .attr('x',scale(startingValueValue))
+            .attr('text-anchor','middle')
+            .text(startingTextValue+" "+tickFormat(startingValueValue))
+        }
       }
 
-      sliderEnter
-        .append('line')
-        .attr('class', 'track-inset')
-        .attr(x + '1', scale.range()[0] - SLIDER_END_PADDING)
-        .attr('stroke', '#eee')
-        .attr('stroke-width', 10)
-        .attr('stroke-linecap', 'round');
 
-      if (fill) {
+      if(orientation===top||orientation===bottom||orientation===topBottom){
         sliderEnter
           .append('line')
-          .attr('class', 'track-fill')
-          .attr(
-            x + '1',
-            value.length === 1
-              ? scale.range()[0] + SLIDER_END_PADDING
-              : scale(value[0])
-          )
-          .attr('stroke', fill)
+          .attr('class', 'track-inset')
+          .attr(x + '1', scale.range()[0])
+          .attr('stroke', '#eee')
           .attr('stroke-width', 10)
           .attr('stroke-linecap', 'round');
+      }else{
+        sliderEnter
+          .append('line')
+          .attr('class', 'track-inset')
+          .attr(x + '1', scale.range()[0] - SLIDER_END_PADDING)
+          .attr('stroke', '#eee')
+          .attr('stroke-width', 10)
+          .attr('stroke-linecap', 'round');
+
+      }
+
+
+      if (fill) {
+        if(orientation===top||orientation===bottom||orientation===topBottom){
+          sliderEnter
+            .append('line')
+            .attr('class', 'track-fill')
+            .attr(
+              x + '1',
+              value.length === 1
+                ? scale.range()[0]
+                : scale(value[0])
+            )
+            .attr('stroke', fill)
+            .attr('stroke-width', 10)
+            .attr('stroke-linecap', 'round');
+          }else{
+            sliderEnter
+              .append('line')
+              .attr('class', 'track-fill')
+              .attr(
+                x + '1',
+                value.length === 1
+                  ? scale.range()[0] + SLIDER_END_PADDING
+                  : scale(value[0])
+              )
+              .attr('stroke', fill)
+              .attr('stroke-width', 10)
+              .attr('stroke-linecap', 'round');
+          }
       }
 
       sliderEnter
@@ -278,20 +345,41 @@
         .attr('fill', 'white')
         .attr('stroke', '#777');
 
-
-      handleEnter
-        .append('path')
-        .attr('transform', 'translate(21 1) rotate(-90)')
-        .attr('d', d3.symbol()
-          .type(d3.symbolTriangle)
-          .size(150))
-        .style('fill', '#206095')
-        .style('stroke',"none")
+      if(orientation===left||orientation===right||orientation===leftRight){
+        handleEnter
+          .append('path')
+          .attr('transform', 'translate(21 1) rotate(-90)')
+          .attr('d', d3.symbol()
+            .type(d3.symbolTriangle)
+            .size(150))
+          .style('fill', '#206095')
+          .style('stroke',"none")
+      }else if(orientation===top||orientation===bottom||orientation===topBottom){
+        handleEnter
+          .append('path')
+          .attr('transform', 'translate(0 21)')
+          .attr('d', d3.symbol()
+            .type(d3.symbolTriangle)
+            .size(150))
+          .style('fill', '#206095')
+          .style('stroke',"none")
+      }
 
       if(orientation===leftRight){
         handleEnter
           .append('path')
           .attr('transform', 'translate(-21 1) rotate(+90)')
+          .attr('d', d3.symbol()
+            .type(d3.symbolTriangle)
+            .size(150))
+          .style('fill', '#206095')
+          .style('stroke',"none")
+      }
+
+      if(orientation===topBottom){
+        handleEnter
+          .append('path')
+          .attr('transform', 'translate(0 -21) rotate(180)')
           .attr('d', d3.symbol()
             .type(d3.symbolTriangle)
             .size(150))
@@ -343,13 +431,26 @@
 
       }
 
-      context
-        .select('.track')
-        .attr(x + '2', scale.range()[1] + SLIDER_END_PADDING);
+      if(orientation===top||orientation===bottom||orientation===topBottom){
+        context
+          .select('.track')
+          .attr(x + '2', scale.range()[1]);
 
-      context
-        .select('.track-inset')
-        .attr(x + '2', scale.range()[1] - SLIDER_END_PADDING);
+        context
+          .select('.track-inset')
+          .attr(x + '2', scale.range()[1]);
+      }else{
+        context
+          .select('.track')
+          .attr(x + '2', scale.range()[1] + SLIDER_END_PADDING);
+
+        context
+          .select('.track-inset')
+          .attr(x + '2', scale.range()[1] - SLIDER_END_PADDING);
+      }
+
+
+
 
       if (fill) {
         context
@@ -368,7 +469,7 @@
           .tickValues(tickValues)
       );
 
-      if(orientation===leftRight){
+      if(orientation===leftRight||orientation===topBottom){
         context.select('.axis2').call(
           axisFunction2(scale)
           .tickFormat(tickFormat)
@@ -419,7 +520,7 @@
         d3Selection.select(this).classed('active', true);
 
         var pos = identityClamped(
-          orientation === bottom || orientation === top ? d3Selection.event.x : d3Selection.event.y
+          orientation === bottom || orientation === top || orientation === topBottom ? d3Selection.event.x : d3Selection.event.y
         );
 
         handleIndex = d3Array.scan(
@@ -443,7 +544,7 @@
 
       function dragged() {
         var pos = identityClamped(
-          orientation === bottom || orientation === top ? d3Selection.event.x : d3Selection.event.y
+          orientation === bottom || orientation === top || orientation === topBottom ? d3Selection.event.x : d3Selection.event.y
         );
 
         var adjustedValue = alignedValue(scale.invert(pos));
@@ -473,7 +574,7 @@
         d3Selection.select(this).classed('active', false);
 
         var pos = identityClamped(
-          orientation === bottom || orientation === top ? d3Selection.event.x : d3Selection.event.y
+          orientation === bottom || orientation === top || orientation === topBottom ? d3Selection.event.x : d3Selection.event.y
         );
 
         var newValue = value.map(function(d, i) {
@@ -567,20 +668,39 @@
           });
 
         if (fill) {
-          fillSelection
-            .transition()
-            .ease(d3Ease.easeQuadOut)
-            .duration(UPDATE_DURATION)
-            .attr(
-              x + '1',
-              value.length === 1
-                ? scale.range()[1] + SLIDER_END_PADDING
-                : scale(newValue[0])
-            )
-            .attr(
-              x + '2',
-              value.length === 1 ? scale(newValue[0]) : scale(newValue[1])
-            );
+          if(orientation===topBottom||orientation===top||orientation===bottom){
+            fillSelection
+              .transition()
+              .ease(d3Ease.easeQuadOut)
+              .duration(UPDATE_DURATION)
+              .attr(
+                x + '1',
+                value.length === 1
+                  ? scale.range()[1]
+                  : scale(newValue[0])
+              )
+              .attr(
+                x + '2',
+                value.length === 1 ? scale(newValue[0]) + SLIDER_END_PADDING: scale(newValue[1])
+              );
+          }else{
+            fillSelection
+              .transition()
+              .ease(d3Ease.easeQuadOut)
+              .duration(UPDATE_DURATION)
+              .attr(
+                x + '1',
+                value.length === 1
+                  ? scale.range()[1] + SLIDER_END_PADDING
+                  : scale(newValue[0])
+              )
+              .attr(
+                x + '2',
+                value.length === 1 ? scale(newValue[0]) : scale(newValue[1])
+              );
+          }
+
+
         }
       } else {
         selection
@@ -591,17 +711,31 @@
           });
 
         if (fill) {
+          if(orientation===topBottom||orientation===top||orientation===bottom){
           fillSelection
             .attr(
               x + '1',
               value.length === 1
-                ? scale.range()[0] + SLIDER_END_PADDING
+                ? scale.range()[0]
                 : scale(newValue[0])
             )
             .attr(
               x + '2',
-              value.length === 1 ? scale(newValue[0]) : scale(newValue[1])
+              value.length === 1 ? scale(newValue[0]) + SLIDER_END_PADDING: scale(newValue[1])
             );
+          }else{
+            fillSelection
+              .attr(
+                x + '1',
+                value.length === 1
+                  ? scale.range()[0] + SLIDER_END_PADDING
+                  : scale(newValue[0])
+              )
+              .attr(
+                x + '2',
+                value.length === 1 ? scale(newValue[0]) : scale(newValue[1])
+              );
+          }
         }
       }
 
@@ -798,6 +932,10 @@
     return slider(leftRight,scale)
   }
 
+  function sliderTopBottom(scale){
+    return slider(topBottom,scale)
+  }
+
   exports.sliderHorizontal = sliderHorizontal;
   exports.sliderVertical = sliderVertical;
   exports.sliderTop = sliderTop;
@@ -805,6 +943,7 @@
   exports.sliderBottom = sliderBottom;
   exports.sliderLeft = sliderLeft;
   exports.sliderLeftRight = sliderLeftRight;
+  exports.sliderTopBottom = sliderTopBottom;
 
   Object.defineProperty(exports, '__esModule', { value: true });
 
