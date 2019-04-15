@@ -27,6 +27,7 @@
       .line{
         shape-rendering:"crispEdges";
       }
+      svg{overflow: visible;}
       h2{
         font-size: 30px;
         line-height:40px;
@@ -67,6 +68,9 @@
       input[type="number"]{
           -moz-appearance: textfield;
       }
+      .slider-col{
+        border-right: 1px solid #ccc;
+      }
       .slider text{
         font-size: 18px;
       }
@@ -74,7 +78,9 @@
       .axis text{
         font-size: 18px;
       }
-
+#legend{
+  margin-bottom: 10px;
+}
       .parameter-value path{
         fill:#0F8243;
         stroke:white;
@@ -88,6 +94,7 @@
       .bold{
         font-weight: 700;
         font-size:20px;
+            color: #206595;
       }
 
     button {
@@ -166,6 +173,51 @@
             left: 155px !important;
         }
     }
+    .results_box--outline h3 {
+    padding: 10px;
+    background: #1c5e97;
+    color: white;
+  font-size: 20px;
+}
+.error_text{
+  font-weight: 100;
+}
+    .results_box {
+  padding: 20px 20px 30px;
+  width: 100%;
+  font-weight: bold;
+  line-height: 2em;
+  margin-bottom: 20px; }
+  .results_box h3 {
+    font-weight: bold; }
+  .results_box p {
+    margin-bottom: 0; }
+
+.results_text {
+  font-size: 2.5em; }
+
+.results_text--sml {
+  font-size: 2em;
+  border-bottom: 2px solid white;
+  padding-bottom: 10px;
+  margin-bottom: 10px; }
+
+.results_box--outline {
+  border: 2px solid #206095;
+  padding: 0; }
+  .results_box--outline h3 {
+    padding: 10px;
+    background: #1c5e97;
+    color: white; }
+
+.results_text--outline {
+  padding: 10px;
+  font-size: 2.5em;
+  color: #1c5e97; }
+
+  #boxtext1, #boxtext2, #boxtext3, #boxtext4, #boxtext5 {
+    font-weight: bold;
+  }
     </style>
 </head>
 
@@ -174,21 +226,21 @@
   <h1>Lorem ipsum</h1>
     <div class="container" style="padding-left:0px;padding-right:0px;">
       <div class="row">
-        <div class="col col-12 col-md-3">
+        <div class="col col-12 col-md-3 slider-col">
           <div class="row no-gutters">
             <div class="col-12" style="height:70px;"><p class='bold'>Life expectancy in 2042<span class="fas fa-info-circle test" id="icon1"></span></p></div>
             <div class="col-12"><div id="slider-mortality"></div></div>
           </div>
         </div>
 
-        <div class="col col-12 col-md-3">
+        <div class="col col-12 col-md-3 slider-col">
           <div class="row no-gutters">
             <div class="col-md-12" style="height:70px;"><p class='bold'>Annual net migration by 2042<span class="fas fa-info-circle test" id="icon2"></span></p></div>
             <div class="col-md-12"><div id="slider-simple"></div></div>
           </div>
         </div>
 
-        <div class="col col-12 col-md-3">
+        <div class="col col-12 col-md-3 slider-col">
           <div class="row no-gutters">
             <div class="col-md-12" style="height:70px;"><p class='bold' >Children per woman by 2042<span class="fas fa-info-circle test" id="icon3"></span></p></div>
             <div class="col-md-12"><div id="slider-women"></div></div>
@@ -208,7 +260,7 @@
 
       </div>
     </div>
-    <div class="container" style="padding-left:0px;padding-right:0px;">
+    <div class="container" style="padding-left:0px;padding-right:0px;margin-top: 40px;">
       <div class="row">
         <div class="col-md-8 order-2 order-md-1">
           <div id="graphic">
@@ -217,16 +269,27 @@
         </div>
         <div class="col-md-4 order-1 order-md-2">
           <div id="keypoints">
-              <p class='bold' style="margin:0;">Based on your selection</p>
+                <!--<p class='bold' style="margin:0;">Based on your selection</p>
 
-              <div class="error_message">
+            <div class="error_message">
                 <p class="error_text">In 2042, there will be <span id="boxtext1">367</span> pensioners per 1,000 people of working age.
                 </br></br>
                 This is <span id="boxtext2"></span> <span id='boxtext3'>equal to</span> our projections.
                 </br></br>
                 This is <span id='boxtext4'>67</span> <span id='boxtext5'>more than in</span> 2016.
                 </p>
-              </div>
+              </div>-->
+              <div class="results_box results_box--outline">
+    <h3>Based on your selection</h3>
+    <div class="results_text--outline">
+      <p class="error_text">In 2042, there will be <span id="boxtext1">367</span> pensioners per 1,000 people of working age.
+      </br>
+      This is <span id="boxtext2"></span> <span id='boxtext3'>equal to</span> our projections.
+      </br>
+      This is <span id='boxtext4'>67</span> <span id='boxtext5'>more than in</span> 2016.
+      </p>
+    </div>
+</div>
 
           </div>
         </div>
@@ -1570,6 +1633,7 @@ function createLegend(){
   var legendLabels=["Your projection", "Our projection"]
   legendLabels.forEach(function(d,i) {
   var_group= d3.select("#legend").append("g")
+  .attr("transform", "translate(0,-10)")
   var_group.append("line")
     .attr("class","rect" + i)
     .style("stroke", colours[i])
