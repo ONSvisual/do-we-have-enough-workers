@@ -647,7 +647,7 @@
 
         updateText(newOADR)
 
-        }),100);
+      }),300);
 
       var gSimple = d3
         .select('div#slider-simple')
@@ -694,7 +694,7 @@
 
         updateText(newOADR)
 
-        }),100);
+      }),300);
 
       var gSimple2 = d3
         .select('div#slider-women')
@@ -738,7 +738,7 @@
 
           updateText(newOADR)
 
-        }),100);
+        }),300);
 
       var gSimple3 = d3
         .select('div#slider-pension')
@@ -831,7 +831,7 @@
                 //set the mortalityprofile
                 mortalityprofile=slidervalues[4]
               }
-          }),100);
+          }),300);
 
       var gSimple4 = d3
         .select('div#slider-mortality')
@@ -901,11 +901,6 @@
 
 
     }//end else mobile
-
-    //set up the sliders
-
-
-
 
     //select all handles and give them separate ids
     d3.selectAll(".handle").attr("id",function(d,i){return 'handle'+i})
@@ -1866,7 +1861,13 @@
       selectBox.select('#boxtext5').html('equal to')
     }
 
-  }//end function OADR
+  }//end function updateText(OADR)
+
+function setupSliders(){
+
+}
+
+
 
 function createLegend(){
   var prevX= 0;
