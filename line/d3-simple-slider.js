@@ -196,59 +196,7 @@
       //   .attr('stroke-width', 12)
       //   .attr('stroke-linecap', 'round');
 
-      if(startingTextValue!=""){
-        if(orientation===left||orientation===right||orientation===leftRight){
-          sliderEnter
-            .append('line')
-            .attr('class','starting-value')
-            .attr('y1',scale(startingValueValue))
-            .attr('y2',scale(startingValueValue))
-            .attr('x1',0)
-            .attr('x2',-20)
-            .attr('stroke', '#58595B')
-            .attr('stroke-width', 3)
-            .attr('stroke-linecap', 'round');
 
-          sliderEnter
-            .append('text')
-            .attr('class','starting-text')
-            .style('fill', '#58595B')
-            .attr('y',scale(startingValueValue))
-            .attr('x',-80)
-            .attr('text-anchor','start')
-            .text(startingTextValue)
-
-
-          sliderEnter
-            .append('text')
-            .attr('class','starting-text')
-            .style('fill', '#58595B')
-            .attr('y',scale(startingValueValue)+16)
-            .attr('x',-80)
-            .attr('text-anchor','start')
-            .text(tickFormat(startingValueValue))
-        }else{
-          sliderEnter
-            .append('line')
-            .attr('class','starting-value')
-            .attr('y1',0)
-            .attr('y2',-17)
-            .attr('x1',scale(startingValueValue))
-            .attr('x2',scale(startingValueValue))
-            .attr('stroke', '#58595B')
-            .attr('stroke-width', 3)
-            .attr('stroke-linecap', 'round');
-
-          sliderEnter
-            .append('text')
-            .attr('class','starting-text')
-            .style('fill', '#58595B')
-            .attr('y',-20)
-            .attr('x',scale(startingValueValue))
-            .attr('text-anchor','middle')
-            .text(startingTextValue+" "+tickFormat(startingValueValue))
-        }
-      }
 
 
       if(orientation===top||orientation===bottom||orientation===topBottom){
@@ -301,6 +249,60 @@
           }
       }
 
+      if(startingTextValue!=""){
+        if(orientation===left||orientation===right||orientation===leftRight){
+          sliderEnter
+            .append('line')
+            .attr('class','starting-value')
+            .attr('y1',scale(startingValueValue))
+            .attr('y2',scale(startingValueValue))
+            .attr('x1',-5)
+            .attr('x2',5)
+            .attr('stroke', '#339a59')
+            .attr('stroke-width', 3)
+            .attr('stroke-linecap', 'butt');
+
+          sliderEnter
+            .append('text')
+            .attr('class','starting-text')
+            .style('fill', '#58595B')
+            .attr('y',scale(startingValueValue))
+            .attr('x',-80)
+            .attr('text-anchor','start')
+            .text(startingTextValue)
+
+
+          sliderEnter
+            .append('text')
+            .attr('class','starting-text')
+            .style('fill', '#58595B')
+            .attr('y',scale(startingValueValue)+16)
+            .attr('x',-80)
+            .attr('text-anchor','start')
+            .text(tickFormat(startingValueValue))
+        }else{
+          sliderEnter
+            .append('line')
+            .attr('class','starting-value')
+            .attr('y1',5)
+            .attr('y2',-5)
+            .attr('x1',scale(startingValueValue))
+            .attr('x2',scale(startingValueValue))
+            .attr('stroke', '#339a59')
+            .attr('stroke-width', 3)
+            .attr('stroke-linecap', 'butt');
+
+          sliderEnter
+            .append('text')
+            .attr('class','starting-text')
+            .style('fill', '#58595B')
+            .attr('y',-20)
+            .attr('x',scale(startingValueValue))
+            .attr('text-anchor','middle')
+            .text(startingTextValue+" "+tickFormat(startingValueValue))
+        }
+      }
+
       sliderEnter
         .append('line')
         .attr('class', 'track-overlay')
@@ -309,6 +311,7 @@
         .attr('stroke-width', 40)
         .attr('stroke-linecap', 'round')
         .merge(slider.select('.track-overlay'));
+
 
       handleSelection = sliderEnter.selectAll('.parameter-value').data(value);
 
@@ -448,9 +451,6 @@
           .select('.track-inset')
           .attr(x + '2', scale.range()[1] - SLIDER_END_PADDING);
       }
-
-
-
 
       if (fill) {
         context
