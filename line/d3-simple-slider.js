@@ -265,7 +265,7 @@
           sliderEnter
             .append('text')
             .attr('class','starting-text')
-            .style('fill', '#58595B')
+            .style('fill', '#339a59')
             .attr('y',scale(startingValueValue))
             .attr('x',-80)
             .attr('text-anchor','start')
@@ -275,7 +275,7 @@
           sliderEnter
             .append('text')
             .attr('class','starting-text')
-            .style('fill', '#58595B')
+            .style('fill', '#339a59')
             .attr('y',scale(startingValueValue)+16)
             .attr('x',-80)
             .attr('text-anchor','start')
@@ -295,7 +295,7 @@
           sliderEnter
             .append('text')
             .attr('class','starting-text')
-            .style('fill', '#58595B')
+            .style('fill', '#339a59')
             .attr('y',-20)
             .attr('x',scale(startingValueValue))
             .attr('text-anchor','middle')
