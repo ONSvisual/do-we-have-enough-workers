@@ -13,6 +13,7 @@
 
     <link rel="stylesheet" href="../lib/globalStyle.css" />
     <link rel="stylesheet" href="bootstrap-grid.css"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 
 
@@ -310,7 +311,7 @@
 
    <input id="mortalityHidden" type="hidden" value=2>
    <input id="migrationHidden" type="hidden" value=165000>
-   <input id="fertilityHidden" type="hidden" value="3">
+   <input id="fertilityHidden" type="hidden" value="1.84">
    <input id="yearHidden" type="hidden" value="2028">
    <input id="pensionHidden" type="hidden" value="67">
 
@@ -397,6 +398,7 @@
        var typenumber = document.getElementById("year").value
        if(typenumber+1<=document.getElementById("year").max){
          document.getElementById("year").value = +typenumber + 1;
+         document.getElementById("yearHidden").value = +typenumber + 1;
          d3.select("#year").on('change')()
        }
       })
@@ -405,6 +407,7 @@
          var typenumber = document.getElementById("year").value
          if(typenumber-1>=document.getElementById("year").min){
            document.getElementById("year").value = +typenumber - 1;
+           document.getElementById("yearHidden").value = +typenumber - 1;
            d3.select("#year").on('change')()
          }
        }
@@ -433,7 +436,7 @@
         //   d3.select("#value-simple").on('change')() //call the change event https://stackoverflow.com/questions/32610092/why-isnt-the-checkbox-change-event-triggered-when-i-do-it-programatically-in-d3
         //
         var svg = d3.select('#graphic').select('svg')
-
+        document.getElementById('migrationHidden').value=val;
 
         slidervalues=getSliderValues()
         var newOADR=runthemodel(malemortality,femalemortality,malemigration,femalemigration,fertility,malepopulation,femalepopulation,slidervalues[0],slidervalues[1],slidervalues[2],slidervalues[3])
@@ -476,6 +479,7 @@
         .on('onchange', _.throttle(function(val){
         //   d3.select("#value-women").on('change')()
         var svg = d3.select('#graphic').select('svg')
+        document.getElementById('fertilityHidden').value=val;
 
         slidervalues=getSliderValues()
 
@@ -519,6 +523,7 @@
         .on('onchange', _.throttle(function(val){
         //  d3.select("#value-pension").on('change')()
           var svg = d3.select('#graphic').select('svg')
+          document.getElementById('pensionHidden').value=val;
 
           slidervalues=getSliderValues()
 
@@ -564,6 +569,8 @@
           .fill("#206595")
           .on('onchange', _.throttle(function(val){
             var svg = d3.select('#graphic').select('svg')
+            document.getElementById('mortalityHidden').value=val;
+
             //change text in bubbles
             d3.select('div#slider-mortality').select(".parameter-value").select('text').text(ticksRight[sliderMortality.value()])
             d3.select('div#slider-mortality').select(".parameter-value").select('#textLeft').text(ticksLeft[sliderMortality.value()])
@@ -701,6 +708,7 @@
         .fill("#206595")
         .on('onchange', _.throttle(function(val){
         var svg = d3.select('#graphic').select('svg')
+        document.getElementById('migrationHidden').value=val;
 
         slidervalues=getSliderValues()
 
@@ -726,7 +734,6 @@
 
       gSimple.call(sliderSimple);
 
-
       //women sliders
       var sliderWomen = d3
         .sliderBottom()
@@ -748,6 +755,7 @@
         .on('onchange', _.throttle(function(val){
         //   d3.select("#value-women").on('change')()
         var svg = d3.select('#graphic').select('svg')
+        document.getElementById('fertilityHidden').value=val;
 
         slidervalues=getSliderValues()
 
@@ -792,6 +800,7 @@
         .on('onchange', _.throttle(function(val){
         //  d3.select("#value-pension").on('change')()
           var svg = d3.select('#graphic').select('svg')
+          document.getElementById('pensionHidden').value=val;
 
           slidervalues=getSliderValues()
 
@@ -838,6 +847,9 @@
           .fill("#206595")
           .on('onchange', _.throttle(function(val){
             var svg = d3.select('#graphic').select('svg')
+            document.getElementById('mortalityHidden').value=val;
+
+
             //change text in bubbles
             d3.select('div#slider-mortality').select(".parameter-value").select('text').text(ticksRight[sliderMortality.value()])
             d3.select('div#slider-mortality').select(".parameter-value").select('#textLeft').text(ticksLeft[sliderMortality.value()])
@@ -1365,11 +1377,12 @@
     }//ends draw graphic
 
     function getSliderValues(){
-      var netmigration=sliderSimple.value()
-      var totalfertility=sliderWomen.value()
-      var year=document.getElementById('year').value
-      var pensionage=sliderPension.value()
-      var mortality=ticks[sliderMortality.value()]
+      var netmigration=+document.getElementById('migrationHidden').value
+      var totalfertility=+document.getElementById('fertilityHidden').value
+      var year=+document.getElementById('yearHidden').value
+      var pensionage=+document.getElementById('pensionHidden').value
+      var mortality=ticks[+document.getElementById('mortalityHidden').value]
+
       return [netmigration,totalfertility,year,pensionage,mortality]
     }
 
@@ -1929,7 +1942,7 @@
   }//end function updateText(OADR)
 
 function setupSliders(){
-
+  //function to be called when switching desktop to mobile
 }
 
 
