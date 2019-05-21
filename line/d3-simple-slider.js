@@ -265,7 +265,7 @@
           sliderEnter
             .append('text')
             .attr('class','starting-text')
-            .style('fill', '#58595B')
+            .style('fill', '#339a59')
             .attr('y',scale(startingValueValue))
             .attr('x',-80)
             .attr('text-anchor','start')
@@ -275,7 +275,7 @@
           sliderEnter
             .append('text')
             .attr('class','starting-text')
-            .style('fill', '#58595B')
+            .style('fill', '#339a59')
             .attr('y',scale(startingValueValue)+16)
             .attr('x',-80)
             .attr('text-anchor','start')
@@ -295,11 +295,35 @@
           sliderEnter
             .append('text')
             .attr('class','starting-text')
-            .style('fill', '#58595B')
+            .style('fill', '#339a59')
             .attr('y',-20)
             .attr('x',scale(startingValueValue))
             .attr('text-anchor','middle')
             .text(startingTextValue+" "+tickFormat(startingValueValue))
+        }
+      }else if(startingValueValue!=undefined){
+        if(orientation===left||orientation===right||orientation===leftRight){
+          sliderEnter
+            .append('line')
+            .attr('class','starting-value')
+            .attr('y1',scale(startingValueValue))
+            .attr('y2',scale(startingValueValue))
+            .attr('x1',-5)
+            .attr('x2',5)
+            .attr('stroke', '#339a59')
+            .attr('stroke-width', 3)
+            .attr('stroke-linecap', 'butt');
+        }else{
+          sliderEnter
+            .append('line')
+            .attr('class','starting-value')
+            .attr('y1',5)
+            .attr('y2',-5)
+            .attr('x1',scale(startingValueValue))
+            .attr('x2',scale(startingValueValue))
+            .attr('stroke', '#339a59')
+            .attr('stroke-width', 3)
+            .attr('stroke-linecap', 'butt');
         }
       }
 

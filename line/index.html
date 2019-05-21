@@ -13,6 +13,7 @@
 
     <link rel="stylesheet" href="../lib/globalStyle.css" />
     <link rel="stylesheet" href="bootstrap-grid.css"/>
+    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous"> -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
 
 
@@ -22,7 +23,7 @@
     <style>
       body{
         font-family: 'Open Sans', helvetica, arial, sans-serif;
-
+        max-width: 768px;
       }
       .line{
         shape-rendering:"crispEdges";
@@ -97,18 +98,94 @@
       }
 
 
+    /* Button */
+
+    .btn--primary {
+    background-color: #206095 !important;
+    }
+    .btn {
+        position: relative;
+        padding: 10px 15px;
+        margin: 0 0 20px;
+        line-height: normal;
+        color: #fff;
+        font-size: 1.3em !important;
+        border-radius: 0px;
+        display: inline-block;
+        text-rendering: optimizeLegibility;
+        transition: background-color .2s ease-in, color .2s ease-in;
+    }
+    .btn--primary {
+        background-color: #0F8243;
+        color: #fff;
+    }
+    .btn {
+        font-family: "Open Sans",Helvetica,Arial,sans-serif;
+        font-weight: 400;
+        font-size: 14px;
+        display: inline-block;
+        width: auto;
+        cursor: pointer;
+        padding: 6px 16px 10px 16px;
+        border: 0 none;
+        text-align: center;
+        -webkit-appearance: none;
+        transition: background-color 0.25s ease-out;
+        text-decoration: none;
+        line-height: 24px;
+    }
+    .btn {
+        display: inline-block;
+        padding: 6px 12px;
+        margin-bottom: 0;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 1.42857143;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+        -ms-touch-action: manipulation;
+        touch-action: manipulation;
+        cursor: pointer;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        background-image: none;
+        border: 1px solid transparent;
+        border-radius: 4px;
+    }
     button {
+        cursor: pointer;
+    }
+
+    .btn--previous::before {
+      font-family: "Font Awesome 5 Free";
+      font-weight: 900;
+      content: "\f053";
+      margin-right: 10px;
+    }
+
+    .btn--next::after {
+        font-family: "Font Awesome 5 Free";
+        font-weight: 900;
+        content: "\f054";
+        margin-left: 10px;
+    }
+
+    button#minus.minus, button#plus.plus {
     width: 1.4em;
     height: 1.4em;
     background-color: #1b5f97;
     color: #fff;
     border: 2px solid #1b5f97;
     box-sizing: border-box;
-    font-size: 20px;
+    font-size: 19px;
     text-align: center;
     cursor: pointer;
     font-weight: bold;
     }
+
     .borderbox {
     border: 2px solid #1b5f97;
     /* padding-top:5px; */
@@ -177,53 +254,58 @@
             left: 155px !important;
         }
 
-        .results_box--outline h3 {
-         padding: 10px;
-         background: #1c5e97;
-         color: white;
-        font-size: 20px;
-        }
-        .error_text{
-        font-weight: 100;
-        }
-         .results_box {
-        padding: 20px 20px 30px;
-        width: 100%;
-        font-weight: bold;
-        line-height: 2em;
-        margin-bottom: 20px; }
-        .results_box h3 {
-         font-weight: bold; }
-        .results_box p {
-         margin-bottom: 0; }
-        .results_text {
-        font-size: 2.5em; }
-        .results_text--sml {
-        font-size: 2em;
-        border-bottom: 2px solid white;
-        padding-bottom: 10px;
-        margin-bottom: 10px; }
-        .results_box--outline {
-        border: 2px solid #206095;
-        padding: 0; }
-        .results_box--outline h3 {
-         padding: 10px;
-         background: #1c5e97;
-         color: white; }
-        .results_text--outline {
-        padding: 10px;
-        font-size: 2.5em;
-        color: #1c5e97; }
-        #boxtext1, #boxtext2, #boxtext3, #boxtext4, #boxtext5 {
-         font-weight: bold;
-        }
+    div.results_box h3{
+      padding-bottom: 20px;
+      font-size: 24px;
+      border-bottom: 3px solid #206095;
+    }
 
+    div.results_text--outline p{
+      line-height: 1.5em;
+      border-bottom: 3px solid #206095;
+      padding-bottom: 8px;
+      padding-top: 5px;
+    }
 
+    #boxtext1,#boxtext2,#boxtext3,#boxtext4,#boxtext5{
+      color:#206095;
+      font-weight:700;
+    }
+    .green{
+      color:#339a59;
+      font-weight: 400;
+      font-size: 16px;
+    }
+
+    #keypoints {
+      margin-bottom: 50px;
+    }
+
+    /* .col-md-3{
+      max-width:
+    } */
     @media (min-width: 767px){
       .title{
          height:70px;
       }
     }
+
+    @media (max-width:768px){
+      .title{
+        padding-bottom: 10px;
+      }
+    }
+    #counter{
+      margin-bottom:10px;
+    }
+
+    #graphHeader {
+      font-size: 20px;
+      font-weight: 700;
+      color:#206095;
+      padding-bottom: 14px;
+    }
+
 
     </style>
 </head>
@@ -231,30 +313,31 @@
 
 <body>
   <h1>Lorem ipsum</h1>
+  <div id="counter" class="bold d-md-none d-block"><span id="counternum">1</span>/4</div>
     <div class="container" style="padding-left:0px;padding-right:0px;margin-bottom:20px">
       <div class="row">
-        <div class="col col-12 col-md-3 slider-col">
+        <div id="column0" class="col col-12 col-md-3 slider-col">
           <div class="row no-gutters">
-            <div class="col-12 title"><p class='bold'>Life expectancy in 2042<span class="fas fa-info-circle test" id="icon1"></span></p></div>
+            <div class="col-12 title"><p class='bold'>Life expectancy in 2042 <span class="fas fa-info-circle test" id="icon1"></span><br/></p></div>
             <div class="col-12"><div id="slider-mortality"></div></div>
           </div>
         </div>
 
-        <div class="col col-12 col-md-3" slider-col>
+        <div id="column1" class="col col-12 col-md-3 slider-col">
           <div class="row no-gutters">
-            <div class="col-md-12 title"><p class='bold'>Annual net migration by 2042<span class="fas fa-info-circle test" id="icon2"></span></p></div>
+            <div class="col-md-12 title"><p class='bold'>Annual net migration by 2042 <span class="fas fa-info-circle test" id="icon2"></span><br/><span class="green">▬ 2017:283,000</span></p></div>
             <div class="col-md-12"><div id="slider-simple"></div></div>
           </div>
         </div>
 
-        <div class="col col-12 col-md-3" slider-col>
+        <div id="column2" class="col col-12 col-md-3 slider-col">
           <div class="row no-gutters">
-            <div class="col-md-12 title"><p class='bold' >Children per woman by 2042<span class="fas fa-info-circle test" id="icon3"></span></p></div>
+            <div class="col-md-12 title"><p class='bold' >Children per woman by 2042 <span class="fas fa-info-circle test" id="icon3"></span><br/><span class="green">▬ 2017:1.75</span></p></div>
             <div class="col-md-12"><div id="slider-women"></div></div>
           </div>
         </div>
 
-        <div class="col col-12 col-md-3">
+        <div id="column3" class="col col-12 col-md-3">
           <div class="row no-gutters">
             <div class="col-md-12 title"><p class='bold'>At
                   <span class="borderbox"><span><button type="button" id="minus" class="minus">-</button></span>
@@ -267,9 +350,19 @@
 
       </div>
     </div>
+<!-- Next Prev buttons -->
+<div class="d-md-none d-block">
+  <div class="row">
+    <div id="previous" class="col-3 "><button class="btn btn-group__btn btn--primary btn--green btn--previous">Previous</button></div>
+    <div id="next" class="col-3 offset-6"><button class="btn btn-group__btn btn--primary btn--green btn--next">Next</button></div>
+  </div>
+</div>
+
+<!-- Results block -->
     <div class="container" style="padding-left:0px;padding-right:0px; margin-top:40px;">
       <div class="row">
         <div class="col-md-8 order-2 order-md-1">
+          <div id="graphHeader">Number of pensioners per 1,000 people of working age</div>
           <div id="graphic">
           	<!-- <img src="fallback.png" alt="[Chart]" /> -->
            </div>
@@ -287,13 +380,14 @@
                 </p>
               </div> -->
               <div class="results_box results_box--outline">
-                 <h3>Based on your selection</h3>
+                 <h3 class="bold">Based on your selection…</h3>
                  <div class="results_text--outline">
                    <p class="error_text">In 2042, there will be <span id="boxtext1">367</span> pensioners per 1,000 people of working age.
-                   </br>
-                   This is <span id="boxtext2"></span> <span id='boxtext3'>equal to</span> our projections.
-                   </br>
-                   This is <span id='boxtext4'>67</span> <span id='boxtext5'>more than in</span> 2016.
+                   </p>
+
+                   <p class="error_text">This is <span id='boxtext4'>67</span> <span id='boxtext5'>more than in</span> 2016.
+                   </p>
+                   <p class="error_text">This will <span id="boxtext2">increase</span> our spending on state pensions.
                    </p>
                  </div>
              </div>
@@ -307,6 +401,14 @@
 
    <div id="footer">
    </div>
+
+   <input id="mortalityHidden" type="hidden" value=2>
+   <input id="migrationHidden" type="hidden" value=165000>
+   <input id="fertilityHidden" type="hidden" value="1.84">
+   <input id="yearHidden" type="hidden" value="2028">
+   <input id="pensionHidden" type="hidden" value="67">
+   <input id="buttonCounter" type="hidden" value="0">
+
     <script src="https://unpkg.com/unfetch/polyfill"></script>
     <script src="https://cdn.ons.gov.uk/vendor/jquery/2.1.4/jquery.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
@@ -331,6 +433,29 @@
 		var keypoints = d3.select('#keypoints');
 		var footer = d3.select(".footer");
 		var pymChild = null;
+
+
+
+    //next previous buttons
+    d3.select("#next").on('click',function(){
+      var currentbutton = +document.getElementById('buttonCounter').value
+      d3.select("#column"+currentbutton).style("display","none")
+      var newbutton = currentbutton+1;
+      if(newbutton==4){newbutton=0}
+      document.getElementById('buttonCounter').value=newbutton
+      d3.select("#counternum").html(newbutton+1)
+      d3.select("#column"+newbutton).style("display","block")
+    })
+
+    d3.select("#previous").on('click',function(){
+      var currentbutton = +document.getElementById('buttonCounter').value
+      d3.select("#column"+currentbutton).style("display","none")
+      var newbutton = currentbutton-1;
+      if(newbutton==-1){newbutton=3}
+      document.getElementById('buttonCounter').value=newbutton
+      d3.select("#counternum").html(newbutton+1)
+      d3.select("#column"+newbutton).style("display","block")
+    })
 
     //tooltip
      d3.select('#icon1')
@@ -389,6 +514,7 @@
        var typenumber = document.getElementById("year").value
        if(typenumber+1<=document.getElementById("year").max){
          document.getElementById("year").value = +typenumber + 1;
+         document.getElementById("yearHidden").value = +typenumber + 1;
          d3.select("#year").on('change')()
        }
       })
@@ -397,6 +523,7 @@
          var typenumber = document.getElementById("year").value
          if(typenumber-1>=document.getElementById("year").min){
            document.getElementById("year").value = +typenumber - 1;
+           document.getElementById("yearHidden").value = +typenumber - 1;
            d3.select("#year").on('change')()
          }
        }
@@ -413,7 +540,7 @@
         .ticks(5)
         .step(1000)
         .default(165000)
-        .startingText("2017:")
+        .startingText("")
         .startingValue(283000)
         .handle(
           d3.symbol()
@@ -425,7 +552,7 @@
         //   d3.select("#value-simple").on('change')() //call the change event https://stackoverflow.com/questions/32610092/why-isnt-the-checkbox-change-event-triggered-when-i-do-it-programatically-in-d3
         //
         var svg = d3.select('#graphic').select('svg')
-
+        document.getElementById('migrationHidden').value=val;
 
         slidervalues=getSliderValues()
         var newOADR=runthemodel(malemortality,femalemortality,malemigration,femalemigration,fertility,malepopulation,femalepopulation,slidervalues[0],slidervalues[1],slidervalues[2],slidervalues[3])
@@ -442,7 +569,7 @@
         .append('svg')
         .attr('height', 220)
         .append('g')
-        .attr('transform', 'translate(80,30)');
+        .attr('transform', 'translate(60,50)');
 
       gSimple.call(sliderSimple);
 
@@ -457,8 +584,8 @@
         .ticks(5)
         .step(0.01)
         .default(1.84)
-        .startingText("2017:")
-        .startingValue("1.75")
+        .startingText("")
+        .startingValue(1.75)
         .handle(
           d3.symbol()
             .type(d3.symbolCircle)
@@ -468,6 +595,7 @@
         .on('onchange', _.throttle(function(val){
         //   d3.select("#value-women").on('change')()
         var svg = d3.select('#graphic').select('svg')
+        document.getElementById('fertilityHidden').value=val;
 
         slidervalues=getSliderValues()
 
@@ -486,7 +614,7 @@
         .append('svg')
         .attr('height', 220)
         .append('g')
-        .attr('transform', 'translate(80,30)');
+        .attr('transform', 'translate(60,50)');
 
       gSimple2.call(sliderWomen);
 
@@ -511,6 +639,7 @@
         .on('onchange', _.throttle(function(val){
         //  d3.select("#value-pension").on('change')()
           var svg = d3.select('#graphic').select('svg')
+          document.getElementById('pensionHidden').value=val;
 
           slidervalues=getSliderValues()
 
@@ -529,7 +658,7 @@
         .append('svg')
         .attr('height', 220)
         .append('g')
-        .attr('transform', 'translate(80,30)');
+        .attr('transform', 'translate(60,50)');
 
       gSimple3.call(sliderPension);
 
@@ -556,6 +685,8 @@
           .fill("#206595")
           .on('onchange', _.throttle(function(val){
             var svg = d3.select('#graphic').select('svg')
+            document.getElementById('mortalityHidden').value=val;
+
             //change text in bubbles
             d3.select('div#slider-mortality').select(".parameter-value").select('text').text(ticksRight[sliderMortality.value()])
             d3.select('div#slider-mortality').select(".parameter-value").select('#textLeft').text(ticksLeft[sliderMortality.value()])
@@ -609,7 +740,7 @@
         .append('svg')
         .attr('height', 220)
         .append('g')
-        .attr('transform', 'translate(80,30)');
+        .attr('transform', 'translate(60,50)');
 
       gSimple4.call(sliderMortality);
 
@@ -683,7 +814,7 @@
         .ticks(5)
         .step(1000)
         .default(165000)
-        .startingText("2017:")
+        .startingText("")
         .startingValue(283000)
         .handle(
           d3.symbol()
@@ -693,6 +824,7 @@
         .fill("#206595")
         .on('onchange', _.throttle(function(val){
         var svg = d3.select('#graphic').select('svg')
+        document.getElementById('migrationHidden').value=val;
 
         slidervalues=getSliderValues()
 
@@ -718,7 +850,6 @@
 
       gSimple.call(sliderSimple);
 
-
       //women sliders
       var sliderWomen = d3
         .sliderBottom()
@@ -729,7 +860,7 @@
         .ticks(5)
         .step(0.01)
         .default(1.84)
-        .startingText("2017:")
+        .startingText("")
         .startingValue("1.75")
         .handle(
           d3.symbol()
@@ -740,6 +871,7 @@
         .on('onchange', _.throttle(function(val){
         //   d3.select("#value-women").on('change')()
         var svg = d3.select('#graphic').select('svg')
+        document.getElementById('fertilityHidden').value=val;
 
         slidervalues=getSliderValues()
 
@@ -784,6 +916,7 @@
         .on('onchange', _.throttle(function(val){
         //  d3.select("#value-pension").on('change')()
           var svg = d3.select('#graphic').select('svg')
+          document.getElementById('pensionHidden').value=val;
 
           slidervalues=getSliderValues()
 
@@ -830,6 +963,9 @@
           .fill("#206595")
           .on('onchange', _.throttle(function(val){
             var svg = d3.select('#graphic').select('svg')
+            document.getElementById('mortalityHidden').value=val;
+
+
             //change text in bubbles
             d3.select('div#slider-mortality').select(".parameter-value").select('text').text(ticksRight[sliderMortality.value()])
             d3.select('div#slider-mortality').select(".parameter-value").select('#textLeft').text(ticksLeft[sliderMortality.value()])
@@ -955,7 +1091,11 @@
       .attr('x',textRight.attr('x'))
       .attr('dy',textRight.attr('dy'))
 
-
+      //now hide all but one of the sliders
+      document.getElementById('buttonCounter').value=0;
+      d3.select("#column3").style("display","none")
+      d3.select("#column2").style("display","none")
+      d3.select("#column1").style("display","none")
 
     }//end else mobile
 
@@ -1227,7 +1367,7 @@
         var OADR=runthemodel(malemortality,femalemortality,malemigration,femalemigration,fertility,malepopulation,femalepopulation,165000,1.84,2028,67)
         // console.log("draw the line")
 
-        var margin = {	top: 	60,
+        var margin = {	top: 	20,
              right: 	20,
              bottom: 50,
              left: 	50
@@ -1241,7 +1381,8 @@
 
         }else{
           var chart_width = parseInt(graphic.style("width")) - margin.left - margin.right;
-          var height = Math.ceil((chart_width * aspectRatio[1]) / aspectRatio[0]) - margin.top - margin.bottom;
+          // var height = Math.ceil((chart_width * aspectRatio[1]) / aspectRatio[0]) - margin.top - margin.bottom;
+          var height = parseInt(keypoints.style("height")) - margin.top - margin.bottom-40;
         }
 
         var x = d3.scaleTime()
@@ -1302,12 +1443,12 @@
              );
 
        //y axis label
-          svg.append("text")
-           //.attr('class', 'unit')
-           .attr('transform','translate(' + -margin.left + ',-17)') // " + eval(-margin.top + (lineNo+1)*20) + "
-           .attr("font-size","18px")
-           .attr("fill","#321213")
-           .text("Number of pensioners per 1,000 people of working age");
+          // svg.append("text")
+          //  //.attr('class', 'unit')
+          //  .attr('transform','translate(' + -margin.left + ',-17)') // " + eval(-margin.top + (lineNo+1)*20) + "
+          //  .attr("font-size","18px")
+          //  .attr("fill","#321213")
+          //  .text("Number of pensioners per 1,000 people of working age");
 
       //create lines
        svg.append('g')
@@ -1357,11 +1498,12 @@
     }//ends draw graphic
 
     function getSliderValues(){
-      var netmigration=sliderSimple.value()
-      var totalfertility=sliderWomen.value()
-      var year=document.getElementById('year').value
-      var pensionage=sliderPension.value()
-      var mortality=ticks[sliderMortality.value()]
+      var netmigration=+document.getElementById('migrationHidden').value
+      var totalfertility=+document.getElementById('fertilityHidden').value
+      var year=+document.getElementById('yearHidden').value
+      var pensionage=+document.getElementById('pensionHidden').value
+      var mortality=ticks[+document.getElementById('mortalityHidden').value]
+
       return [netmigration,totalfertility,year,pensionage,mortality]
     }
 
@@ -1897,31 +2039,34 @@
     var changeAgainstProjections = OADRin2042-367
     selectBox.select('#boxtext2').html(Math.abs(changeAgainstProjections))
 
-    if(changeAgainstProjections>0){
-      selectBox.select('#boxtext3').html('more than')
-    }else if(changeAgainstProjections<0){
-      selectBox.select('#boxtext3').html('less than')
-    }else{
-      selectBox.select('#boxtext2').html("")
-      selectBox.select('#boxtext3').html('equal to')
-    }
+    // if(changeAgainstProjections>0){
+    //   selectBox.select('#boxtext3').html('more than')
+    // }else if(changeAgainstProjections<0){
+    //   selectBox.select('#boxtext3').html('less than')
+    // }else{
+    //   selectBox.select('#boxtext2').html("")
+    //   selectBox.select('#boxtext3').html('equal to')
+    // }
 
     var changeAgainst2016 = OADRin2042-300
     selectBox.select('#boxtext4').html(Math.abs(changeAgainst2016))
 
     if(changeAgainst2016>0){
       selectBox.select('#boxtext5').html('more than in')
+      selectBox.select('#boxtext2').html("increase")
     }else if(changeAgainst2016<0){
       selectBox.select('#boxtext5').html('less than in')
+      selectBox.select('#boxtext2').html("decrease")
     }else{
       selectBox.select('#boxtext4').html("")
       selectBox.select('#boxtext5').html('equal to')
+      selectBox.select('#boxtext2').html("equal ")
     }
 
   }//end function updateText(OADR)
 
 function setupSliders(){
-
+  //function to be called when switching desktop to mobile
 }
 
 
