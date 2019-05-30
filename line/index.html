@@ -365,14 +365,14 @@
       </div>
   <!-- Next Prev buttons -->
   <div class="container-fluid no-gutters d-md-none d-block">
-    <div class="row no-gutters" style="margin-right: -0px;margin-left: -15px;">
+    <div class="row" style="margin-right: -0px;margin-left: -15px;">
       <div id="previous" class="col-3 "><button class="btn btn-group__btn btn--primary btn--green btn--previous">Previous</button></div>
       <div id="next" class="col-3 offset-6"><button class="btn btn-group__btn btn--primary btn--green btn--next">Next</button></div>
     </div>
   </div>
 
   <!-- Results block -->
-      <div class="container-fluid" style="padding-left:0px;padding-right:0px; margin-top:40px;">
+      <div class="container-fluid" style="margin-top:40px;">
         <div class="row" style="margin-right: -0px;margin-left: -15px;">
           <div class="col-md-8 order-2 order-md-1">
             <div id="graphHeader">Number of pensioners per 1,000 people of working age</div>
@@ -538,7 +538,7 @@
       var sliderSimple = d3
         .sliderRight()
         .min(0)
-        .max(600000)
+        .max(800000)
         .height(175)
         .tickFormat(d3.format(',.0f'))
         .ticks(5)
@@ -812,7 +812,7 @@
       var sliderSimple = d3
         .sliderBottom()
         .min(0)
-        .max(600000)
+        .max(800000)
         .width(width-80)
         .tickFormat(d3.format(',.0f'))
         .ticks(5)
