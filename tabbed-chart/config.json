@@ -4,7 +4,7 @@
 
             "dateFormat":"",
 
-            "legendLabels" : ["Estimates", "Projections", "If state pension age rises to 68 by 2039", "If net migration falls to 100,000 by 2042"],
+            "legendLabels" : ["Estimates", "Projections", "If state pension age rises to 68 by 2039", "If net migration rises to 500,000 by 2042"],
             "legendStyle": "line",
             "colour_palette": [ "#008080" , "#D32F2F", "#36ADD9", "#1D568A" ],
 
@@ -36,7 +36,7 @@
               }
             ],
 
-            "wordwrap":[15,20,20,15],
+            "wordwrap":[16,20,20,15],
             "annoAlign": ["start","start","start", "start"],
             "annotationBullet" : [],
 

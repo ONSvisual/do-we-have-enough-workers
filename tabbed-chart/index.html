@@ -31,17 +31,17 @@
         margin-bottom: 1.2em;
       }
 
-            #article-text-2 p {
-              margin-bottom: 1.2em;
-            }
+      #article-text-2 p {
+        margin-bottom: 1.2em;
+      }
 
-                  #article-text-3 p {
-                    margin-bottom: 1.2em;
-                  }
+      #article-text-3 p {
+        margin-bottom: 1.2em;
+      }
 
-                        #article-text-4 p {
-                          margin-bottom: 1.2em;
-                        }
+      #article-text-4 p {
+        margin-bottom: 1.2em;
+      }
       /* BUTTON GROUP STYLE */
 
       h3 {
@@ -134,7 +134,13 @@
           padding-top: 10px;
           font-weight: bold;
         }
+        .line1,.line2,.line3{
+          stroke-dasharray:2 4;
+        }
 
+        .rect1,.rect2,.rect3{
+          stroke-dasharray:2 4;
+        }
 
     </style>
 
@@ -648,26 +654,32 @@ function createLegend(value){
               value = d - 1
 
 
-							var_group.append("rect")
+							var_group.append("path")
 								.attr("class","rect" + value)
-								.attr("fill", function(){
+								.style("stroke", function(){
                   if(value==0&&i==0){return "#008080"}else{return dvc.essential.colour_palette[value]}})
-								.attr("x", 0)
-								.attr("y", 0)
-								.attr("width", function(d){
-									if(dvc.essential.legendStyle=="rect"){
-										return 15;
-									} else {
-										return 20;
-									}
-								})
-								.attr("height", function(d){
-									if(dvc.essential.legendStyle=="rect"){
-										return 15;
-									} else {
-										return 3;
-									}
-								});
+								.attr("d", function(d,i){if(value==0){
+                  return "M 0 15 h 20 Z"
+                }else{
+                  return "M 100 15 h 20 Z"
+                }})
+                .style("stroke-width","3px")
+                // .style("stroke-dasharray",function(){if(value!=0){return "4 4"}})
+								// .attr("y", 0)
+								// .attr("width", function(d){
+								// 	if(dvc.essential.legendStyle=="rect"){
+								// 		return 15;
+								// 	} else {
+								// 		return 20;
+								// 	}
+								// })
+								// .attr("height", function(d){
+								// 	if(dvc.essential.legendStyle=="rect"){
+								// 		return 15;
+								// 	} else {
+								// 		return 3;
+								// 	}
+								// });
 
 							var_group.append("text")
 								.text(dvc.essential.legendLabels[value])
@@ -759,9 +771,9 @@ function createLegend(value){
       // text contetn
 
       var textArray = [
-        "Current projections indicate the number of pensioners to 1,000 working people will rise…",
-        "…the government are proposing bringing forward changes to the state pension age by 2039…",
-        "…the ratio will rise if net migration drop to 100,000 "
+        "Current projections indicate the number of pensioners for every 1,000 people of working age will rise",
+        "Raising the State Pension age further has a significant impact on the projected ratio",
+        "Even if net migration were to surpass record levels, the projected impact would be smaller than that of a rise in the State Pension age"
       ];
 
       // last two lines have to have same class

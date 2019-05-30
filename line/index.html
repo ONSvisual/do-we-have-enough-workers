@@ -478,7 +478,6 @@
 
       function showTooltip(d){
         var boundingRect=document.getElementById(d.id).getBoundingClientRect()
-        console.log(boundingRect)
         if(boundingRect.x>width/2){
           d3.select("#tooltip")
             .classed("tooltipright",true)
@@ -2024,6 +2023,7 @@
       })
     })
     return OldAgeDependencyRatio
+
   }//ends run the model
 
   function updateText(OADR){
@@ -2066,7 +2066,7 @@
       selectBox.select('#boxtext5').html('equal to')
       selectBox.select('#boxtext2').html("equal ")
     }
-
+    console.log(OADR)
   }//end function updateText(OADR)
 
 function setupSliders(){
