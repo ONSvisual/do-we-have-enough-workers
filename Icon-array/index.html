@@ -171,7 +171,7 @@ function createLegend(labels){
       }
       return eval((lineNo*20) + 20);
       })
-      .attr("x",function(d){ return prevX+25;})
+      .attr("x",function(d){ return prevX+12;})
       d3.select(".rect" + (i))
       .attr("cy",function(d){
       if((prevX+BBox.width +50)>parseInt(graphic.style("width")) ){
@@ -179,7 +179,7 @@ function createLegend(labels){
       lineNo=lineNo + 1;
       prevX = 0;
       }
-      return eval((lineNo*20)+12);
+      return eval((lineNo*20)+15);
       })
       .attr("cx",function(d){ return prevX; })
       prevX = prevX + BBox.width +50
