@@ -2,22 +2,19 @@
   "essential": {
     "graphic_data_url": "data.csv",
     "dateFormat": "%d/%m/%Y",
-    "colour_palette": ["#36ADD9", "#BBBDBF", "#BBBDBF","#BBBDBF", "#BBBDBF", "#BBBDBF"],
-    "sourceText": ["Office for National Statistics"],
-    "gridWidth":"16",
-    "gridHeight":"6",
+    "colour_palette": ["#1E5C92", "#CD842F", "#5B0F44","#039E82", "#5999D1", "#B1295E"],
+    "sourceText": ["Office for Budget Responsibility"],
+    "gridWidth":"43",
     "widthFirst":false,
-    "dotRadius":5
+    "dotRadius":7
   },
 
   "optional": {
-    "margin_sm": [80, 10, 70, 30],
-    "margin_md": [50, 10, 70, 30],
-    "margin_lg": [50, 10, 70, 30],
+    "margin_sm": [10, 10, 10, 10],
+    "margin_lg": [10, 10, 10, 10],
 
     "aspectRatio_sm": [16, 13],
-    "aspectRatio_md": [16, 12],
-    "aspectRatio_lg": [16, 10],
+    "aspectRatio_lg": [30, 10],
 
     "mobileBreakpoint": 610
   }

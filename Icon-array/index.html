@@ -11,19 +11,25 @@
   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 
   <link rel="stylesheet" href="../lib/globalStyle.css" />
-  <link rel="stylesheet" href="../lib/bootstrap-grid.css" />
 <style>
 body{
   max-width: 700px;
 }
+
+h6 {
+    font-size: 16px;
+    margin: 16px 0 8px 0;
+    font-weight: 700;
+    color:#323132;
+    }
 </style>
 </head>
 
 
 <body>
 
-  <div class="container-fluid">
-    <div id="graphic" class="row no-gutters">
+  <div>
+    <div id="graphic" >
       <img src="fallback.png" alt="[Chart]" />
     </div>
   </div>
@@ -52,77 +58,135 @@ body{
       keypoints.selectAll("*").remove();
       footer.selectAll("*").remove();
 
+      margin={top:dvc.optional.margin_lg[0],
+                right:dvc.optional.margin_lg[1],
+                bottom:dvc.optional.margin_lg[2],
+                left:dvc.optional.margin_lg[3]}
+
+
       chart_width=parseInt(graphic.style('width'))
+      if(chart_width<450){//mobile
+        height = Math.ceil((chart_width * dvc.optional.aspectRatio_sm[1]) / dvc.optional.aspectRatio_sm[0]) - margin.top - margin.bottom;
+        gridHeight=10
+        arrayDomain=Math.ceil(dvc.essential.gridWidth/2);
+        dotRadius=0.9*chart_width/dvc.essential.gridWidth
 
-      dotmargin={top:dvc.essential.dotRadius*2,
-                right:dvc.essential.dotRadius*2,
-                bottom:dvc.essential.dotRadius*2,
-                left:dvc.essential.dotRadius*2}
-
-      var x = d3.scaleLinear()
-				.range([0, (2*dvc.essential.gridWidth+2)*dvc.essential.dotRadius])
-				.domain([0, dvc.essential.gridWidth]);
-
-      var y = d3.scaleLinear()
-          .range([0,dvc.essential.gridHeight*dvc.essential.dotRadius+dotmargin.top])
-          .domain([0,dvc.essential.gridHeight])
-
-      var colour = d3.scaleOrdinal()
-                    .domain(graphic_data.map(function(d){return d.group}))
-                    .range(dvc.essential.colour_palette)
-
-      var layout= d3_iconarray.layout()
-        .width(dvc.essential.gridWidth)
-        .height(dvc.essential.gridHeight)
-        .widthFirst(dvc.essential.widthFirst)
-
-
-      //create layouts for each group
-      layouts={}
-      for(i=0;i<graphic_data.length;i++){
-        layouts[graphic_data[i].group]=layout(d3.range(0,graphic_data[i].value,1))
+      }else{//large
+        height = Math.ceil((chart_width * dvc.optional.aspectRatio_lg[1]) / dvc.optional.aspectRatio_lg[0]) - margin.top - margin.bottom;
+        gridHeight=5;
+        arrayDomain=dvc.essential.gridWidth;
+        dotRadius=0.45*chart_width/dvc.essential.gridWidth
       }
 
-      graphic.selectAll('div')
-      .data(graphic_data)
-    	.enter()
-    	.append('div')
-      .attr('class','col-sm')
-    	.call(arrayBars);
+
+
+      var layout = d3_iconarray.layout()
+    	.height(gridHeight)
+      .widthFirst(dvc.essential.widthFirst);
+
+      var dataArray = graphic_data.reduce(function(value,d){
+        for(var i=0;i<d.value;i++){
+          value.push(d.colour);
+        }
+        return value
+      },[]);
 
 
 
-      function arrayBars(parent){
-      		parent.append('p')
-      			.attr('class','bar-label')
-      			.html(function(d){
-      				return d.group + " £" + d.value;
-      			});
+      var grid = layout(dataArray)
+      var arrayScale = d3.scaleLinear()
+        	.domain([ 0, arrayDomain ])
+        	.range([0, chart_width-(margin.left+margin.right)]);
 
-      		parent.append('svg')
-      			.attr('width', ((2*dvc.essential.gridWidth+2)*dvc.essential.dotRadius)+dotmargin.left+dotmargin.right)
-            .attr('height', 2*(dvc.essential.gridHeight*dvc.essential.dotRadius+dotmargin.top+dotmargin.bottom))
+      var svg = d3.select('#graphic')
+      		.append('svg')
+      			.attr('width',chart_width)
+      			.attr('height',height)
       		.append('g')
-      			.attr('transform','translate('+dotmargin.left+','+dotmargin.top+')')
-      			.attr('class',function(d){return d.group})
-      		.selectAll('circle')
-      			.data(function(d){
-              var thislayout = layout( d3.range(0, d.value, 1) );
-              thislayout.forEach(function(e){
-                e["group"]=d.group
-              })
-              return thislayout })
-      		.enter()
-      			.append('circle')
-      				.attr('cx',function(d){ return x(d.position.x); })
-      				.attr('cy',function(d){ return 2*y(d.position.y); })
-      				.attr('r', dvc.essential.dotRadius)
-              .attr('fill',function(d,i){return colour(d.group)})
-      }
+      			.attr('transform','translate('+margin.left+','+margin.top+')');
 
-      d3.selectAll('svg')
-      .selectAll('circles')
-      .attr('fill',function(d,i){return dvc.essential.colour_palette[i]})
+      svg.selectAll('circle')
+      	.data(grid)
+      		.enter()
+      	.append('circle')
+      		.attr('cx', function(d){
+      			return arrayScale(d.position.x);
+      		})
+      		.attr('cy', function(d){
+      			return arrayScale(d.position.y);
+      		})
+      		.attr('r',dotRadius)
+      		.attr('fill',function(d){ return d.data; })
+
+      var legend = d3.select('svg')
+    						.append("g")
+    						.attr("id", "legend")
+                .attr("transform",function(){
+                  if(chart_width<450){return "translate("+margin.left+" "+(24*0.90*chart_width/dvc.essential.gridWidth)+")"}
+                  else {return "translate("+margin.left+" "+(12*0.45*chart_width/dvc.essential.gridWidth)+")"}
+                })
+
+      labels=[]
+      graphic_data.forEach(function(d){
+        labels.push(d.group)
+      })
+      createLegend(labels);
+
+function createLegend(labels){
+  var prevX= 0;
+  var prevY= 0;
+  lineNo = 0;
+  var lineNoOld = 0;
+  labels.forEach(function(d,i) {
+    // draw legend text based on content of var legendLabels ...
+    var_group= d3.select("#legend").append("g");
+
+    var_group.append("circle")
+    .attr("class","rect" + i)
+    .attr("fill", dvc.essential.colour_palette[i])
+    .attr("cx", 0)
+    .attr("cy", 0)
+    .attr("r", dotRadius);
+
+    var_group.append("text")
+    .text(labels[i])
+    .attr("class","legend" + i)
+    .attr("text-anchor", "start")
+    .style("font-size", "12px")
+    .style("fill", "#666")
+    .attr('y',15)
+    .attr('x',0);
+    d3.selectAll(".legend" + (i))
+    .each(calcPosition);
+
+    function calcPosition() {
+      var BBox = this.getBBox()
+      //prevY =BBox.width
+      d3.select(".legend" + (i))
+      .attr("y",function(d){
+      if((prevX+BBox.width +50)>parseInt(graphic.style("width")) ){
+        lineNoOld = lineNo;
+        lineNo=lineNo + 1;
+        prevX = 0;
+      }
+      return eval((lineNo*20) + 20);
+      })
+      .attr("x",function(d){ return prevX+25;})
+      d3.select(".rect" + (i))
+      .attr("cy",function(d){
+      if((prevX+BBox.width +50)>parseInt(graphic.style("width")) ){
+      lineNoOld = lineNo;
+      lineNo=lineNo + 1;
+      prevX = 0;
+      }
+      return eval((lineNo*20)+12);
+      })
+      .attr("cx",function(d){ return prevX; })
+      prevX = prevX + BBox.width +50
+    }; // end function calcPosition()
+
+  }); // end foreach
+}// end function createLegend()
 
       //create link to source
       d3.select('#footer')
