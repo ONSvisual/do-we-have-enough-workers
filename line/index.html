@@ -1761,7 +1761,7 @@
 
       dataLayer.push({
 					 'event': 'mapDropSelect',
-					 'selected': netmigration+","+totalfertility+","+,year+","+,pensionage+","+,mortality
+					 'selected': netmigration+","+totalfertility+","+year+","+pensionage+","+mortality
 			})
       return [netmigration,totalfertility,year,pensionage,mortality]
     }
@@ -2280,7 +2280,7 @@
     })
 
     pymChild.sendHeight();
-
+    console.log(OldAgeDependencyRatio)
     return OldAgeDependencyRatio
 
   }//ends run the model
