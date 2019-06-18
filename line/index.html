@@ -1225,36 +1225,36 @@
 
         if (d3.event.key=='ArrowLeft') {
           if(+document.getElementById('migrationHidden').value-1 > min-1) {
-            sliderSimple.value(+document.getElementById('migrationHidden').value-10000)
+            sliderSimple.value(+document.getElementById('migrationHidden').value-5000)
           }
         }
         if (d3.event.key=='ArrowUp') {
           d3.event.preventDefault();
           if(+document.getElementById('migrationHidden').value+1 < max+1){
-            sliderSimple.value(+document.getElementById('migrationHidden').value+10000)
+            sliderSimple.value(+document.getElementById('migrationHidden').value+5000)
           }
         }
         if (d3.event.key=='ArrowRight') {
           if(+document.getElementById('migrationHidden').value+1 < max+1){
-            sliderSimple.value(+document.getElementById('migrationHidden').value+10000)
+            sliderSimple.value(+document.getElementById('migrationHidden').value+5000)
           }
         }
         if (d3.event.key=='ArrowDown') {
           d3.event.preventDefault();
           if(+document.getElementById('migrationHidden').value-1 > min-1){
-            sliderSimple.value(+document.getElementById('migrationHidden').value-10000)
+            sliderSimple.value(+document.getElementById('migrationHidden').value-5000)
           }
         }
         if (d3.event.key=='PageDown') {
           d3.event.preventDefault();
           if(+document.getElementById('migrationHidden').value-1 > min-1){
-            sliderSimple.value(+document.getElementById('migrationHidden').value-100000)
+            sliderSimple.value(+document.getElementById('migrationHidden').value-50000)
           }
         }
         if (d3.event.key=='PageUp') {
           d3.event.preventDefault();
           if(+document.getElementById('migrationHidden').value+1 < max+1){
-            sliderSimple.value(+document.getElementById('migrationHidden').value+100000)
+            sliderSimple.value(+document.getElementById('migrationHidden').value+50000)
           }
         }
         if (d3.event.key=='Home') {
@@ -1319,7 +1319,6 @@
 
 
       //pension keyboard accessible
-
       if(document.getElementById("handle3")===document.activeElement){//if handle is focussed
         var max = document.getElementById('pensionHidden').max
         var min = document.getElementById('pensionHidden').min
