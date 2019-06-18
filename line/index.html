@@ -2,6 +2,14 @@
 <html lang="en">
 
 <head>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-MBCBVQS');</script>
+    <!-- End Google Tag Manager -->
+
     <!-- <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> -->
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
     <title>Old Age Dependency Calculator</title>
@@ -356,6 +364,11 @@
 
 
 <body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MBCBVQS"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
   <div style="max-width:768px;margin:auto;">
     <div id="counter" class="bold d-md-none d-block"><span id="counternum">1</span>/4</div>
       <div id="sliders" class="container-fluid full-width" style="margin-bottom:20px">
@@ -501,6 +514,10 @@
       d3.select("#counternum").html(newbutton+1)
       d3.select("#column"+newbutton).style("display","block")
       pymChild.sendHeight();
+      dataLayer.push({
+        'event':'buttonClicked',
+        'selected':'next'
+      })
     })
 
     d3.select("#previous").on('click',function(){
@@ -512,7 +529,10 @@
       d3.select("#counternum").html(newbutton+1)
       d3.select("#column"+newbutton).style("display","block")
       pymChild.sendHeight();
-
+      dataLayer.push({
+        'event':'buttonClicked',
+        'selected':'previous'
+      })
     })
 
     // //tooltip
@@ -575,6 +595,10 @@
          document.getElementById("yearHidden").value = +typenumber + 1;
          d3.select("#year").on('change')()
        }
+       dataLayer.push({
+         'event':'buttonClicked',
+         'selected':'plus'
+       })
       })
       document.getElementById("minus").addEventListener("click", function() {
        if (document.getElementById("year").value > 0) {
@@ -585,6 +609,10 @@
            d3.select("#year").on('change')()
          }
        }
+       dataLayer.push({
+         'event':'buttonClicked',
+         'selected':'minus'
+       })
       })
 
 
@@ -620,6 +648,12 @@
             .style("stroke", "grey")
 
         updateText(newOADR)
+
+        dataLayer.push({
+          'event':'buttonClicked',
+          'selected':'migration'
+        })
+
         }),100);
 
       var gSimple = d3
@@ -663,6 +697,11 @@
             .style("stroke", "grey")
 
         updateText(newOADR)
+
+        dataLayer.push({
+          'event':'buttonClicked',
+          'selected':'fertility'
+        })
 
         }),100);
 
@@ -708,6 +747,10 @@
 
           updateText(newOADR)
 
+          dataLayer.push({
+            'event':'buttonClicked',
+            'selected':'pension'
+          })
         }),100);
 
       var gSimple3 = d3
@@ -743,6 +786,11 @@
           .on('onchange', _.throttle(function(val){
             var svg = d3.select('#graphic').select('svg')
             document.getElementById('mortalityHidden').value=val;
+
+            dataLayer.push({
+              'event':'buttonClicked',
+              'selected':'mortality'
+            })
 
             //change text in bubbles
             d3.select('div#slider-mortality').select(".parameter-value").select('text').text(ticksRight[sliderMortality.value()])
@@ -800,9 +848,6 @@
         .attr('transform', 'translate(70,50)');
 
       gSimple4.call(sliderMortality);
-
-
-
 
       //male & female labels
       gSimple4.append('text').text("Males").attr("x",-18).attr("y",-18).attr('text-anchor','end').attr('fill','#58595B')
@@ -895,7 +940,10 @@
             .style("stroke", "grey")
 
         updateText(newOADR)
-
+        dataLayer.push({
+          'event':'buttonClicked',
+          'selected':'migration'
+        })
       }),300);
 
       var gSimple = d3
@@ -942,7 +990,10 @@
             .style("stroke", "grey")
 
         updateText(newOADR)
-
+        dataLayer.push({
+          'event':'buttonClicked',
+          'selected':'fertility'
+        })
       }),300);
 
       var gSimple2 = d3
@@ -987,7 +1038,10 @@
               .style("stroke", "grey")
 
           updateText(newOADR)
-
+          dataLayer.push({
+            'event':'buttonClicked',
+            'selected':'pension'
+          })
         }),300);
 
       var gSimple3 = d3
@@ -1025,6 +1079,10 @@
             var svg = d3.select('#graphic').select('svg')
             document.getElementById('mortalityHidden').value=val;
 
+            dataLayer.push({
+              'event':'buttonClicked',
+              'selected':'mortality'
+            })
 
             //change text in bubbles
             d3.select('div#slider-mortality').select(".parameter-value").select('text').text(ticksRight[sliderMortality.value()])
@@ -1701,6 +1759,10 @@
       var pensionage=+document.getElementById('pensionHidden').value
       var mortality=ticks[+document.getElementById('mortalityHidden').value]
 
+      dataLayer.push({
+					 'event': 'mapDropSelect',
+					 'selected': netmigration+","+totalfertility+","+,year+","+,pensionage+","+,mortality
+			})
       return [netmigration,totalfertility,year,pensionage,mortality]
     }
 
@@ -2263,6 +2325,10 @@
       selectBox.select('#boxtext5').html('equal to')
       selectBox.select('#boxtext2').html("maintain ")
     }
+    dataLayer.push({
+      'event': 'mapClickSelect',
+      'selected': OADRin2042
+    })
 
     pymChild.sendHeight();
   }//end function updateText(OADR)
