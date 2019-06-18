@@ -8,7 +8,7 @@
             "legendStyle": "line",
             "colour_palette": [ "#008080" , "#D32F2F", "#36ADD9", "#1D568A" ],
 
-            "sourceText":["ONS"],
+            "sourceText":["Office for National Statistics"],
             "sourceURL":[""],
             "draggable": false,
            "annotationsChart" : [
@@ -51,9 +51,9 @@
     },
 
     "optional" : {
-            "margin_sm": [50, 15, 105, 30],
-            "margin_md": [50, 15, 105, 30],
-            "margin_lg": [50, 15, 105, 30],
+            "margin_sm": [50, 15, 20, 30],
+            "margin_md": [50, 15, 20, 30],
+            "margin_lg": [50, 15, 20, 30],
 
             "aspectRatio_sm" : [16,14],
             "aspectRatio_md" : [16,12],

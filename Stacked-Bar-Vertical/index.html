@@ -148,7 +148,6 @@
       var formatAsPercentage = d3.formatPrefix('%', 0);
 
       x.domain(graphic_data.map(function(d){return d.group;}));
-      console.log(x.domain())
 
       z.domain(graphic_data.columns.slice(1));
 
@@ -276,8 +275,6 @@
         .attr("y", function(d) { return y(d[1]); })
         .attr("height", function(d) { return y(d[0]) - y(d[1]); })
         .style("opacity", 0.8);
-
-      console.log(line_data)
 
       var line = d3.line()
         .x(function(d){return x(d.group)})
