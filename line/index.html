@@ -302,6 +302,10 @@
     @media (max-width:699px){
       .title{
         padding-bottom: 10px;
+        height:40px;
+      }
+      .slider-col,#column3{
+        height:130px;
       }
     }
     #counter{
@@ -1147,7 +1151,7 @@
         .attr('width',width)
         .attr('height', 120)
         .append('g')
-        .attr('transform', 'translate(35,50)');
+        .attr('transform', 'translate(35,40)');
 
       gSimple4.call(sliderMortality);
 
@@ -1670,6 +1674,7 @@
                     .attr("width", chart_width + margin.left + margin.right)
                     .attr("height", height + margin.top + margin.bottom )
                     .append("g")
+                    .attr('id',"charty")
                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 
@@ -2374,18 +2379,35 @@ function createLegend(){
       lineNoOld = lineNo;
       lineNo=lineNo + 1;
       prevX = 0;
+
+      //move the chart down
+      svgheight=parseInt(d3.select('#graphic').select('svg').style('height'))
+      charttransform=d3.select('#graphic').select('#charty').attr('transform')
+      d3.select('#graphic').select('svg').attr('height',+svgheight+30)
+      d3.select('#graphic').select('#charty').attr('transform',charttransform.split(',')[0]+','+(+charttransform.split(',')[1].split(')')[0]+30)+')')
+
       }
       return eval((lineNo*20) + 20);
       })
       .attr("x",function(d){ return prevX+25;})
+
       d3.select(".rect" + (i))
-      .attr("y",function(d){
+      .attr("y1",function(d){
       if((prevX+BBox.width +50)>parseInt(graphic.style("width")) ){
       lineNoOld = lineNo;
       lineNo=lineNo + 1;
       prevX = 0;
       }
-      return eval((lineNo*20)+5);
+      return eval((lineNo*20)+14);
+      })
+      d3.select(".rect" + (i))
+      .attr("y2",function(d){
+      if((prevX+BBox.width +50)>parseInt(graphic.style("width")) ){
+      lineNoOld = lineNo;
+      lineNo=lineNo + 1;
+      prevX = 0;
+      }
+      return eval((lineNo*20)+14);
       })
       .attr("x1",function(d){ return prevX; })
       .attr("x2",function(d){ return prevX+20; })
