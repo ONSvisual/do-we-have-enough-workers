@@ -4,7 +4,7 @@
 <head>
     <!-- <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> -->
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
-    <title></title>
+    <title>Old Age Dependency Calculator</title>
 
     <meta name="description" content="Interactive calculator to show what factors affect the ratio of pensioners to people of working age">
     <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge" /> -->
@@ -284,7 +284,7 @@
     /* .col-md-3{
       max-width:
     } */
-    @media (min-width: 767px){
+    @media (min-width: 700px){
       .title{
          height:70px;
       }
@@ -294,7 +294,7 @@
       }
     }
 
-    @media (max-width:768px){
+    @media (max-width:699px){
       .title{
         padding-bottom: 10px;
       }
@@ -321,6 +321,35 @@
     padding-right: 0;
     overflow-x: hidden;
     }
+
+    /* tippy styling */
+    .tippy-tooltip.ons-theme {
+      background-color: #206095;
+      color: white;
+    }
+
+    .tippy-tooltip.ons-theme[data-animatefill] {
+      background-color: transparent;
+    }
+
+    .tippy-tooltip.ons-theme .tippy-backdrop {
+      background-color: #206095;
+    }
+    .tippy-tooltip.tomato-theme[x-placement^='top'] .tippy-arrow {
+      border-top-color: #206095;
+    }
+    .tippy-tooltip.tomato-theme[x-placement^='bottom'] .tippy-arrow {
+      border-bottom-color: #206095;
+    }
+    .tippy-tooltip.tomato-theme[x-placement^='left'] .tippy-arrow {
+      border-left-color: #206095;
+    }
+    .tippy-tooltip.tomato-theme[x-placement^='right'] .tippy-arrow {
+      border-right-color: #206095;
+    }
+    .tippy-tooltip.tomato-theme .tippy-roundarrow {
+      fill: #206095;
+    }
     </style>
 </head>
 
@@ -333,7 +362,7 @@
           <div id="column0" class="col col-12 col-md-3 slider-col">
             <div class="container">
               <div class="row">
-                <div class="col-12 title"><p class='bold'>Life expectancy in 2042 <span class="fas fa-info-circle test" id="icon1"></span><br/></p></div>
+                <div class="col-12 title"><p class='bold'>Life expectancy in 2042 <span data-tippy-content="Period life expectancy at birth" class="fas fa-info-circle test" id="icon1"></span><br/></p></div>
                 <div class="col-12"><div id="slider-mortality"></div></div>
               </div>
             </div>
@@ -341,14 +370,14 @@
 
           <div id="column1" class="container col col-12 col-md-3 slider-col">
             <div class="row no-gutters">
-              <div class="col-md-12 title"><p class='bold'>Annual net migration by 2042 <span class="fas fa-info-circle test" id="icon2"></span><br/><span class="green">▬ 2017:283,000</span></p></div>
+              <div class="col-md-12 title"><p class='bold'>Annual net migration by 2042 <span data-tippy-content="The differene between the number of immigrants and the number of emigrants" class="fas fa-info-circle test" id="icon2"></span><br/><span class="green">▬ 2017:283,000</span></p></div>
               <div class="col-md-12"><div id="slider-simple"></div></div>
             </div>
           </div>
 
           <div id="column2" class="container col col-12 col-md-3 slider-col">
             <div class="row no-gutters">
-              <div class="col-md-12 title"><p class='bold' >Children per woman by 2042 <span class="fas fa-info-circle test" id="icon3"></span><br/><span class="green">▬ 2017:1.75</span></p></div>
+              <div class="col-md-12 title"><p class='bold' >Children per woman by 2042 <span data-tippy-content="The average numer of children per woman during her lifetime." class="fas fa-info-circle test" id="icon3"></span><br/><span class="green">▬ 2017:1.75</span></p></div>
               <div class="col-md-12"><div id="slider-women"></div></div>
             </div>
           </div>
@@ -407,11 +436,11 @@
    </div>
 
 
-   <input id="mortalityHidden" type="hidden" value=2>
-   <input id="migrationHidden" type="hidden" value=165000>
-   <input id="fertilityHidden" type="hidden" value="1.84">
+   <input id="mortalityHidden" max=4 min=0 type="hidden" value=2>
+   <input id="migrationHidden" max=500000 min=-100000 type="hidden" value=165000>
+   <input id="fertilityHidden" max=5 min=0 type="hidden" value="1.84">
    <input id="yearHidden" type="hidden" value="2028">
-   <input id="pensionHidden" type="hidden" value="67">
+   <input id="pensionHidden" max=80 min=60 type="hidden" value="67">
    <input id="buttonCounter" type="hidden" value="0">
 
     <script src="https://unpkg.com/unfetch/polyfill"></script>
@@ -421,14 +450,14 @@
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.11/lodash.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bluebird/3.3.4/bluebird.min.js"></script>
-    <!-- <script src="https://d3js.org/d3-queue.v3.min.js"></script> -->
+
+    <!-- tooltip -->
+    <script src="https://unpkg.com/popper.js@1"></script>
+    <script src="https://unpkg.com/tippy.js@4"></script>
+
     <script src="d3-simple-slider.js"></script>
  		<script src="../lib/modernizr.svg.min.js" type="text/javascript"></script>
  		<script src="../lib/pym.js" type="text/javascript"></script>
-
-    <script>
-
-    </script>
 
 
    <script>
@@ -448,6 +477,19 @@
     document.getElementById('pensionHidden').value=67
     document.getElementById('buttonCounter').value=0
 
+    //start tooltips
+    tippy.setDefaults({
+      animation:'fade',
+      arrow:true,
+      a11y:true,
+      maxWidth:175,
+      theme:'ons',
+    })
+
+    tippy('#icon1')
+    tippy('#icon2')
+    tippy('#icon3')
+
     //next previous buttons
     d3.select("#next").on('click',function(){
       var currentbutton = +document.getElementById('buttonCounter').value
@@ -457,6 +499,7 @@
       document.getElementById('buttonCounter').value=newbutton
       d3.select("#counternum").html(newbutton+1)
       d3.select("#column"+newbutton).style("display","block")
+      pymChild.sendHeight();
     })
 
     d3.select("#previous").on('click',function(){
@@ -467,59 +510,61 @@
       document.getElementById('buttonCounter').value=newbutton
       d3.select("#counternum").html(newbutton+1)
       d3.select("#column"+newbutton).style("display","block")
+      pymChild.sendHeight();
+
     })
 
-    //tooltip
-     d3.select('#icon1')
-      .data([{"tooltipText":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec mollis nulla purus. Etiam aliquam sit amet dolor vel ullamcorper. ","id":"icon1"}])
-      .on('mouseover',function(d){showTooltip(d)})
-      .on('mouseout',function(d){hideTooltip(d)})
-
-      d3.select('#icon2')
-       .data([{"tooltipText":"Sed euismod urna non tristique euismod. Quisque auctor dui arcu, sit amet porta dui ornare sit amet. ","id":"icon2"}])
-       .on('mouseover',function(d){showTooltip(d)})
-       .on('mouseout',function(d){hideTooltip(d)})
-
-       d3.select('#icon3')
-        .data([{"tooltipText":"Donec at maximus turpis, in sagittis enim. Curabitur maximus rhoncus hendrerit. Fusce suscipit sit amet mauris nec vehicula.","id":"icon3"}])
-        .on('mouseover',function(d){showTooltip(d)})
-        .on('mouseout',function(d){hideTooltip(d)})
-
-      function showTooltip(d){
-        var boundingRect=document.getElementById(d.id).getBoundingClientRect()
-        if(boundingRect.x>width/2){
-          d3.select("#tooltip")
-            .classed("tooltipright",true)
-            .classed("tooltipleft",false)
-            .style("left", (boundingRect.x-135+2)+"px")
-            .style("top", (boundingRect.y+25)+"px")
-            .text(d.tooltipText)
-            .transition()
-            .duration(300)
-            .style("opacity","1");
-        }else{
-          d3.select("#tooltip")
-            .classed("tooltipright",false)
-            .classed("tooltipleft",true)
-            .style("left", (boundingRect.x-2)+"px")
-            .style("top", (boundingRect.y+25)+"px")
-            .text(d.tooltipText)
-            .transition()
-            .duration(300)
-            .style("opacity","1");
-        }
-      }
-
-      function hideTooltip(){
-        d3.select("#tooltip")
-        .transition()
-        .duration(300)
-        .style("opacity","0");
-
-        window.setTimeout(function(){d3.select("#tooltip")
-        .style("left","")
-        .style("right","")},301)
-      }
+    // //tooltip
+    //  d3.select('#icon1')
+    //   .data([{"tooltipText":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec mollis nulla purus. Etiam aliquam sit amet dolor vel ullamcorper. ","id":"icon1"}])
+    //   .on('mouseover',function(d){showTooltip(d)})
+    //   .on('mouseout',function(d){hideTooltip(d)})
+    //
+    //   d3.select('#icon2')
+    //    .data([{"tooltipText":"Sed euismod urna non tristique euismod. Quisque auctor dui arcu, sit amet porta dui ornare sit amet. ","id":"icon2"}])
+    //    .on('mouseover',function(d){showTooltip(d)})
+    //    .on('mouseout',function(d){hideTooltip(d)})
+    //
+    //    d3.select('#icon3')
+    //     .data([{"tooltipText":"Donec at maximus turpis, in sagittis enim. Curabitur maximus rhoncus hendrerit. Fusce suscipit sit amet mauris nec vehicula.","id":"icon3"}])
+    //     .on('mouseover',function(d){showTooltip(d)})
+    //     .on('mouseout',function(d){hideTooltip(d)})
+    //
+    //   function showTooltip(d){
+    //     var boundingRect=document.getElementById(d.id).getBoundingClientRect()
+    //     if(boundingRect.x>width/2){
+    //       d3.select("#tooltip")
+    //         .classed("tooltipright",true)
+    //         .classed("tooltipleft",false)
+    //         .style("left", (boundingRect.x-135+2)+"px")
+    //         .style("top", (boundingRect.y+25)+"px")
+    //         .text(d.tooltipText)
+    //         .transition()
+    //         .duration(300)
+    //         .style("opacity","1");
+    //     }else{
+    //       d3.select("#tooltip")
+    //         .classed("tooltipright",false)
+    //         .classed("tooltipleft",true)
+    //         .style("left", (boundingRect.x-2)+"px")
+    //         .style("top", (boundingRect.y+25)+"px")
+    //         .text(d.tooltipText)
+    //         .transition()
+    //         .duration(300)
+    //         .style("opacity","1");
+    //     }
+    //   }
+    //
+    //   function hideTooltip(){
+    //     d3.select("#tooltip")
+    //     .transition()
+    //     .duration(300)
+    //     .style("opacity","0");
+    //
+    //     window.setTimeout(function(){d3.select("#tooltip")
+    //     .style("left","")
+    //     .style("right","")},301)
+    //   }
 
      //stuff for the tally
      document.getElementById("plus").addEventListener("click", function() {
@@ -542,11 +587,11 @@
       })
 
 
-    if(width>767){
+    if(width>699){
       var sliderSimple = d3
         .sliderRight()
-        .min(0)
-        .max(800000)
+        .min(-100000)
+        .max(500000)
         .height(175)
         .tickFormat(d3.format(',.0f'))
         .ticks(5)
@@ -584,7 +629,6 @@
         .attr('transform', 'translate(60,50)');
 
       gSimple.call(sliderSimple);
-
 
       //women sliders
       var sliderWomen = d3
@@ -756,6 +800,9 @@
 
       gSimple4.call(sliderMortality);
 
+
+
+
       //male & female labels
       gSimple4.append('text').text("Males").attr("x",-18).attr("y",-18).attr('text-anchor','end').attr('fill','#58595B')
       gSimple4.append('text').text("Females").attr("x",15).attr("y",-18).attr('text-anchor','start').attr('fill','#58595B')
@@ -819,8 +866,8 @@
 
       var sliderSimple = d3
         .sliderBottom()
-        .min(0)
-        .max(800000)
+        .min(-100000)
+        .max(500000)
         .width(width-80)
         .tickFormat(d3.format(',.0f'))
         .ticks(5)
@@ -856,7 +903,7 @@
         .attr('height', 110)
         .attr('width',width)
         .append('g')
-        .attr('transform', 'translate(30,40)');
+        .attr('transform', 'translate(35,40)');
 
       if(width<500){sliderSimple.ticks(3)}
 
@@ -903,7 +950,7 @@
         .attr('height', 100)
         .attr('width',width)
         .append('g')
-        .attr('transform', 'translate(30,40)');
+        .attr('transform', 'translate(35,40)');
 
       gSimple2.call(sliderWomen);
 
@@ -948,7 +995,7 @@
         .attr('height', 100)
         .attr('width',width)
         .append('g')
-        .attr('transform', 'translate(30,40)');
+        .attr('transform', 'translate(35,40)');
 
       gSimple3.call(sliderPension);
 
@@ -1044,7 +1091,7 @@
         .attr('width',width)
         .attr('height', 120)
         .append('g')
-        .attr('transform', 'translate(30,50)');
+        .attr('transform', 'translate(35,50)');
 
       gSimple4.call(sliderMortality);
 
@@ -1068,7 +1115,6 @@
       .text(function(d,i){return ticksLeft[i]})
 
       d3.select('div#slider-mortality').select('.axis2').selectAll('line').attr('y2','18')
-
 
       d3.select('div#slider-mortality').select('.axis2').selectAll('.tick line')
       .attr('stroke',"#aaa")
@@ -1114,82 +1160,218 @@
     //select all handles and give them separate ids
     d3.selectAll(".handle").attr("id",function(d,i){return 'handle'+i})
 
-
-    // Keyboard accessibility
-
-    // d3.select('body').on('keydown',function(){
-    //   if(document.getElementById("handle0")===document.activeElement){//if handle is focussed
-    //     var max = document.getElementById('value-simple').max
-    //     var min = document.getElementById('value-simple').min
     //
-    //     if (d3.event.key=='ArrowLeft') {
-    //       if(+document.getElementById('value-simple').value-100<min){
-    //         sliderSimple.silentValue(min)
-    //         document.getElementById("value-simple").value=min
-    //       }else{
-    //         sliderSimple.silentValue(+document.getElementById('value-simple').value-100)
-    //         document.getElementById("value-simple").value=+document.getElementById("value-simple").value-100
-    //       }
-    //     }
-    //     if (d3.event.key=='ArrowUp') {
-    //       d3.event.preventDefault();
-    //       if(+document.getElementById('value-simple').value+100>max){
-    //         sliderSimple.silentValue(max)
-    //         document.getElementById("value-simple").value=max
-    //       }else{
-    //         sliderSimple.silentValue(+document.getElementById('value-simple').value+100)
-    //         document.getElementById("value-simple").value=+document.getElementById("value-simple").value+100
-    //       }
-    //     }
-    //     if (d3.event.key=='ArrowRight') {
-    //       if(+document.getElementById('value-simple').value+100>max){
-    //         sliderSimple.silentValue(max)
-    //         document.getElementById("value-simple").value=max
-    //       }else{
-    //         sliderSimple.silentValue(+document.getElementById('value-simple').value+100)
-    //         document.getElementById("value-simple").value=+document.getElementById("value-simple").value+100
-    //       }              }
-    //     if (d3.event.key=='ArrowDown') {
-    //       d3.event.preventDefault();
-    //       if(+document.getElementById('value-simple').value-100<min){
-    //         sliderSimple.silentValue(min)
-    //         document.getElementById("value-simple").value=min
-    //       }else{
-    //         sliderSimple.silentValue(+document.getElementById('value-simple').value-100)
-    //         document.getElementById("value-simple").value=+document.getElementById("value-simple").value-100
-    //       }
-    //     }
-    //     if (d3.event.key=='PageDown') {
-    //       d3.event.preventDefault();
-    //       if(+document.getElementById('value-simple').value-1000<min){
-    //         sliderSimple.silentValue(min)
-    //         document.getElementById("value-simple").value=min
-    //       }else{
-    //         sliderSimple.silentValue(+document.getElementById('value-simple').value-1000)
-    //         document.getElementById("value-simple").value=+document.getElementById("value-simple").value-1000
-    //       }
-    //     }
-    //     if (d3.event.key=='PageUp') {
-    //       d3.event.preventDefault();
-    //       if(+document.getElementById('value-simple').value+1000>max){
-    //         sliderSimple.silentValue(max)
-    //         document.getElementById("value-simple").value=max
-    //       }else{
-    //         sliderSimple.silentValue(+document.getElementById('value-simple').value+1000)
-    //         document.getElementById("value-simple").value=+document.getElementById("value-simple").value+1000
-    //       }              }
-    //     if (d3.event.key=='Home') {
-    //       d3.event.preventDefault();
-    //       sliderSimple.silentValue(min)
-    //       document.getElementById("value-simple").value=min
-    //     }
-    //     if (d3.event.key=='End') {
-    //       d3.event.preventDefault();
-    //       sliderSimple.silentValue(max)
-    //       document.getElementById("value-simple").value=max
-    //     }
-    //   }
-    // })
+    // Keyboard accessible sliders
+    //
+
+    //mortality
+    d3.select('body').on('keydown',function(){
+      if(document.getElementById("handle0")===document.activeElement){//if handle is focussed
+        var max = document.getElementById('mortalityHidden').max
+        var min = document.getElementById('mortalityHidden').min
+
+        if (d3.event.key=='ArrowLeft') {
+          if(+document.getElementById('mortalityHidden').value-1 > min-1) {
+            sliderMortality.value(+document.getElementById('mortalityHidden').value-1)
+          }
+        }
+
+        if (d3.event.key=='ArrowUp') {
+          d3.event.preventDefault();
+          if(+document.getElementById('mortalityHidden').value+1 < max+1){
+            sliderMortality.value(+document.getElementById('mortalityHidden').value+1)
+          }
+        }
+        if (d3.event.key=='ArrowRight') {
+          if(+document.getElementById('mortalityHidden').value+1 < max+1){
+            sliderMortality.value(+document.getElementById('mortalityHidden').value+1)
+          }
+        }
+        if (d3.event.key=='ArrowDown') {
+          d3.event.preventDefault();
+          if(+document.getElementById('mortalityHidden').value-1 > min-1){
+            sliderMortality.value(+document.getElementById('mortalityHidden').value-1)
+          }
+        }
+        if (d3.event.key=='PageDown') {
+          d3.event.preventDefault();
+          if(+document.getElementById('mortalityHidden').value-1 > min-1){
+            sliderMortality.value(+document.getElementById('mortalityHidden').value-1)
+          }
+        }
+        if (d3.event.key=='PageUp') {
+          d3.event.preventDefault();
+          if(+document.getElementById('mortalityHidden').value+1 < max+1){
+            sliderMortality.value(+document.getElementById('mortalityHidden').value+1)
+          }
+        }
+        if (d3.event.key=='Home') {
+          d3.event.preventDefault();
+          sliderMortality.value(min)
+        }
+        if (d3.event.key=='End') {
+          d3.event.preventDefault();
+          sliderMortality.value(max)
+        }
+      }
+    })
+
+
+    //migration keyboard accessible
+    d3.select('body').on('keydown',function(){
+      if(document.getElementById("handle1")===document.activeElement){//if handle is focussed
+        var max = document.getElementById('migrationHidden').max
+        var min = document.getElementById('migrationHidden').min
+
+        if (d3.event.key=='ArrowLeft') {
+          if(+document.getElementById('migrationHidden').value-1 > min-1) {
+            sliderSimple.value(+document.getElementById('migrationHidden').value-10000)
+          }
+        }
+
+        if (d3.event.key=='ArrowUp') {
+          d3.event.preventDefault();
+          if(+document.getElementById('migrationHidden').value+1 < max+1){
+            sliderSimple.value(+document.getElementById('migrationHidden').value+10000)
+          }
+        }
+        if (d3.event.key=='ArrowRight') {
+          if(+document.getElementById('migrationHidden').value+1 < max+1){
+            sliderSimple.value(+document.getElementById('migrationHidden').value+10000)
+          }
+        }
+        if (d3.event.key=='ArrowDown') {
+          d3.event.preventDefault();
+          if(+document.getElementById('migrationHidden').value-1 > min-1){
+            sliderSimple.value(+document.getElementById('migrationHidden').value-10000)
+          }
+        }
+        if (d3.event.key=='PageDown') {
+          d3.event.preventDefault();
+          if(+document.getElementById('migrationHidden').value-1 > min-1){
+            sliderSimple.value(+document.getElementById('migrationHidden').value-100000)
+          }
+        }
+        if (d3.event.key=='PageUp') {
+          d3.event.preventDefault();
+          if(+document.getElementById('migrationHidden').value+1 < max+1){
+            sliderSimple.value(+document.getElementById('migrationHidden').value+100000)
+          }
+        }
+        if (d3.event.key=='Home') {
+          d3.event.preventDefault();
+          sliderSimple.value(min)
+        }
+        if (d3.event.key=='End') {
+          d3.event.preventDefault();
+          sliderSimple.value(max)
+        }
+      }
+    })
+
+    //fertility keyboard accessible
+    d3.select('body').on('keydown',function(){
+      if(document.getElementById("handle2")===document.activeElement){//if handle is focussed
+        var max = document.getElementById('fertilityHidden').max
+        var min = document.getElementById('fertilityHidden').min
+
+        if (d3.event.key=='ArrowLeft') {
+          if(+document.getElementById('fertilityHidden').value-1 > min-1) {
+            sliderWomen.value(+document.getElementById('fertilityHidden').value-0.01)
+          }
+        }
+
+        if (d3.event.key=='ArrowUp') {
+          d3.event.preventDefault();
+          if(+document.getElementById('fertilityHidden').value+1 < max+1){
+            sliderWomen.value(+document.getElementById('fertilityHidden').value+0.01)
+          }
+        }
+        if (d3.event.key=='ArrowRight') {
+          if(+document.getElementById('fertilityHidden').value+1 < max+1){
+            sliderWomen.value(+document.getElementById('fertilityHidden').value+0.01)
+          }
+        }
+        if (d3.event.key=='ArrowDown') {
+          d3.event.preventDefault();
+          if(+document.getElementById('fertilityHidden').value-1 > min-1){
+            sliderWomen.value(+document.getElementById('fertilityHidden').value-0.01)
+          }
+        }
+        if (d3.event.key=='PageDown') {
+          d3.event.preventDefault();
+          if(+document.getElementById('fertilityHidden').value-1 > min-1){
+            sliderWomen.value(+document.getElementById('fertilityHidden').value-0.1)
+          }
+        }
+        if (d3.event.key=='PageUp') {
+          d3.event.preventDefault();
+          if(+document.getElementById('fertilityHidden').value+1 < max+1){
+            sliderWomen.value(+document.getElementById('fertilityHidden').value+0.1)
+          }
+        }
+        if (d3.event.key=='Home') {
+          d3.event.preventDefault();
+          sliderWomen.value(min)
+        }
+        if (d3.event.key=='End') {
+          d3.event.preventDefault();
+          sliderWomen.value(max)
+        }
+      }
+    })
+
+    //pension keyboard accessible
+    d3.select('body').on('keydown',function(){
+      if(document.getElementById("handle3")===document.activeElement){//if handle is focussed
+        var max = document.getElementById('pensionHidden').max
+        var min = document.getElementById('pensionHidden').min
+
+        if (d3.event.key=='ArrowLeft') {
+          if(+document.getElementById('pensionHidden').value-1 > min-1) {
+            sliderPension.value(+document.getElementById('pensionHidden').value-1)
+          }
+        }
+
+        if (d3.event.key=='ArrowUp') {
+          d3.event.preventDefault();
+          if(+document.getElementById('pensionHidden').value+1 < max+1){
+            sliderPension.value(+document.getElementById('pensionHidden').value+1)
+          }
+        }
+        if (d3.event.key=='ArrowRight') {
+          if(+document.getElementById('pensionHidden').value+1 < max+1){
+            sliderPension.value(+document.getElementById('pensionHidden').value+1)
+          }
+        }
+        if (d3.event.key=='ArrowDown') {
+          d3.event.preventDefault();
+          if(+document.getElementById('pensionHidden').value-1 > min-1){
+            sliderPension.value(+document.getElementById('pensionHidden').value-1)
+          }
+        }
+        if (d3.event.key=='PageDown') {
+          d3.event.preventDefault();
+          if(+document.getElementById('pensionHidden').value-1 > min-1){
+            sliderPension.value(+document.getElementById('pensionHidden').value-5)
+          }
+        }
+        if (d3.event.key=='PageUp') {
+          d3.event.preventDefault();
+          if(+document.getElementById('pensionHidden').value+1 < max+1){
+            sliderPension.value(+document.getElementById('pensionHidden').value+5)
+          }
+        }
+        if (d3.event.key=='Home') {
+          d3.event.preventDefault();
+          sliderPension.value(min)
+        }
+        if (d3.event.key=='End') {
+          d3.event.preventDefault();
+          sliderPension.value(max)
+        }
+      }
+    })
 
     function drawGraphic(){
       //adjust the sliders to match the width of the body
@@ -1503,9 +1685,9 @@
 
 
       //use pym to calculate chart dimensions
-       if (pymChild) {
+     if (pymChild) {
            pymChild.sendHeight();
-       }
+     }
 
     }//ends draw graphic
 
@@ -2031,6 +2213,9 @@
         oadr:((thisyear.malepensioners+thisyear.femalepensioners)/(thisyear.maleworkers+thisyear.femaleworkers))*1000
       })
     })
+
+    pymChild.sendHeight();
+
     return OldAgeDependencyRatio
 
   }//ends run the model
@@ -2073,8 +2258,10 @@
     }else{
       selectBox.select('#boxtext4').html("")
       selectBox.select('#boxtext5').html('equal to')
-      selectBox.select('#boxtext2').html("equal ")
+      selectBox.select('#boxtext2').html("maintain ")
     }
+
+    pymChild.sendHeight();
   }//end function updateText(OADR)
 
 function setupSliders(){
@@ -2141,6 +2328,7 @@ function createLegend(){
       prevX = prevX + BBox.width +50
       }; // end function calcPosition()
   }); // end foreach
+  pymChild.sendHeight();
 }// end function createLegend()
 
 	//check whether browser can cope with svg

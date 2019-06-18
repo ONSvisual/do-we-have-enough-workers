@@ -79,16 +79,17 @@
         break;
       case leftRight:
         axisFunction = d3Axis.axisRight;
-        axisFunction2= d3Axis.axisLeft
+        axisFunction2= d3Axis.axisLeft;
         break;
       case topBottom:
         axisFunction = d3Axis.axisTop;
-        axisFunction2= d3Axis.axisBottom
+        axisFunction2= d3Axis.axisBottom;
     }
 
     var handleSelection = null;
     var fillSelection = null;
     var textSelection = null;
+    var rectSelection = null;
 
     if (scale) {
       domain = [d3Array.min(scale.domain()), d3Array.max(scale.domain())];
@@ -153,7 +154,7 @@
 
       var axis = selection.selectAll('.axis').data([null]);
       if(orientation===leftRight||orientation===topBottom){
-        var axis2 = selection.selectAll('.axis').data([null])
+        var axis2 = selection.selectAll('.axis').data([null]);
 
         axis2
           .enter()
@@ -269,7 +270,7 @@
             .attr('y',scale(startingValueValue))
             .attr('x',-80)
             .attr('text-anchor','start')
-            .text(startingTextValue)
+            .text(startingTextValue);
 
 
           sliderEnter
@@ -279,7 +280,7 @@
             .attr('y',scale(startingValueValue)+16)
             .attr('x',-80)
             .attr('text-anchor','start')
-            .text(tickFormat(startingValueValue))
+            .text(tickFormat(startingValueValue));
         }else{
           sliderEnter
             .append('line')
@@ -299,7 +300,7 @@
             .attr('y',-20)
             .attr('x',scale(startingValueValue))
             .attr('text-anchor','middle')
-            .text(startingTextValue+" "+tickFormat(startingValueValue))
+            .text(startingTextValue+" "+tickFormat(startingValueValue));
         }
       }else if(startingValueValue!=undefined){
         if(orientation===left||orientation===right||orientation===leftRight){
@@ -350,13 +351,13 @@
         .attr(
             'text-anchor', function(){
             if(orientation===right){
-              return 'start'
+              return 'start';
             }else if(orientation===left){
-              return 'end'
+              return 'end';
             }else if(orientation===leftRight){
-              return 'start'
+              return 'start';
             }else{
-              return 'middle'
+              return 'middle';
             }
           }
         );
@@ -380,7 +381,7 @@
             .type(d3.symbolTriangle)
             .size(150))
           .style('fill', '#206095')
-          .style('stroke',"none")
+          .style('stroke',"none");
       }else if(orientation===top||orientation===bottom||orientation===topBottom){
         handleEnter
           .append('path')
@@ -389,7 +390,7 @@
             .type(d3.symbolTriangle)
             .size(150))
           .style('fill', '#206095')
-          .style('stroke',"none")
+          .style('stroke',"none");
       }
 
       if(orientation===leftRight){
@@ -400,7 +401,7 @@
             .type(d3.symbolTriangle)
             .size(150))
           .style('fill', '#206095')
-          .style('stroke',"none")
+          .style('stroke',"none");
       }
 
       if(orientation===topBottom){
@@ -411,7 +412,7 @@
             .type(d3.symbolTriangle)
             .size(150))
           .style('fill', '#206095')
-          .style('stroke',"none")
+          .style('stroke',"none");
       }
 
       if (displayValue && value.length === 1) {
@@ -431,11 +432,11 @@
           .text(tickFormat(value[0]));
 
 
-          var text=handleEnter.select('text')
+          var text=handleEnter.select('text');
 
           if(text._groups.length>0){
             var bbox = text.node().getBBox();
-            handleEnter.select('text').remove()
+            handleEnter.select('text').remove();
             var padding = 5;
             var rect = handleEnter.append("rect")
               .attr("x", bbox.x - padding)
@@ -451,7 +452,7 @@
               .style('fill','white')
               .attr('y',text.attr('y'))
               .attr('x',text.attr('x'))
-              .attr('dy',text.attr('dy'))
+              .attr('dy',text.attr('dy'));
           }
 
 
@@ -618,6 +619,7 @@
 
       textSelection = selection.select('.parameter-value text');
       fillSelection = selection.select('.track-fill');
+      rectSelection = selection.select('.parameter-value rect');
     }
 
     function fadeTickText() {
@@ -679,7 +681,6 @@
 
     function updateHandle(newValue, animate) {
       animate = typeof animate !== 'undefined' ? animate : false;
-
       if (animate) {
         selection
           .selectAll('.parameter-value')
@@ -700,7 +701,7 @@
               .attr(
                 x + '1',
                 value.length === 1
-                  ? scale.range()[1]
+                  ? scale.range()[0]
                   : scale(newValue[0])
               )
               .attr(
@@ -715,7 +716,7 @@
               .attr(
                 x + '1',
                 value.length === 1
-                  ? scale.range()[1] + SLIDER_END_PADDING
+                  ? scale.range()[0] + SLIDER_END_PADDING
                   : scale(newValue[0])
               )
               .attr(
@@ -765,8 +766,18 @@
 
       if (displayValue) {
         textSelection.text(displayFormat(newValue[0]));
-        if(orientation===leftRight){textSelection.text(ticks[(newValue[0])])}
+        if(orientation===leftRight){textSelection.text(ticks[(newValue[0])]);}
       }
+
+      if(orientation!==leftRight&&orientation!==topBottom){
+        var bbox = textSelection.node().getBBox();
+        var padding = 5;
+        rectSelection
+          .attr("x", bbox.x - padding)
+          .attr("width",bbox.width+(padding*2));
+      }
+
+
     }
 
     slider.min = function(_) {
@@ -876,13 +887,13 @@
       if (!arguments.length) return startingText;
       startingTextValue = _;
       return slider;
-    }
+    };
 
     slider.startingValue = function(_) {
       if (!arguments.length) return startingValue;
       startingValueValue = _;
       return slider;
-    }
+    };
 
     slider.step = function(_) {
       if (!arguments.length) return step;
@@ -953,11 +964,11 @@
   }
 
   function sliderLeftRight(scale){
-    return slider(leftRight,scale)
+    return slider(leftRight,scale);
   }
 
   function sliderTopBottom(scale){
-    return slider(topBottom,scale)
+    return slider(topBottom,scale);
   }
 
   exports.sliderHorizontal = sliderHorizontal;

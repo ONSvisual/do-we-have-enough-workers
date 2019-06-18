@@ -2,7 +2,7 @@
   "essential": {
     "graphic_data_url": "data.csv",
     "dateFormat": "%d/%m/%Y",
-    "colour_palette": ["#1E5C92", "#CD842F", "#5B0F44","#039E82", "#5999D1", "#B1295E"],
+    "colour_palette": ["#1E5C92", "#CD842F","#5999D1", "#B1295E","#039E82", "#5B0F44"],
     "sourceText": ["Office for Budget Responsibility"],
     "gridWidth":"43",
     "widthFirst":false,
@@ -13,7 +13,8 @@
     "margin_sm": [10, 10, 10, 10],
     "margin_lg": [10, 10, 10, 10],
 
-    "aspectRatio_sm": [16, 13],
+    "aspectRatio_sm": [13, 13],
+    "aspectRatio_md": [16, 13],
     "aspectRatio_lg": [37, 10],
 
     "mobileBreakpoint": 610

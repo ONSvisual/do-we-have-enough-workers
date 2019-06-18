@@ -65,8 +65,14 @@ h6 {
 
 
       chart_width=parseInt(graphic.style('width'))
-      if(chart_width<450){//mobile
+      if(chart_width<406){//mobile
         height = Math.ceil((chart_width * dvc.optional.aspectRatio_sm[1]) / dvc.optional.aspectRatio_sm[0]) - margin.top - margin.bottom;
+        gridHeight=10
+        arrayDomain=Math.ceil(dvc.essential.gridWidth/2);
+        dotRadius=0.9*chart_width/dvc.essential.gridWidth
+
+      }else if(chart_width<609){//mobile
+        height = Math.ceil((chart_width * dvc.optional.aspectRatio_md[1]) / dvc.optional.aspectRatio_md[0]) - margin.top - margin.bottom;
         gridHeight=10
         arrayDomain=Math.ceil(dvc.essential.gridWidth/2);
         dotRadius=0.9*chart_width/dvc.essential.gridWidth
