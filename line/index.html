@@ -1162,7 +1162,9 @@
     d3.selectAll(".handle").attr("id",function(d,i){return 'handle'+i})
 
     //
+    //
     // Keyboard accessible sliders
+    //
     //
 
     //mortality
@@ -1215,11 +1217,8 @@
           sliderMortality.value(max)
         }
       }
-    })
 
-
-    //migration keyboard accessible
-    d3.select('body').on('keydown',function(){
+      //migration keyboard accessible
       if(document.getElementById("handle1")===document.activeElement){//if handle is focussed
         var max = document.getElementById('migrationHidden').max
         var min = document.getElementById('migrationHidden').min
@@ -1229,7 +1228,6 @@
             sliderSimple.value(+document.getElementById('migrationHidden').value-10000)
           }
         }
-
         if (d3.event.key=='ArrowUp') {
           d3.event.preventDefault();
           if(+document.getElementById('migrationHidden').value+1 < max+1){
@@ -1268,10 +1266,8 @@
           sliderSimple.value(max)
         }
       }
-    })
 
-    //fertility keyboard accessible
-    d3.select('body').on('keydown',function(){
+      //fertility keyboard accessible
       if(document.getElementById("handle2")===document.activeElement){//if handle is focussed
         var max = document.getElementById('fertilityHidden').max
         var min = document.getElementById('fertilityHidden').min
@@ -1320,10 +1316,10 @@
           sliderWomen.value(max)
         }
       }
-    })
 
-    //pension keyboard accessible
-    d3.select('body').on('keydown',function(){
+
+      //pension keyboard accessible
+
       if(document.getElementById("handle3")===document.activeElement){//if handle is focussed
         var max = document.getElementById('pensionHidden').max
         var min = document.getElementById('pensionHidden').min
@@ -1372,7 +1368,14 @@
           sliderPension.value(max)
         }
       }
+
+
     })
+
+
+
+
+
 
     function drawGraphic(){
       //adjust the sliders to match the width of the body
