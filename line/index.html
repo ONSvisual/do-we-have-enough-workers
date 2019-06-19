@@ -602,6 +602,15 @@
     //     .style("right","")},301)
     //   }
 
+      //if you change the input
+      document.getElementById("year").oninput = function(){
+        document.getElementById("yearHidden").value=+document.getElementById("year").value;
+        dataLayer.push({
+            'event':'buttonClicked',
+            'selected':'numberinput'
+          })
+      }
+
      //stuff for the tally
      document.getElementById("plus").addEventListener("click", function() {
        var typenumber = document.getElementById("year").value
