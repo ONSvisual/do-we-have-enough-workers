@@ -179,16 +179,18 @@
     }
 
     button#minus.minus, button#plus.plus {
-    width: 1.4em;
-    height: 1.4em;
+    width: 24px;
+    /* height: 1.4em; */
     background-color: #1b5f97;
     color: #fff;
     border: 2px solid #1b5f97;
     box-sizing: border-box;
-    font-size: 19px;
+    font-size: 9.0px;
     text-align: center;
     cursor: pointer;
     font-weight: bold;
+    display: block;
+    line-height: 50%;
     }
 
     .borderbox {
@@ -227,6 +229,9 @@
       /* font-size: 2em;  */
     }
 
+    .white{
+      color:white;
+    }
     /* #tooltip {
       background: #206095;
       color: #fff;
@@ -292,6 +297,7 @@
     @media (min-width: 700px){
       .title{
          height:70px;
+         margin-top:2px;
       }
 
       .slider-col{
@@ -303,6 +309,7 @@
       .title{
         padding-bottom: 10px;
         height:40px;
+        margin-top:2px;
       }
       .slider-col,#column3{
         height:130px;
@@ -400,10 +407,17 @@
           <div id="column3" class="container col col-12 col-md-3">
             <div class="row no-gutters">
               <div class="col-md-12 title"><p class='bold'>At
-                    <span class="borderbox"><span><button type="button" id="minus" class="minus">-</button></span>
-                    <span style="text-align: center;"><input class="bold" id="year" type="number" value="2028" max="2042" min="2017"></span>
-                    <span><button type="button" id="plus" class="plus">+</button></span></span>
-                 the state pension age will be</p></div>
+                    <span class="borderbox">
+                      <span style="display:inline-block; text-align: center;">
+                        <input class="bold" id="year" type="number" value="2028" max="2042" min="2017">
+                      </span
+                      ><span style="display:inline-block;vertical-align:top;">
+
+                        <button type="button" id="plus" class="plus"><i class="fas fa-caret-up white"></i></button>
+                        <button type="button" id="minus" class="minus"><i class="fas fa-caret-down white"></i></button>
+                      </span
+                      ></span>
+                    the state pension age will be</p></div>
               <div class="col-md-12"><div id="slider-pension"></div></div>
             </div>
           </div>
