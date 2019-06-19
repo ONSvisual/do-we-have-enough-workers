@@ -27,15 +27,15 @@
             "annotationCXCY":[
             ],
             "xAxisLabel":"Age",
-            "yAxisLabel":"£ thousand",
-            "yAxisScale":[0,40],
-            "yAxisBreak": true,
+            "yAxisLabel":"£",
+            "yAxisScale":[0,40000],
+            "yAxisBreak": false,
             "yAxisBreak_sm_md_lg": [65,65,65]
     },
     "optional" : {
-            "margin_sm": [20, 10, 35, 25],
-            "margin_md": [20, 10, 35, 25],
-            "margin_lg": [20, 10, 35, 25],
+            "margin_sm": [40, 10, 35, 50],
+            "margin_md": [40, 10, 35, 50],
+            "margin_lg": [40, 10, 35, 50],
 
             "aspectRatio_sm" : [16,10],
             "aspectRatio_md" : [16,8],

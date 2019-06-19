@@ -104,12 +104,28 @@ h6 {
         	.domain([ 0, arrayDomain ])
         	.range([0, chart_width-(margin.left+margin.right)]);
 
-      var svg = d3.select('#graphic')
-      		.append('svg')
-      			.attr('width',chart_width)
-      			.attr('height',height)
+      var legend = d3.select('#graphic')
+              .append('svg')
+                .attr('width',chart_width)
+                .attr('height',height)
+    						.append("g")
+    						.attr("id", "legend")
+                .attr('transform','translate('+margin.left+','+margin.top+')');
+                // .attr("transform",function(){
+                //   if(chart_width<450){return "translate("+margin.left+" "+(24*0.90*chart_width/dvc.essential.gridWidth)+")"}
+                //   else {return "translate("+margin.left+" "+(12*0.45*chart_width/dvc.essential.gridWidth)+")"}
+                // })
+      labels=[]
+      graphic_data.forEach(function(d){
+        labels.push(d.group)
+      })
+      createLegend(labels);
+
+      legendsize=document.getElementById('legend').getBBox()
+
+      var svg = d3.select('svg')
       		.append('g')
-      			.attr('transform','translate('+margin.left+','+margin.top+')');
+      			.attr('transform','translate('+margin.left+','+(3*margin.top+legendsize.height)+')');
 
       svg.selectAll('circle')
       	.data(grid)
@@ -124,19 +140,9 @@ h6 {
       		.attr('r',dotRadius)
       		.attr('fill',function(d){ return d.data; })
 
-      var legend = d3.select('svg')
-    						.append("g")
-    						.attr("id", "legend")
-                .attr("transform",function(){
-                  if(chart_width<450){return "translate("+margin.left+" "+(24*0.90*chart_width/dvc.essential.gridWidth)+")"}
-                  else {return "translate("+margin.left+" "+(12*0.45*chart_width/dvc.essential.gridWidth)+")"}
-                })
 
-      labels=[]
-      graphic_data.forEach(function(d){
-        labels.push(d.group)
-      })
-      createLegend(labels);
+
+
 
 function createLegend(labels){
   var prevX= 0;
