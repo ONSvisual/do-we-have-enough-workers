@@ -13,10 +13,10 @@
             "draggable": false,
            "annotationsChart" : [
               {
-                "xVal": "2010",
+                "xVal": "2008",
                 "yVal": 420,
                 "path": "",
-                "text": "Women's state pension age increased from 60 to 65 between 2010 and 2016",
+                "text": "Women's State Pension age increased from 60 to 65 between 2010 and 2018",
                 "textOffset": [0,0]
 
               },
@@ -36,7 +36,7 @@
               }
             ],
 
-            "wordwrap":[16,20,20,15],
+            "wordwrap":[20,20,20,15],
             "annoAlign": ["start","start","start", "start"],
             "annotationBullet" : [],
 
