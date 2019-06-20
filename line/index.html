@@ -193,6 +193,17 @@
     line-height: 50%;
     }
 
+    button#plus{
+      margin-top:-2px;
+    }
+
+    @-moz-document url-prefix() {
+      button#plus{
+        margin-top:0px;
+      }
+    }
+
+
     .borderbox {
     border: 2px solid #1b5f97;
     /* padding-top:5px; */
@@ -413,7 +424,7 @@
                       </span
                       ><span style="display:inline-block;vertical-align:top;">
 
-                        <button style="margin-top:-2px;" type="button" id="plus" class="plus"><i class="fas fa-caret-up white"></i></button>
+                        <button type="button" id="plus" class="plus"><i class="fas fa-caret-up white"></i></button>
                         <button type="button" id="minus" class="minus"><i class="fas fa-caret-down white"></i></button>
                       </span
                       ></span>
